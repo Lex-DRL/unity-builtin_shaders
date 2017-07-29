@@ -5,7 +5,7 @@
 // controlled by material parameters.
 
 Shader "Hidden/Internal-Colored"
-{ 
+{
 	Properties
 	{
 		_Color ("Color", Color) = (1,1,1,1)
@@ -34,7 +34,7 @@ Shader "Hidden/Internal-Colored"
 			#pragma target 2.0
 			#pragma multi_compile _ UNITY_SINGLE_PASS_STEREO STEREO_INSTANCING_ON STEREO_MULTIVIEW_ON
 			#include "UnityCG.cginc"
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				float4 color : COLOR;
@@ -59,7 +59,7 @@ Shader "Hidden/Internal-Colored"
 			{
 				return i.color;
 			}
-			ENDCG  
-		}  
+			ENDCG
+		}
 	}
 }

@@ -24,7 +24,7 @@ UNITY_DECLARE_TEXCUBE(_TexB);
 
 float _Level;
 float _value;
-		
+
 struct appdata_t {
 	float4 vertex : POSITION;
 	float3 texcoord : TEXCOORD0;
@@ -51,7 +51,7 @@ half4 frag (v2f i) : SV_Target
 	half3 res = lerp(texA, texB, _value);
 	return half4(res, 1.0);
 }
-ENDCG 
+ENDCG
 
 SubShader {
 	Tags { "Queue"="Background" "RenderType"="Background" }
@@ -62,7 +62,7 @@ SubShader {
 		#pragma target 3.0
 		ENDCG
 	}
-} 	
+}
 
 SubShader {
 	Tags { "Queue"="Background" "RenderType"="Background" }
@@ -74,7 +74,7 @@ SubShader {
 		#pragma target 2.0
 		ENDCG
 	}
-} 	
+}
 
 Fallback Off
 

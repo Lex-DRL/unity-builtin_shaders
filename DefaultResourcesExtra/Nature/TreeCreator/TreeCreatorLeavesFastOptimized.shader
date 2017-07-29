@@ -7,7 +7,7 @@ Properties {
 	_Cutoff ("Alpha cutoff", Range(0,1)) = 0.3
 	_TranslucencyViewDependency ("View dependency", Range(0,1)) = 0.7
 	_ShadowStrength("Shadow Strength", Range(0,1)) = 1.0
-	
+
 	_MainTex ("Base (RGB) Alpha (A)", 2D) = "white" {}
 	_ShadowTex ("Shadow (RGB)", 2D) = "white" {}
 
@@ -17,7 +17,7 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader { 
+SubShader {
 	Tags {
 		"IgnoreProjector"="True"
 		"RenderType" = "TreeLeaf"
@@ -35,7 +35,7 @@ SubShader {
 		#pragma fragment FragmentLeaf
 		#pragma multi_compile_fwdbase nolightmap
 		#pragma multi_compile_fog
-		
+
 		sampler2D _MainTex;
 		float4 _MainTex_ST;
 
@@ -68,7 +68,7 @@ SubShader {
 			ao += 0.1; ao = saturate(ao * ao * ao); // emphasize AO
 
 			fixed3 color = v.color.rgb * ao;
-			
+
 			float3 worldN = UnityObjectToWorldNormal(v.normal);
 
 			fixed4 mainLight;
@@ -81,7 +81,7 @@ SubShader {
 			o.screenPos = ComputeScreenPos (o.pos);
 		#else
 			o.diffuse += mainLight;
-		#endif			
+		#endif
 			o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 			UNITY_TRANSFER_FOG(o,o.pos);
 			return o;
@@ -114,7 +114,7 @@ SubShader {
 	Pass {
 		Name "ShadowCaster"
 		Tags { "LightMode" = "ShadowCaster" }
-		
+
 		ZWrite On ZTest LEqual
 
 	CGPROGRAM
@@ -137,9 +137,9 @@ SubShader {
 			float2 hip_pack0 : TEXCOORD1;
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
-		
+
 		float4 _MainTex_ST;
-		
+
 		v2f_surf vert_surf (appdata_full v) {
 			v2f_surf o;
 			UNITY_SETUP_INSTANCE_ID(v);
@@ -149,9 +149,9 @@ SubShader {
 			TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
 			return o;
 		}
-		
+
 		fixed _Cutoff;
-		
+
 		half4 frag_surf (v2f_surf IN) : SV_Target {
 			fixed alpha = tex2D(_MainTex, IN.hip_pack0.xy).a;
 			clip (alpha - _Cutoff);

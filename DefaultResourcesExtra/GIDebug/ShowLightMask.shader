@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-﻿Shader "Hidden/GIDebug/ShowLightMask" {
+Shader "Hidden/GIDebug/ShowLightMask" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_LightTexture ("Light texture", 2D) = "white" {}
@@ -20,7 +20,7 @@
 			#include "UnityCG.cginc"
 			#include "UnityShaderVariables.cginc"
 			#include "UnityShadowLibrary.cginc"
-			
+
 			struct v2f_surf
 			{
 				float4 pos : SV_POSITION;

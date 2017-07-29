@@ -7,22 +7,22 @@ Properties {
 	_Cutoff ("Alpha cutoff", Range(0,1)) = 0.3
 	_TranslucencyViewDependency ("View dependency", Range(0,1)) = 0.7
 	_ShadowStrength("Shadow Strength", Range(0,1)) = 1.0
-	
+
 	_MainTex ("Base (RGB) Alpha (A)", 2D) = "white" {}
-	
+
 	// These are here only to provide default values
 	[HideInInspector] _TreeInstanceColor ("TreeInstanceColor", Vector) = (1,1,1,1)
 	[HideInInspector] _TreeInstanceScale ("TreeInstanceScale", Vector) = (1,1,1,1)
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader { 
+SubShader {
 	Tags {
 		"IgnoreProjector"="True"
 		"RenderType" = "TreeLeaf"
 	}
 	LOD 200
-		
+
 	Pass {
 		Tags { "LightMode" = "ForwardBase" }
 		Name "ForwardBase"
@@ -34,7 +34,7 @@ SubShader {
 		#pragma fragment FragmentLeaf
 		#pragma multi_compile_fwdbase nolightmap
 		#pragma multi_compile_fog
-		
+
 		sampler2D _MainTex;
 		float4 _MainTex_ST;
 
@@ -65,9 +65,9 @@ SubShader {
 
 			fixed ao = v.color.a;
 			ao += 0.1; ao = saturate(ao * ao * ao); // emphasize AO
-						
+
 			fixed3 color = v.color.rgb * ao;
-			
+
 			float3 worldN = UnityObjectToWorldNormal (v.normal);
 
 			fixed4 mainLight;
@@ -80,7 +80,7 @@ SubShader {
 			o.screenPos = ComputeScreenPos (o.pos);
 		#else
 			o.diffuse += mainLight;
-		#endif			
+		#endif
 			o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 			UNITY_TRANSFER_FOG(o,o.pos);
 			return o;

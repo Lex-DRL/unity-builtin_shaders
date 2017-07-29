@@ -34,7 +34,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Albedo = c.rgb;
 	o.Gloss = tex.a;
 	o.Specular = _Shininess;
-	
+
 	fixed4 reflcol = texCUBE (_Cube, IN.worldRefl);
 	reflcol *= tex.a;
 	o.Emission = reflcol.rgb * _ReflectColor.rgb;

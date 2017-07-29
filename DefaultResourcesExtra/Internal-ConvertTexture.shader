@@ -1,10 +1,10 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
 Shader "Hidden/ConvertTexture" {
-	SubShader { 
+	SubShader {
 		// Cubemap blit.  Takes a face index.
 		Pass {
- 			ZTest Always Cull Off ZWrite Off
+			ZTest Always Cull Off ZWrite Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -26,7 +26,7 @@ Shader "Hidden/ConvertTexture" {
 				float4 vertex : SV_POSITION;
 				float3 texcoord : TEXCOORD0;
 			};
-			
+
 			static const float3 faceU[6] = { float3(0, 0, -1), float3(0, 0, 1), float3(1, 0, 0), float3(1, 0, 0), float3(1, 0, 0), float3(-1, 0, 0) };
 			static const float3 faceV[6] = { float3(0, -1, 0), float3(0, -1, 0), float3(0, 0, 1), float3(0, 0, -1), float3(0, -1, 0), float3(0, -1, 0) };
 
@@ -34,14 +34,14 @@ Shader "Hidden/ConvertTexture" {
 			{
 				v2f o;
 				o.vertex = UnityObjectToClipPos(v.vertex);
-				
+
 				float2 uv = TRANSFORM_TEX(v.texcoord.xy, _MainTex);
 				uv = uv * 2 - 1;
-				
+
 				int idx = (int)_faceIndex;
 				float3 transformU = faceU[idx];
 				float3 transformV = faceV[idx];
-				
+
 				float3 n = cross(transformV, transformU);
 				o.texcoord = n + uv.x * transformU + uv.y * transformV;
 				return o;
@@ -51,9 +51,9 @@ Shader "Hidden/ConvertTexture" {
 			{
 				return texCUBE(_MainTex, i.texcoord);
 			}
-			ENDCG 
+			ENDCG
 
-		}		
+		}
 	}
-	Fallback Off 
+	Fallback Off
 }

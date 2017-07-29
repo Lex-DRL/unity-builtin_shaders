@@ -1,9 +1,9 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "Hidden/Internal-Halo" { 
+Shader "Hidden/Internal-Halo" {
 	SubShader {
 		Tags {"RenderType"="Overlay"}
-		ZWrite off Cull off	// NOTE: 'Cull off' is important as the halo meshes flip handedness each time... BUG: #1220
+		ZWrite off Cull off // NOTE: 'Cull off' is important as the halo meshes flip handedness each time... BUG: #1220
 		Blend OneMinusDstColor One
 		ColorMask RGB
 		Pass {
@@ -46,7 +46,7 @@ Shader "Hidden/Internal-Halo" {
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(0,0,0,0)); // fog towards black due to our blend mode
 				return col;
 			}
-			ENDCG  
-		}  
+			ENDCG
+		}
 	}
 }

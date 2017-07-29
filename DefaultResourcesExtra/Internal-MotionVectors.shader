@@ -100,7 +100,7 @@ Shader "Hidden/Internal-MotionVectors"
 			o.ray = v.normal;
 			return o;
 		}
-		
+
 		inline half2 CalculateMotion(float rawDepth, float2 inUV, float3 inRay)
 		{
 			float depth = Linear01Depth(rawDepth);
@@ -113,7 +113,7 @@ Shader "Hidden/Internal-MotionVectors"
 
 			float4 curClipPos = mul(_NonJitteredVP, worldPos);
 			float2 curHPos = curClipPos.xy / curClipPos.w;
-			
+
 			// V is the viewport position at this pixel in the range 0 to 1.
 			float2 vPosPrev = (prevHPos.xy + 1.0f) / 2.0f;
 			float2 vPosCur = (curHPos.xy + 1.0f) / 2.0f;
@@ -126,7 +126,7 @@ Shader "Hidden/Internal-MotionVectors"
 
 		half4 FragMotionVectorsCamera(CamMotionVectors i) : SV_Target
 		{
- 			float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
+			float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, i.uv);
 			return half4(CalculateMotion(depth, i.uv, i.ray), 0, 1);
 		}
 
@@ -142,7 +142,7 @@ Shader "Hidden/Internal-MotionVectors"
 		Pass
 		{
 			Tags{ "LightMode" = "MotionVectors" }
-			
+
 			ZTest LEqual
 			Cull Back
 			ZWrite Off
@@ -159,7 +159,7 @@ Shader "Hidden/Internal-MotionVectors"
 			ZTest Always
 			Cull Off
 			ZWrite Off
-			
+
 			CGPROGRAM
 			#pragma vertex VertMotionVectorsCamera
 			#pragma fragment FragMotionVectorsCamera
@@ -172,7 +172,7 @@ Shader "Hidden/Internal-MotionVectors"
 			ZTest Always
 			Cull Off
 			ZWrite On
-			
+
 			CGPROGRAM
 			#pragma vertex VertMotionVectorsCamera
 			#pragma fragment FragMotionVectorsCameraWithDepth

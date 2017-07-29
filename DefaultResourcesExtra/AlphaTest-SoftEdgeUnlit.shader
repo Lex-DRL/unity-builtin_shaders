@@ -21,18 +21,18 @@ Properties {
 SubShader {
 	Tags { "Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout" }
 	Lighting off
-	
+
 	// Render both front and back facing polygons.
 	Cull Off
-	
+
 	// first pass:
 	//   render any pixels that are more than [_Cutoff] opaque
-	Pass {  
+	Pass {
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			struct appdata_t {
@@ -53,7 +53,7 @@ SubShader {
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			fixed _Cutoff;
-			
+
 			v2f vert (appdata_t v)
 			{
 				v2f o;
@@ -65,7 +65,7 @@ SubShader {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
 			fixed4 _Color;
 			fixed4 frag (v2f i) : SV_Target
 			{
@@ -81,18 +81,18 @@ SubShader {
 	//   render the semitransparent details.
 	Pass {
 		Tags { "RequireOption" = "SoftVegetation" }
-		
+
 		// Dont write to the depth buffer
 		ZWrite off
-		
+
 		// Set up alpha blending
 		Blend SrcAlpha OneMinusSrcAlpha
-		
+
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			struct appdata_t {
@@ -113,7 +113,7 @@ SubShader {
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
 			float _Cutoff;
-			
+
 			v2f vert (appdata_t v)
 			{
 				v2f o;
@@ -125,7 +125,7 @@ SubShader {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
 			fixed4 _Color;
 			fixed4 frag (v2f i) : SV_Target
 			{

@@ -8,13 +8,13 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 		_BaseLight ("Base Light", Range(0, 1)) = 0.35
 		_AO ("Amb. Occlusion", Range(0, 10)) = 2.4
 		_Occlusion ("Dir Occlusion", Range(0, 20)) = 7.5
-		
+
 		// These are here only to provide default values
 		[HideInInspector] _TreeInstanceColor ("TreeInstanceColor", Vector) = (1,1,1,1)
 		[HideInInspector] _TreeInstanceScale ("TreeInstanceScale", Vector) = (1,1,1,1)
 		[HideInInspector] _SquashAmount ("Squash", Float) = 1
 	}
-	
+
 	SubShader {
 		Tags {
 			"Queue" = "AlphaTest"
@@ -24,48 +24,48 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 		}
 		Cull Off
 		ColorMask RGB
-		
+
 		Pass {
 			Lighting On
-		
+
 			CGPROGRAM
 			#pragma vertex leaves
 			#pragma fragment frag
 			#pragma multi_compile_fog
 			#include "UnityBuiltin2xTreeLibrary.cginc"
-			
+
 			sampler2D _MainTex;
 			fixed _Cutoff;
-			
+
 			fixed4 frag(v2f input) : SV_Target
 			{
 				fixed4 c = tex2D( _MainTex, input.uv.xy);
 				c.rgb *= input.color.rgb;
-				
+
 				clip (c.a - _Cutoff);
 				UNITY_APPLY_FOG(input.fogCoord, c);
 				return c;
 			}
 			ENDCG
 		}
-		
+
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }
-			
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma multi_compile_shadowcaster
 			#include "UnityCG.cginc"
 			#include "TerrainEngine.cginc"
-			
-			struct v2f { 
+
+			struct v2f {
 				V2F_SHADOW_CASTER;
 				float2 uv : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
-			
+
 			struct appdata {
 				float4 vertex : POSITION;
 				float3 normal : NORMAL;
@@ -83,20 +83,20 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 				o.uv = v.texcoord;
 				return o;
 			}
-			
+
 			sampler2D _MainTex;
 			fixed _Cutoff;
-					
+
 			float4 frag( v2f i ) : SV_Target
 			{
 				fixed4 texcol = tex2D( _MainTex, i.uv );
 				clip( texcol.a - _Cutoff );
 				SHADOW_CASTER_FRAGMENT(i)
 			}
-			ENDCG	
+			ENDCG
 		}
 	}
-	
+
 	// This subshader is never actually used, but is only kept so
 	// that the tree mesh still assumes that normals are needed
 	// at build time (due to Lighting On in the pass). The subshader
@@ -120,7 +120,7 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 				Ambient [_Color]
 			}
 			SetTexture [_MainTex] { combine primary * texture DOUBLE, texture }
-		}		
+		}
 	}
 
 	Dependency "BillboardShader" = "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex"

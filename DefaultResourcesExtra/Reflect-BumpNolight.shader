@@ -12,7 +12,7 @@ Properties {
 Category {
 	Tags { "RenderType"="Opaque" }
 	LOD 250
-	
+
 	SubShader {
 		// Always drawn reflective pass
 		Pass {
@@ -27,12 +27,12 @@ CGPROGRAM
 
 struct v2f {
 	float4 pos : SV_POSITION;
-	float2	uv		: TEXCOORD0;
-	float2	uv2		: TEXCOORD1;
-	float3	I		: TEXCOORD2;
-	float3	TtoW0 	: TEXCOORD3;
-	float3	TtoW1	: TEXCOORD4;
-	float3	TtoW2	: TEXCOORD5;
+	float2  uv      : TEXCOORD0;
+	float2  uv2     : TEXCOORD1;
+	float3  I       : TEXCOORD2;
+	float3  TtoW0   : TEXCOORD3;
+	float3  TtoW1   : TEXCOORD4;
+	float3  TtoW2   : TEXCOORD5;
 	UNITY_FOG_COORDS(6)
 	UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -47,18 +47,18 @@ v2f vert(appdata_tan v)
 	o.pos = UnityObjectToClipPos(v.vertex);
 	o.uv = TRANSFORM_TEX(v.texcoord,_MainTex);
 	o.uv2 = TRANSFORM_TEX(v.texcoord,_BumpMap);
-	
+
 	o.I = -WorldSpaceViewDir( v.vertex );
-	
+
 	float3 worldNormal = UnityObjectToWorldNormal(v.normal);
 	float3 worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
 	float3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w;
 	o.TtoW0 = float3(worldTangent.x, worldBinormal.x, worldNormal.x);
 	o.TtoW1 = float3(worldTangent.y, worldBinormal.y, worldNormal.y);
 	o.TtoW2 = float3(worldTangent.z, worldBinormal.z, worldNormal.z);
-	
+
 	UNITY_TRANSFER_FOG(o,o.pos);
-	return o; 
+	return o;
 }
 
 uniform sampler2D _BumpMap;
@@ -69,20 +69,20 @@ uniform fixed4 _Color;
 
 fixed4 frag (v2f i) : SV_Target
 {
-	// Sample and expand the normal map texture	
+	// Sample and expand the normal map texture
 	fixed3 normal = UnpackNormal(tex2D(_BumpMap, i.uv2));
-	
+
 	fixed4 texcol = tex2D(_MainTex,i.uv);
-	
+
 	// transform normal to world space
 	half3 wn;
 	wn.x = dot(i.TtoW0, normal);
 	wn.y = dot(i.TtoW1, normal);
 	wn.z = dot(i.TtoW2, normal);
-	
+
 	// calculate reflection vector in world space
 	half3 r = reflect(i.I, wn);
-	
+
 	fixed4 c = UNITY_LIGHTMODEL_AMBIENT * texcol;
 
 	fixed4 reflcolor = texCUBE(_Cube, r) * _ReflectColor * texcol.a;
@@ -91,10 +91,10 @@ fixed4 frag (v2f i) : SV_Target
 	UNITY_OPAQUE_ALPHA(c.a);
 	return c;
 }
-ENDCG  
-		} 
-	}	
+ENDCG
+		}
+	}
 }
-	
+
 FallBack "Legacy Shaders/VertexLit"
 }

@@ -16,10 +16,10 @@ Shader "Sprites/Diffuse"
 	SubShader
 	{
 		Tags
-		{ 
-			"Queue"="Transparent" 
-			"IgnoreProjector"="True" 
-			"RenderType"="Transparent" 
+		{
+			"Queue"="Transparent"
+			"IgnoreProjector"="True"
+			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
@@ -40,7 +40,7 @@ Shader "Sprites/Diffuse"
 			float2 uv_MainTex;
 			fixed4 color;
 		};
-		
+
 		void vert (inout appdata_full v, out Input o)
 		{
 			v.vertex.xy *= _Flip.xy;
@@ -48,7 +48,7 @@ Shader "Sprites/Diffuse"
 			#if defined(PIXELSNAP_ON)
 			v.vertex = UnityPixelSnap (v.vertex);
 			#endif
-			
+
 			UNITY_INITIALIZE_OUTPUT(Input, o);
 			o.color = v.color * _Color * _RendererColor;
 		}

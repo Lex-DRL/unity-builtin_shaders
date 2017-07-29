@@ -13,14 +13,14 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 100
-	
-	Pass {  
+
+	Pass {
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			struct appdata_t {
@@ -38,7 +38,7 @@ SubShader {
 
 			sampler2D _MainTex;
 			float4 _MainTex_ST;
-			
+
 			v2f vert (appdata_t v)
 			{
 				v2f o;
@@ -49,7 +49,7 @@ SubShader {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
 			fixed4 frag (v2f i) : SV_Target
 			{
 				fixed4 col = tex2D(_MainTex, i.texcoord);

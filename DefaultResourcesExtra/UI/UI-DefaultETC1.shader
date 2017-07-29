@@ -7,7 +7,7 @@ Shader "UI/DefaultETC1"
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
 		[PerRendererData] _AlphaTex("Sprite Alpha Texture", 2D) = "white" {}
 		_Color ("Tint", Color) = (1,1,1,1)
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -22,19 +22,19 @@ Shader "UI/DefaultETC1"
 	SubShader
 	{
 		Tags
-		{ 
-			"Queue"="Transparent" 
-			"IgnoreProjector"="True" 
-			"RenderType"="Transparent" 
+		{
+			"Queue"="Transparent"
+			"IgnoreProjector"="True"
+			"RenderType"="Transparent"
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
-		
+
 		Stencil
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -58,7 +58,7 @@ Shader "UI/DefaultETC1"
 			#include "UnityUI.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-			
+
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
@@ -73,7 +73,7 @@ Shader "UI/DefaultETC1"
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 			};
-			
+
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
@@ -85,11 +85,11 @@ Shader "UI/DefaultETC1"
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
 				OUT.texcoord = IN.texcoord;
-				
+
 				#ifdef UNITY_HALF_TEXEL_OFFSET
 				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1) * OUT.vertex.w;
 				#endif
-				
+
 				OUT.color = IN.color * _Color;
 				return OUT;
 			}
@@ -100,9 +100,9 @@ Shader "UI/DefaultETC1"
 			fixed4 frag(v2f IN) : SV_Target
 			{
 				fixed4 color = UnityGetUIDiffuseColor(IN.texcoord, _MainTex, _AlphaTex, _TextureSampleAdd) * IN.color;
-				
+
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif

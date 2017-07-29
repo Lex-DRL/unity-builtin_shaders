@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-﻿Shader "Hidden/GIDebug/UV1sAsPositions" {
+Shader "Hidden/GIDebug/UV1sAsPositions" {
 Properties {
 	_Color ("Main Color", Color) = (1,1,1,1)
 }
@@ -8,8 +8,8 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 100
-	
-	Pass { 
+
+	Pass {
 		ZTest Always
 		Cull Off
 		CGPROGRAM
@@ -23,7 +23,7 @@ SubShader {
 				float4 texcoord1 : TEXCOORD1;
 				float4 texcoord2 : TEXCOORD2;
 			};
-			
+
 			struct v2f {
 				float4 pos : SV_POSITION;
 				float4 dummy : TEXCOORD0;

@@ -11,7 +11,7 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 300
-	
+
 CGPROGRAM
 #pragma surface surf BlinnPhong
 

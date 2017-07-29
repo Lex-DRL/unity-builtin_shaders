@@ -35,7 +35,7 @@ SubShader {
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			combine texture * primary DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
-		} 
+		}
 	}
 	Pass {
 		Tags { "LightMode" = "VertexLMRGBM" }

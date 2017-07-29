@@ -8,7 +8,7 @@ Properties {
 	_TranslucencyViewDependency ("View dependency", Range(0,1)) = 0.7
 	_ShadowStrength("Shadow Strength", Range(0,1)) = 0.8
 	_ShadowOffsetScale ("Shadow Offset Scale", Float) = 1
-	
+
 	_MainTex ("Base (RGB) Alpha (A)", 2D) = "white" {}
 	_ShadowTex ("Shadow (RGB)", 2D) = "white" {}
 	_BumpSpecMap ("Normalmap (GA) Spec (R) Shadow Offset (B)", 2D) = "bump" {}
@@ -20,13 +20,13 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader { 
+SubShader {
 	Tags {
 		"IgnoreProjector"="True"
 		"RenderType"="TreeLeaf"
 	}
 	LOD 200
-	
+
 CGPROGRAM
 #pragma surface surf TreeLeaf alphatest:_Cutoff vertex:TreeVertLeaf nolightmap noforwardadd
 #include "UnityBuiltin3xTreeLibrary.cginc"
@@ -43,12 +43,12 @@ struct Input {
 void surf (Input IN, inout LeafSurfaceOutput o) {
 	fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
 	o.Albedo = c.rgb * IN.color.rgb * IN.color.a;
-	
+
 	fixed4 trngls = tex2D (_TranslucencyMap, IN.uv_MainTex);
 	o.Translucency = trngls.b;
 	o.Gloss = trngls.a * _Color.r;
 	o.Alpha = c.a;
-	
+
 	half4 norspc = tex2D (_BumpSpecMap, IN.uv_MainTex);
 	o.Specular = norspc.r;
 	o.Normal = UnpackNormalDXT5nm(norspc);
@@ -59,7 +59,7 @@ ENDCG
 	Pass {
 		Name "ShadowCaster"
 		Tags { "LightMode" = "ShadowCaster" }
-		
+
 		CGPROGRAM
 		#pragma vertex vert_surf
 		#pragma fragment frag_surf
@@ -102,7 +102,7 @@ ENDCG
 		}
 		ENDCG
 	}
-	
+
 }
 
 Dependency "BillboardShader" = "Hidden/Nature/Tree Creator Leaves Rendertex"

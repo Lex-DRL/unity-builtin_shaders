@@ -6,7 +6,7 @@ Shader "Standard"
 	{
 		_Color("Color", Color) = (1,1,1,1)
 		_MainTex("Albedo", 2D) = "white" {}
-		
+
 		_Cutoff("Alpha Cutoff", Range(0.0, 1.0)) = 0.5
 
 		_Glossiness("Smoothness", Range(0.0, 1.0)) = 0.5
@@ -30,7 +30,7 @@ Shader "Standard"
 
 		_EmissionColor("Color", Color) = (0,0,0)
 		_EmissionMap("Emission", 2D) = "white" {}
-		
+
 		_DetailMask("Detail Mask", 2D) = "white" {}
 
 		_DetailAlbedoMap("Detail Albedo x2", 2D) = "grey" {}
@@ -55,13 +55,13 @@ Shader "Standard"
 	{
 		Tags { "RenderType"="Opaque" "PerformanceChecks"="False" }
 		LOD 300
-	
+
 
 		// ------------------------------------------------------------------
 		//  Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
-			Name "FORWARD" 
+			Name "FORWARD"
 			Tags { "LightMode" = "ForwardBase" }
 
 			Blend [_SrcBlend] [_DstBlend]
@@ -85,6 +85,8 @@ Shader "Standard"
 			#pragma multi_compile_fwdbase
 			#pragma multi_compile_fog
 			#pragma multi_compile_instancing
+			// Uncomment the following line to enable dithering LOD crossfade. Note: there are more in the file to uncomment for other passes.
+			//#pragma multi_compile _ LOD_FADE_CROSSFADE
 
 			#pragma vertex vertBase
 			#pragma fragment fragBase
@@ -119,6 +121,8 @@ Shader "Standard"
 
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
+			// Uncomment the following line to enable dithering LOD crossfade. Note: there are more in the file to uncomment for other passes.
+			//#pragma multi_compile _ LOD_FADE_CROSSFADE
 
 			#pragma vertex vertAdd
 			#pragma fragment fragAdd
@@ -145,6 +149,8 @@ Shader "Standard"
 			#pragma shader_feature _PARALLAXMAP
 			#pragma multi_compile_shadowcaster
 			#pragma multi_compile_instancing
+			// Uncomment the following line to enable dithering LOD crossfade. Note: there are more in the file to uncomment for other passes.
+			//#pragma multi_compile _ LOD_FADE_CROSSFADE
 
 			#pragma vertex vertShadowCaster
 			#pragma fragment fragShadowCaster
@@ -178,6 +184,8 @@ Shader "Standard"
 
 			#pragma multi_compile_prepassfinal
 			#pragma multi_compile_instancing
+			// Uncomment the following line to enable dithering LOD crossfade. Note: there are more in the file to uncomment for other passes.
+			//#pragma multi_compile _ LOD_FADE_CROSSFADE
 
 			#pragma vertex vertDeferred
 			#pragma fragment fragDeferred
@@ -192,7 +200,7 @@ Shader "Standard"
 		// This pass it not used during regular rendering.
 		Pass
 		{
-			Name "META" 
+			Name "META"
 			Tags { "LightMode"="Meta" }
 
 			Cull Off
@@ -221,7 +229,7 @@ Shader "Standard"
 		//  Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
-			Name "FORWARD" 
+			Name "FORWARD"
 			Tags { "LightMode" = "ForwardBase" }
 
 			Blend [_SrcBlend] [_DstBlend]
@@ -229,11 +237,11 @@ Shader "Standard"
 
 			CGPROGRAM
 			#pragma target 2.0
-			
+
 			#pragma shader_feature _NORMALMAP
 			#pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
-			#pragma shader_feature _EMISSION 
-			#pragma shader_feature _METALLICGLOSSMAP 
+			#pragma shader_feature _EMISSION
+			#pragma shader_feature _METALLICGLOSSMAP
 			#pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 			#pragma shader_feature _ _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _ _GLOSSYREFLECTIONS_OFF
@@ -261,7 +269,7 @@ Shader "Standard"
 			Fog { Color (0,0,0,0) } // in additive pass fog should be black
 			ZWrite Off
 			ZTest LEqual
-			
+
 			CGPROGRAM
 			#pragma target 2.0
 
@@ -273,10 +281,10 @@ Shader "Standard"
 			#pragma shader_feature ___ _DETAIL_MULX2
 			// SM2.0: NOT SUPPORTED shader_feature _PARALLAXMAP
 			#pragma skip_variants SHADOWS_SOFT
-			
+
 			#pragma multi_compile_fwdadd_fullshadows
 			#pragma multi_compile_fog
-			
+
 			#pragma vertex vertAdd
 			#pragma fragment fragAdd
 			#include "UnityStandardCoreForward.cginc"
@@ -288,7 +296,7 @@ Shader "Standard"
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }
-			
+
 			ZWrite On ZTest LEqual
 
 			CGPROGRAM
@@ -312,7 +320,7 @@ Shader "Standard"
 		// This pass it not used during regular rendering.
 		Pass
 		{
-			Name "META" 
+			Name "META"
 			Tags { "LightMode"="Meta" }
 
 			Cull Off

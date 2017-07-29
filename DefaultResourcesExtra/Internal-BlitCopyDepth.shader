@@ -2,9 +2,9 @@
 
 Shader "Hidden/BlitCopyDepth" {
 	Properties { _MainTex ("Texture", any) = "" {} }
-	SubShader { 
+	SubShader {
 		Pass {
- 			ZTest Always Cull Off ZWrite Off
+			ZTest Always Cull Off ZWrite Off
 
 			CGPROGRAM
 			#pragma vertex vert

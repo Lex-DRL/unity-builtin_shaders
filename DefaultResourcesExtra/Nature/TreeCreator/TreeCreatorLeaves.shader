@@ -9,7 +9,7 @@ Properties {
 	_GlossMap ("Gloss (A)", 2D) = "black" {}
 	_TranslucencyMap ("Translucency (A)", 2D) = "white" {}
 	_ShadowOffset ("Shadow Offset (A)", 2D) = "black" {}
-	
+
 	// These are here only to provide default values
 	_Cutoff ("Alpha cutoff", Range(0,1)) = 0.3
 	[HideInInspector] _TreeInstanceColor ("TreeInstanceColor", Vector) = (1,1,1,1)
@@ -17,10 +17,10 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader { 
+SubShader {
 	Tags { "IgnoreProjector"="True" "RenderType"="TreeLeaf" }
 	LOD 200
-		
+
 CGPROGRAM
 #pragma surface surf TreeLeaf alphatest:_Cutoff vertex:TreeVertLeaf addshadow nolightmap noforwardadd
 #include "UnityBuiltin3xTreeLibrary.cginc"

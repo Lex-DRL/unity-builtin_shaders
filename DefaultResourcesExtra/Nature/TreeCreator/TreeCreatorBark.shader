@@ -7,7 +7,7 @@ Properties {
 	_MainTex ("Base (RGB) Alpha (A)", 2D) = "white" {}
 	_BumpMap ("Normalmap", 2D) = "bump" {}
 	_GlossMap ("Gloss (A)", 2D) = "black" {}
-	
+
 	// These are here only to provide default values
 	_SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
 	[HideInInspector] _TreeInstanceColor ("TreeInstanceColor", Vector) = (1,1,1,1)
@@ -15,10 +15,10 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader { 
+SubShader {
 	Tags { "IgnoreProjector"="True" "RenderType"="TreeBark" }
 	LOD 200
-		
+
 CGPROGRAM
 #pragma surface surf BlinnPhong vertex:TreeVertBark addshadow nolightmap
 #include "UnityBuiltin3xTreeLibrary.cginc"

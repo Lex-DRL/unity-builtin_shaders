@@ -18,7 +18,7 @@ SubShader {
 	Cull Off
 	LOD 200
 	ColorMask RGB
-		
+
 CGPROGRAM
 #pragma surface surf Lambert vertex:WavingGrassVert addshadow exclude_path:deferred
 #include "TerrainEngine.cginc"
@@ -40,7 +40,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 }
 ENDCG
 }
-	
+
 	SubShader {
 		Tags {
 			"Queue" = "Geometry+200"
@@ -50,7 +50,7 @@ ENDCG
 		Cull Off
 		LOD 200
 		ColorMask RGB
-		
+
 		Pass {
 			Tags { "LightMode" = "Vertex" }
 			Material {
@@ -77,6 +77,6 @@ ENDCG
 			SetTexture [_MainTex] { combine texture * previous QUAD, texture }
 		}
 	}
-	
+
 	Fallback Off
 }

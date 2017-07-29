@@ -2,6 +2,10 @@
 
 Shader "Hidden/VideoDecodeAndroid"
 {
+GLSLINCLUDE
+	#include "UnityCG.glslinc"
+ENDGLSL
+
 	SubShader
 	{
 		Pass
@@ -13,6 +17,7 @@ Shader "Hidden/VideoDecodeAndroid"
 
 			#extension GL_OES_EGL_image_external : require
 			#pragma glsl_es2
+
 			uniform vec4 _MainTex_ST;
 
 			#ifdef VERTEX
@@ -21,7 +26,7 @@ Shader "Hidden/VideoDecodeAndroid"
 			void main()
 			{
 				gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
-				textureCoord = gl_MultiTexCoord0.xy * _MainTex_ST.xy + _MainTex_ST.zw;
+				textureCoord = TRANSFORM_TEX_ST(gl_MultiTexCoord0, _MainTex_ST);
 			}
 
 			#endif

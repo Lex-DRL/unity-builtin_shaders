@@ -9,7 +9,7 @@ Shader "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex" {
 		_BaseLight ("Base Light", Range(0, 1)) = 0.35
 		_AO ("Amb. Occlusion", Range(0, 10)) = 2.4
 		_Occlusion ("Dir Occlusion", Range(0, 20)) = 7.5
-		
+
 		// These are here only to provide default values
 		[HideInInspector] _TreeInstanceColor ("TreeInstanceColor", Vector) = (1,1,1,1)
 		[HideInInspector] _TreeInstanceScale ("TreeInstanceScale", Vector) = (1,1,1,1)
@@ -19,7 +19,7 @@ Shader "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex" {
 
 		Tags { "Queue" = "AlphaTest" }
 		Cull Off
-		
+
 		Pass {
 			Lighting On
 			ZWrite On
@@ -29,10 +29,10 @@ Shader "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex" {
 			#pragma fragment frag
 			#define USE_CUSTOM_LIGHT_DIR 1
 			#include "UnityBuiltin2xTreeLibrary.cginc"
-			
+
 			sampler2D _MainTex;
 			fixed _Cutoff;
-			
+
 			fixed4 frag(v2f input) : SV_Target
 			{
 				fixed4 col = tex2D( _MainTex, input.uv.xy);
@@ -44,6 +44,6 @@ Shader "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex" {
 			ENDCG
 		}
 	}
-	
+
 	Fallback Off
 }

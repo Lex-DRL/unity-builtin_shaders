@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-﻿Shader "Hidden/GIDebug/TextureUV" {
+Shader "Hidden/GIDebug/TextureUV" {
 	Properties {
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 	}
@@ -14,7 +14,7 @@
 			#pragma fragment frag_surf
 			#include "UnityCG.cginc"
 			#include "UnityShaderVariables.cginc"
-			
+
 			struct v2f_surf
 			{
 				float4 pos : SV_POSITION;

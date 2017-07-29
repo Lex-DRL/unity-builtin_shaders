@@ -47,7 +47,7 @@ Shader "VR/SpatialMapping/Wireframe"
 				float4 dist : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
-			
+
 			v2g vert (appdata v)
 			{
 				v2g o;
@@ -57,7 +57,7 @@ Shader "VR/SpatialMapping/Wireframe"
 				o.worldSpacePosition = mul(unity_ObjectToWorld, v.vertex);
 				return o;
 			}
-			
+
 			[maxvertexcount(3)]
 			void geom(triangle v2g i[3], inout TriangleStream<g2f> triangleStream)
 			{
@@ -70,7 +70,7 @@ Shader "VR/SpatialMapping/Wireframe"
 				float2 edge2 = p1 - p0;
 
 				// To find the distance to the opposite edge, we take the
-				// formula for finding the area of a triangle Area = Base/2 * Height, 
+				// formula for finding the area of a triangle Area = Base/2 * Height,
 				// and solve for the Height = (Area * 2)/Base.
 				// We can get the area of a triangle by taking its cross product
 				// divided by 2.  However we can avoid dividing our area/base by 2
@@ -114,8 +114,8 @@ Shader "VR/SpatialMapping/Wireframe"
 
 				// Smooth our line out
 				float t = exp2(-2 * minDistanceToEdge * minDistanceToEdge);
-				
-				const fixed4 colors[11] = { 
+
+				const fixed4 colors[11] = {
 						fixed4(1.0, 1.0, 1.0, 1.0),  // White
 						fixed4(1.0, 0.0, 0.0, 1.0),  // Red
 						fixed4(0.0, 1.0, 0.0, 1.0),  // Green

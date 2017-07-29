@@ -26,20 +26,20 @@ half4 CalculateLight (unity_v2f_deferred i)
 	half4 nspec = tex2D (_CameraNormalsTexture, TRANSFORM_TEX(uv, _CameraNormalsTexture));
 	half3 normal = nspec.rgb * 2 - 1;
 	normal = normalize(normal);
-	
+
 	half diff = max (0, dot (lightDir, normal));
 	half3 h = normalize (lightDir - normalize(wpos-_WorldSpaceCameraPos));
-	
+
 	float spec = pow (max (0, dot(h,normal)), nspec.a*128.0);
 	spec *= saturate(atten);
-	
+
 	half4 res;
 	res.xyz = _LightColor.rgb * (diff * atten);
 	res.w = spec * Luminance (_LightColor.rgb);
-	
+
 	float fade = fadeDist * unity_LightmapFade.z + unity_LightmapFade.w;
 	res *= saturate(1.0-fade);
-	
+
 	return res;
 }
 ENDCG
@@ -48,7 +48,7 @@ ENDCG
 Pass {
 	ZWrite Off
 	Blend DstColor Zero
-	
+
 CGPROGRAM
 #pragma target 3.0
 #pragma vertex vert_deferred
@@ -67,7 +67,7 @@ ENDCG
 Pass {
 	ZWrite Off
 	Blend One One
-	
+
 CGPROGRAM
 #pragma target 3.0
 #pragma vertex vert_deferred

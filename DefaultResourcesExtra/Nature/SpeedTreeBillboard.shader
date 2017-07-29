@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-﻿Shader "Nature/SpeedTree Billboard"
+Shader "Nature/SpeedTree Billboard"
 {
 	Properties
 	{
@@ -11,7 +11,7 @@
 		_Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 		[MaterialEnum(None,0,Fastest,1)] _WindQuality ("Wind Quality", Range(0,1)) = 0
 	}
-	
+
 	// targeting SM3.0+
 	SubShader
 	{
@@ -61,7 +61,7 @@
 				{
 					float4 vertex	: SV_POSITION;
 					UNITY_FOG_COORDS(0)
-					Input data		: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
 
@@ -123,11 +123,11 @@
 				#pragma multi_compile_fog
 				#include "SpeedTreeBillboardCommon.cginc"
 
-				struct v2f 
+				struct v2f
 				{
 					float4 vertex	: SV_POSITION;
 					UNITY_FOG_COORDS(0)
-					Input data		: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
 

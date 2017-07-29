@@ -27,7 +27,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	float2 offset = ParallaxOffset (h, _Parallax, IN.viewDir);
 	IN.uv_MainTex += offset;
 	IN.uv_BumpMap += offset;
-	
+
 	fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
 	o.Alpha = c.a;

@@ -13,7 +13,7 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 500
-	
+
 CGPROGRAM
 #pragma surface surf Lambert
 #pragma target 3.0
@@ -39,7 +39,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	IN.uv_MainTex += offset;
 	IN.uv_BumpMap += offset;
 	IN.uv_Illum += offset;
-	
+
 	fixed4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
 	o.Emission = c.rgb * tex2D(_Illum, IN.uv_Illum).a;

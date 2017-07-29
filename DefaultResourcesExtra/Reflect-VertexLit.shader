@@ -4,17 +4,17 @@ Shader "Legacy Shaders/Reflective/VertexLit" {
 Properties {
 	_Color ("Main Color", Color) = (1,1,1,1)
 	_ReflectColor ("Reflection Color", Color) = (1,1,1,0.5)
-	_MainTex ("Base (RGB) RefStrength (A)", 2D) = "white" {} 
+	_MainTex ("Base (RGB) RefStrength (A)", 2D) = "white" {}
 	_Cube ("Reflection Cubemap", Cube) = "_Skybox" {}
 }
 Category {
 	Tags { "RenderType"="Opaque" }
 	LOD 150
-	
+
 	SubShader {
-	
+
 		// First pass does reflection cubemap
-		Pass { 
+		Pass {
 			Name "BASE"
 			Tags {"LightMode" = "Always"}
 CGPROGRAM
@@ -43,13 +43,13 @@ v2f vert(appdata_tan v)
 	o.pos = UnityObjectToClipPos(v.vertex);
 	o.uv = TRANSFORM_TEX(v.texcoord,_MainTex);
 
-	// calculate world space reflection vector	
+	// calculate world space reflection vector
 	float3 viewDir = WorldSpaceViewDir( v.vertex );
 	float3 worldN = UnityObjectToWorldNormal( v.normal );
 	o.I = reflect( -viewDir, worldN );
-	
+
 	UNITY_TRANSFER_FOG(o,o.pos);
-	return o; 
+	return o;
 }
 
 uniform sampler2D _MainTex;
@@ -65,10 +65,10 @@ fixed4 frag (v2f i) : SV_Target
 	UNITY_APPLY_FOG(i.fogCoord, col);
 	UNITY_OPAQUE_ALPHA(col.a);
 	return col;
-} 
+}
 ENDCG
 		}
-		
+
 		// Vertex Lit, emulated in shaders (4 lights max, no specular)
 		Pass {
 			Tags { "LightMode" = "Vertex" }
@@ -104,24 +104,24 @@ v2f vert (appdata_base v)
 	float4 lighting = float4(ShadeVertexLightsFull(v.vertex, v.normal, 4, true),_ReflectColor.w);
 	o.diff = lighting * _Color;
 	UNITY_TRANSFER_FOG(o,o.pos);
-	return o; 
+	return o;
 }
 
 uniform sampler2D _MainTex;
 
 fixed4 frag (v2f i) : SV_Target
 {
-	fixed4 temp = tex2D (_MainTex, i.uv);	
+	fixed4 temp = tex2D (_MainTex, i.uv);
 	fixed4 c;
 	c.xyz = temp.xyz * i.diff.xyz;
 	c.w = temp.w * i.diff.w;
 	UNITY_APPLY_FOG_COLOR(i.fogCoord, c, fixed4(0,0,0,0)); // fog towards black due to our blend mode
 	UNITY_OPAQUE_ALPHA(c.a);
 	return c;
-} 
+}
 ENDCG
 		}
-		
+
 		// Lightmapped
 		Pass {
 			Tags { "LightMode" = "VertexLM" }
@@ -180,7 +180,7 @@ ENDCG
 			}
 			ENDCG
 		}
-		
+
 		// Lightmapped, encoded as RGBM
 		Pass {
 			Tags { "LightMode" = "VertexLMRGBM" }
@@ -201,7 +201,7 @@ ENDCG
 				float2 uv2 : TEXCOORD1;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
-			
+
 			struct v2f {
 				float2 uv : TEXCOORD0;
 				float2 uv2 : TEXCOORD1;

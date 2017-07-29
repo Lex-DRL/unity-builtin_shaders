@@ -11,7 +11,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 	LOD 300
-	
+
 CGPROGRAM
 #pragma surface surf Lambert alphatest:_Cutoff
 

@@ -10,7 +10,7 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 200
-	
+
 CGPROGRAM
 #pragma surface surf Lambert
 
@@ -35,7 +35,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha = c.a;
 }
 ENDCG
-} 
+}
 FallBack "Legacy Shaders/Self-Illumin/VertexLit"
 CustomEditor "LegacyIlluminShaderGUI"
 }

@@ -13,7 +13,7 @@ SubShader {
 	Cull Off ZWrite Off
 
 	Pass {
-		
+
 		CGPROGRAM
 		#pragma vertex vert
 		#pragma fragment frag
@@ -35,7 +35,7 @@ SubShader {
 			float2x2 m = float2x2(cosa, -sina, sina, cosa);
 			return float3(mul(m, vertex.xz), vertex.y).xzy;
 		}
-		
+
 		struct appdata_t {
 			float4 vertex : POSITION;
 			UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -66,9 +66,9 @@ SubShader {
 			c *= _Exposure;
 			return half4(c, 1);
 		}
-		ENDCG 
+		ENDCG
 	}
-} 	
+}
 
 
 Fallback Off

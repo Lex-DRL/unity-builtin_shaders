@@ -30,20 +30,20 @@ void surf (Input IN, inout SurfaceOutput o) {
 }
 ENDCG
 
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 400
-	
+
 	CGPROGRAM
 	#pragma surface surf BlinnPhong
 	#pragma target 3.0
 	ENDCG
 }
 
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 400
-	
+
 	CGPROGRAM
 	#pragma surface surf BlinnPhong nodynlightmap
 	ENDCG

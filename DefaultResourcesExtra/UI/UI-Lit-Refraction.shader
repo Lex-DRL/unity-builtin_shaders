@@ -11,7 +11,7 @@ Shader "UI/Lit/Refraction"
 		_Mask ("Mask (Specularity, Shininess, Refraction)", 2D) = "black" {}
 		_Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
 		_Focus ("Focus", Range(-100.0, 100.0)) = -100.0
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -22,7 +22,7 @@ Shader "UI/Lit/Refraction"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
-	
+
 	SubShader
 	{
 		LOD 400
@@ -45,11 +45,11 @@ Shader "UI/Lit/Refraction"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
-		
+
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -75,7 +75,7 @@ Shader "UI/Lit/Refraction"
 				float4 tangent : TANGENT;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
-	
+
 			struct Input
 			{
 				float4 texcoord1;
@@ -101,7 +101,7 @@ Shader "UI/Lit/Refraction"
 
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
-				
+
 			void vert (inout appdata_t v, out Input o)
 			{
 				UNITY_INITIALIZE_OUTPUT(Input, o);
@@ -119,7 +119,7 @@ Shader "UI/Lit/Refraction"
 			#endif
 				o.proj.zw = v.vertex.zw;
 			}
-				
+
 			void surf (Input IN, inout SurfaceOutput o)
 			{
 				fixed4 col = tex2D(_MainTex, IN.texcoord1.xy) + _TextureSampleAdd;
@@ -132,15 +132,15 @@ Shader "UI/Lit/Refraction"
 
 				col.rgb = lerp(col.rgb, ref.rgb, mask.b);
 				col *= IN.color;
-					
+
 				o.Albedo = col.rgb;
 				o.Normal = normalize(normal);
 				o.Specular = _Specular.a * mask.r;
 				o.Gloss = _Shininess * mask.g;
 				o.Alpha = col.a;
-				
+
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);
 				#endif
@@ -160,7 +160,7 @@ Shader "UI/Lit/Refraction"
 
 				// Blinn-Phong shading model
 				//half reflectiveFactor = max(0.0, dot(nNormal, normalize(lightDir + viewDir)));
-				
+
 				half diffuseFactor = max(0.0, dot(nNormal, lightDir));
 				half specularFactor = pow(reflectiveFactor, shininess) * s.Specular;
 

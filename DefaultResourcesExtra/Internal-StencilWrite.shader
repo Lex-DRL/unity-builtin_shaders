@@ -19,12 +19,12 @@ Shader "Hidden/Internal-StencilWrite"
 				float4 vertex : SV_POSITION;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
-			v2f vert (a2v v) 
-			{ 
+			v2f vert (a2v v)
+			{
 				v2f o;
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
-				o.vertex = UnityObjectToClipPos(v.pos); 
+				o.vertex = UnityObjectToClipPos(v.pos);
 				return o;
 			}
 			fixed4 frag () : SV_Target { return fixed4(0,0,0,0); }

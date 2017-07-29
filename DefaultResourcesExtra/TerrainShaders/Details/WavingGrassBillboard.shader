@@ -7,7 +7,7 @@ Shader "Hidden/TerrainEngine/Details/BillboardWavingDoublePass" {
 		_WaveAndDistance ("Wave and distance", Vector) = (12, 3.6, 1, 1)
 		_Cutoff ("Cutoff", float) = 0.5
 	}
-	
+
 CGINCLUDE
 #include "UnityCG.cginc"
 #include "TerrainEngine.cginc"
@@ -24,10 +24,10 @@ v2f BillboardVert (appdata_full v) {
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 	WavingGrassBillboardVert (v);
 	o.color = v.color;
-	
+
 	o.color.rgb *= ShadeVertexLights (v.vertex, v.normal);
-		
-	o.pos = UnityObjectToClipPos(v.vertex);	
+
+	o.pos = UnityObjectToClipPos(v.vertex);
 	o.uv = v.texcoord;
 	return o;
 }
@@ -43,10 +43,10 @@ ENDCG
 		Cull Off
 		LOD 200
 		ColorMask RGB
-				
+
 CGPROGRAM
 #pragma surface surf Lambert vertex:WavingGrassBillboardVert addshadow exclude_path:deferred
-			
+
 sampler2D _MainTex;
 fixed _Cutoff;
 
@@ -63,7 +63,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha *= IN.color.a;
 }
 
-ENDCG			
+ENDCG
 	}
 
 	Fallback Off

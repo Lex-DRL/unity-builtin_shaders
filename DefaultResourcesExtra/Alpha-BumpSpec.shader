@@ -12,7 +12,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 	LOD 400
-	
+
 CGPROGRAM
 #pragma surface surf BlinnPhong alpha:fade
 #pragma target 3.0

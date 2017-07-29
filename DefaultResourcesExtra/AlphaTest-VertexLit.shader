@@ -13,7 +13,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 	LOD 100
-	
+
 	// Non-lightmapped
 	Pass {
 		Tags { "LightMode" = "Vertex" }
@@ -25,22 +25,22 @@ SubShader {
 			Ambient [_Color]
 			Shininess [_Shininess]
 			Specular [_SpecColor]
-			Emission [_Emission]	
+			Emission [_Emission]
 		}
 		Lighting On
 		SeparateSpecular On
 		SetTexture [_MainTex] {
-			Combine texture * primary DOUBLE, texture * primary 
-		} 
+			Combine texture * primary DOUBLE, texture * primary
+		}
 	}
-	
+
 	// Lightmapped, encoded as dLDR
 	Pass {
 		Tags { "LightMode" = "VertexLM" }
 		Alphatest Greater [_Cutoff]
 		AlphaToMask True
 		ColorMask RGB
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
@@ -56,14 +56,14 @@ SubShader {
 			combine texture * previous DOUBLE, texture * primary
 		}
 	}
-	
+
 	// Lightmapped, encoded as RGBM
 	Pass {
 		Tags { "LightMode" = "VertexLMRGBM" }
 		Alphatest Greater [_Cutoff]
 		AlphaToMask True
 		ColorMask RGB
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
@@ -71,7 +71,7 @@ SubShader {
 			Bind "texcoord1", texcoord1 // unused
 			Bind "texcoord", texcoord2 // main uses 1st uv
 		}
-		
+
 		SetTexture [unity_Lightmap] {
 			matrix [unity_LightmapMatrix]
 			combine texture * texture alpha DOUBLE
@@ -84,12 +84,12 @@ SubShader {
 			combine texture * previous QUAD, texture * primary
 		}
 	}
-	
+
 	// Pass to render object as a shadow caster
 	Pass {
 		Name "Caster"
 		Tags { "LightMode" = "ShadowCaster" }
-		
+
 CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag
@@ -98,7 +98,7 @@ CGPROGRAM
 #pragma multi_compile_instancing // allow instanced shadow pass for most of the shaders
 #include "UnityCG.cginc"
 
-struct v2f { 
+struct v2f {
 	V2F_SHADOW_CASTER;
 	float2  uv : TEXCOORD1;
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -124,13 +124,13 @@ float4 frag( v2f i ) : SV_Target
 {
 	fixed4 texcol = tex2D( _MainTex, i.uv );
 	clip( texcol.a*_Color.a - _Cutoff );
-	
+
 	SHADOW_CASTER_FRAGMENT(i)
 }
 ENDCG
 
 	}
-	
+
 }
 
 }

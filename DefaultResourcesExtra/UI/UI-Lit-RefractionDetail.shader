@@ -14,7 +14,7 @@ Shader "UI/Lit/Refraction Detail"
 		_DetailMask ("Detail Mask (Spec, Shin, Ref)", 2D) = "white" {}
 		_Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
 		_Focus ("Focus", Range(-100.0, 100.0)) = -100.0
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -25,7 +25,7 @@ Shader "UI/Lit/Refraction Detail"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
-	
+
 	// SM 3.0
 	SubShader
 	{
@@ -49,11 +49,11 @@ Shader "UI/Lit/Refraction Detail"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
-		
+
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -64,12 +64,12 @@ Shader "UI/Lit/Refraction Detail"
 		CGPROGRAM
 			#pragma target 3.0
 			#pragma surface surf PPL alpha noshadow novertexlights nolightmap vertex:vert nofog
-				
+
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-	
+
 			struct appdata_t
 			{
 				float4 vertex : POSITION;
@@ -80,7 +80,7 @@ Shader "UI/Lit/Refraction Detail"
 				float4 tangent : TANGENT;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
-	
+
 			struct Input
 			{
 				float4 texcoord1;
@@ -125,11 +125,11 @@ Shader "UI/Lit/Refraction Detail"
 				v.vertex = o.worldPosition;
 				v.color = v.color * _Color;
 
-				o.texcoord1.xy	= TRANSFORM_TEX(v.texcoord1, _MainTex);
-				o.texcoord1.zw	= TRANSFORM_TEX(v.texcoord1, _MainBump);
-				o.texcoord2.xy	= TRANSFORM_TEX(v.texcoord2 * _DetailTex_TexelSize.xy, _DetailTex);
-				o.texcoord2.zw	= TRANSFORM_TEX(v.texcoord2 * _DetailBump_TexelSize.xy, _DetailBump);
-				o.texcoord3		= TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
+				o.texcoord1.xy  = TRANSFORM_TEX(v.texcoord1, _MainTex);
+				o.texcoord1.zw  = TRANSFORM_TEX(v.texcoord1, _MainBump);
+				o.texcoord2.xy  = TRANSFORM_TEX(v.texcoord2 * _DetailTex_TexelSize.xy, _DetailTex);
+				o.texcoord2.zw  = TRANSFORM_TEX(v.texcoord2 * _DetailBump_TexelSize.xy, _DetailBump);
+				o.texcoord3     = TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
 
 			#if UNITY_UV_STARTS_AT_TOP
 				o.proj.xy = (float2(v.vertex.x, -v.vertex.y) + v.vertex.w) * 0.5;
@@ -146,7 +146,7 @@ Shader "UI/Lit/Refraction Detail"
 
 				half3 normal = UnpackNormal(tex2D(_MainBump, IN.texcoord1.zw)) +
 							   UnpackNormal(tex2D(_DetailBump, IN.texcoord2.zw));
-				
+
 				half3 mask = tex2D(_Mask, IN.texcoord1.xy) *
 							 tex2D(_DetailMask, IN.texcoord3);
 
@@ -157,15 +157,15 @@ Shader "UI/Lit/Refraction Detail"
 				col.rgb = lerp(col.rgb, ref.rgb, mask.b);
 				col.rgb = lerp(col.rgb, col.rgb * detail.rgb, detail.a);
 				col *= IN.color;
-					
+
 				o.Albedo = col.rgb;
 				o.Normal = normalize(normal);
 				o.Specular = _Specular.a * mask.r;
 				o.Gloss = _Shininess * mask.g;
 				o.Alpha = col.a;
-		
+
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);
 				#endif
@@ -185,7 +185,7 @@ Shader "UI/Lit/Refraction Detail"
 
 				// Blinn-Phong shading model
 				//half reflectiveFactor = max(0.0, dot(nNormal, normalize(lightDir + viewDir)));
-				
+
 				half diffuseFactor = max(0.0, dot(nNormal, lightDir));
 				half specularFactor = pow(reflectiveFactor, shininess) * s.Specular;
 

@@ -14,7 +14,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 	LOD 600
-	
+
 CGPROGRAM
 #pragma surface surf BlinnPhong alpha:fade
 #pragma target 3.0
@@ -37,7 +37,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	float2 offset = ParallaxOffset (h, _Parallax, IN.viewDir);
 	IN.uv_MainTex += offset;
 	IN.uv_BumpMap += offset;
-	
+
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
 	o.Albedo = tex.rgb * _Color.rgb;
 	o.Gloss = tex.a;

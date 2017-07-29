@@ -12,10 +12,10 @@ Category {
 	Blend One OneMinusSrcAlpha
 	ColorMask RGB
 	Cull Off Lighting Off ZWrite Off
-	
+
 	SubShader {
 		Pass {
-		
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -27,7 +27,7 @@ Category {
 
 			sampler2D _MainTex;
 			fixed4 _TintColor;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				fixed4 color : COLOR;
@@ -47,7 +47,7 @@ Category {
 			};
 
 			float4 _MainTex_ST;
-			
+
 			v2f vert (appdata_t v)
 			{
 				v2f o;
@@ -66,7 +66,7 @@ Category {
 
 			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 			float _InvFade;
-			
+
 			fixed4 frag (v2f i) : SV_Target
 			{
 				#ifdef SOFTPARTICLES_ON
@@ -75,7 +75,7 @@ Category {
 				float fade = saturate (_InvFade * (sceneZ-partZ));
 				i.color *= fade;
 				#endif
-				
+
 				fixed4 tex = tex2D(_MainTex, i.texcoord);
 				fixed4 col;
 				col.rgb = _TintColor.rgb * tex.rgb * i.color.rgb * 2.0f;
@@ -83,9 +83,9 @@ Category {
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(0,0,0,0)); // fog towards black due to our blend mode
 				return col;
 			}
-			ENDCG 
+			ENDCG
 		}
-	} 	
+	}
 
 }
 }

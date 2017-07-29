@@ -103,13 +103,13 @@ float4 _ShadowMapTexture_TexelSize;
 #if defined (SHADOWS_SPLIT_SPHERES)
 	#define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights_splitSpheres(wpos)
 #else
-	#define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights( wpos, z )
+	#define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights( wpos, z )
 #endif
 
 #if defined (SHADOWS_SINGLE_CASCADE)
-	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights)	getShadowCoord_SingleCascade(wpos)
+	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights) getShadowCoord_SingleCascade(wpos)
 #else
-	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights)	getShadowCoord(wpos,cascadeWeights)
+	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights) getShadowCoord(wpos,cascadeWeights)
 #endif
 
 // prototypes 
@@ -364,7 +364,7 @@ half unity_sampleShadowmap( float4 coord )
 }
 
 /**
- *	Hard shadow 
+ *  Hard shadow
  */
 fixed4 frag_hard (v2f i) : SV_Target
 {
@@ -382,7 +382,7 @@ fixed4 frag_hard (v2f i) : SV_Target
 }
 
 /**
- *	Soft Shadow (SM 3.0)
+ *  Soft Shadow (SM 3.0)
  */
 fixed4 frag_pcf5x5(v2f i) : SV_Target
 {

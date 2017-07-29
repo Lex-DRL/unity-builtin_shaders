@@ -64,10 +64,10 @@ half4 frag (unity_v2f_deferred i) : SV_Target
 
 	float blendDistance = unity_SpecCube1_ProbePosition.w; // will be set to blend distance for this probe
 	#ifdef UNITY_SPECCUBE_BOX_PROJECTION
-	d.probePosition[0]	= unity_SpecCube0_ProbePosition;
-	d.boxMin[0].xyz		= unity_SpecCube0_BoxMin - float4(blendDistance,blendDistance,blendDistance,0);
-	d.boxMin[0].w		= 1;  // 1 in .w allow to disable blending in UnityGI_IndirectSpecular call
-	d.boxMax[0].xyz		= unity_SpecCube0_BoxMax + float4(blendDistance,blendDistance,blendDistance,0);
+	d.probePosition[0]  = unity_SpecCube0_ProbePosition;
+	d.boxMin[0].xyz     = unity_SpecCube0_BoxMin - float4(blendDistance,blendDistance,blendDistance,0);
+	d.boxMin[0].w       = 1;  // 1 in .w allow to disable blending in UnityGI_IndirectSpecular call
+	d.boxMax[0].xyz     = unity_SpecCube0_BoxMax + float4(blendDistance,blendDistance,blendDistance,0);
 	#endif
 
 	Unity_GlossyEnvironmentData g = UnityGlossyEnvironmentSetup(data.smoothness, d.worldViewDir, data.normalWorld, data.specularColor);

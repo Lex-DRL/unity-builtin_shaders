@@ -36,7 +36,7 @@ CGPROGRAM
 sampler2D _CameraGBufferTexture0;
 sampler2D _CameraGBufferTexture1;
 sampler2D _CameraGBufferTexture2;
-		
+
 half4 CalculateLight (unity_v2f_deferred i)
 {
 	float3 wpos;
@@ -127,7 +127,7 @@ fixed4 frag (v2f i) : SV_Target
 {
 	return -log2(tex2D(_LightBuffer, i.texcoord));
 }
-ENDCG 
+ENDCG
 }
 
 }

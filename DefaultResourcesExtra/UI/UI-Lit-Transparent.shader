@@ -18,7 +18,7 @@ Shader "UI/Lit/Transparent"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
-	
+
 	SubShader
 	{
 		LOD 400
@@ -36,11 +36,11 @@ Shader "UI/Lit/Transparent"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
-		
+
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -55,7 +55,7 @@ Shader "UI/Lit/Transparent"
 			#include "UnityUI.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-	
+
 			struct appdata_t
 			{
 				float4 vertex : POSITION;
@@ -76,7 +76,7 @@ Shader "UI/Lit/Transparent"
 			sampler2D _MainTex;
 			fixed4 _Color;
 			fixed4 _Specular;
-	
+
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
 
@@ -85,18 +85,18 @@ Shader "UI/Lit/Transparent"
 				UNITY_INITIALIZE_OUTPUT(Input, o);
 				o.worldPosition = v.vertex;
 				v.vertex = o.worldPosition;
-				
+
 				v.color = v.color * _Color;
 			}
 
 			void surf (Input IN, inout SurfaceOutput o)
-			{			
+			{
 				fixed4 col = (tex2D(_MainTex, IN.uv_MainTex) + _TextureSampleAdd) * IN.color;
 				o.Albedo = col.rgb;
 				o.Alpha = col.a;
-				
+
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);
 				#endif
@@ -116,7 +116,7 @@ Shader "UI/Lit/Transparent"
 
 				// Blinn-Phong shading model
 				//half reflectiveFactor = max(0.0, dot(nNormal, normalize(lightDir + viewDir)));
-				
+
 				half diffuseFactor = max(0.0, dot(nNormal, lightDir));
 				half specularFactor = pow(reflectiveFactor, shininess) * s.Specular;
 
@@ -129,4 +129,3 @@ Shader "UI/Lit/Transparent"
 		ENDCG
 	}
 }
-

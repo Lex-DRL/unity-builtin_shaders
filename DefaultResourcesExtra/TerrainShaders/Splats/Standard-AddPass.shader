@@ -12,13 +12,13 @@ Shader "Hidden/TerrainEngine/Splatmap/Standard-AddPass" {
 		[HideInInspector] _Normal2 ("Normal 2 (B)", 2D) = "bump" {}
 		[HideInInspector] _Normal1 ("Normal 1 (G)", 2D) = "bump" {}
 		[HideInInspector] _Normal0 ("Normal 0 (R)", 2D) = "bump" {}
-		[HideInInspector] [Gamma] _Metallic0 ("Metallic 0", Range(0.0, 1.0)) = 0.0	
-		[HideInInspector] [Gamma] _Metallic1 ("Metallic 1", Range(0.0, 1.0)) = 0.0	
-		[HideInInspector] [Gamma] _Metallic2 ("Metallic 2", Range(0.0, 1.0)) = 0.0	
+		[HideInInspector] [Gamma] _Metallic0 ("Metallic 0", Range(0.0, 1.0)) = 0.0
+		[HideInInspector] [Gamma] _Metallic1 ("Metallic 1", Range(0.0, 1.0)) = 0.0
+		[HideInInspector] [Gamma] _Metallic2 ("Metallic 2", Range(0.0, 1.0)) = 0.0
 		[HideInInspector] [Gamma] _Metallic3 ("Metallic 3", Range(0.0, 1.0)) = 0.0
-		[HideInInspector] _Smoothness0 ("Smoothness 0", Range(0.0, 1.0)) = 1.0	
-		[HideInInspector] _Smoothness1 ("Smoothness 1", Range(0.0, 1.0)) = 1.0	
-		[HideInInspector] _Smoothness2 ("Smoothness 2", Range(0.0, 1.0)) = 1.0	
+		[HideInInspector] _Smoothness0 ("Smoothness 0", Range(0.0, 1.0)) = 1.0
+		[HideInInspector] _Smoothness1 ("Smoothness 1", Range(0.0, 1.0)) = 1.0
+		[HideInInspector] _Smoothness2 ("Smoothness 2", Range(0.0, 1.0)) = 1.0
 		[HideInInspector] _Smoothness3 ("Smoothness 3", Range(0.0, 1.0)) = 1.0
 	}
 
@@ -56,7 +56,7 @@ Shader "Hidden/TerrainEngine/Splatmap/Standard-AddPass" {
 		half _Metallic1;
 		half _Metallic2;
 		half _Metallic3;
-		
+
 		half _Smoothness0;
 		half _Smoothness1;
 		half _Smoothness2;

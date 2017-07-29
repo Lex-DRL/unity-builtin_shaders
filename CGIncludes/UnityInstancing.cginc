@@ -191,8 +191,8 @@
 		#define UNITY_INSTANCING_CBUFFER_END
 		#define UNITY_DEFINE_INSTANCED_PROP(type, name) static type name;
 	#else
-	#define UNITY_INSTANCING_CBUFFER_START(name)    CBUFFER_START(name)
-	#define UNITY_INSTANCING_CBUFFER_END            CBUFFER_END
+		#define UNITY_INSTANCING_CBUFFER_START(name)    CBUFFER_START(name)
+		#define UNITY_INSTANCING_CBUFFER_END            CBUFFER_END
 		#define UNITY_DEFINE_INSTANCED_PROP(type, name) type name;
 	#endif
 

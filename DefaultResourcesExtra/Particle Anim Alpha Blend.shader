@@ -15,19 +15,19 @@ Category {
 
 	SubShader {
 		Pass {
-		
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
 			#pragma multi_compile_particles
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			sampler2D _MainTex;
 			fixed4 _TintColor;
-			
+
 			struct appdata_t {
 				float4 vertex : POSITION;
 				fixed4 color : COLOR;
@@ -48,14 +48,14 @@ Category {
 				#endif
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
-			
+
 			float4 _MainTex_ST;
 
 			v2f vert (appdata_t v)
 			{
 				v2f o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); 
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				#ifdef SOFTPARTICLES_ON
 				o.projPos = ComputeScreenPos (o.vertex);
@@ -71,7 +71,7 @@ Category {
 
 			UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 			float _InvFade;
-			
+
 			fixed4 frag (v2f i) : SV_Target
 			{
 				#ifdef SOFTPARTICLES_ON
@@ -80,15 +80,15 @@ Category {
 				float fade = saturate (_InvFade * (sceneZ-partZ));
 				i.color.a *= fade;
 				#endif
-				
+
 				fixed4 colA = tex2D(_MainTex, i.texcoord);
 				fixed4 colB = tex2D(_MainTex, i.texcoord2);
 				fixed4 col = 2.0f * i.color * lerp(colA, colB, i.blend);
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
 			}
-			ENDCG 
+			ENDCG
 		}
-	}	
+	}
 }
 }

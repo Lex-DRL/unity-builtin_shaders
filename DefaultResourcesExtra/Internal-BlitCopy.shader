@@ -6,9 +6,9 @@ Shader "Hidden/BlitCopy" {
 		_MainTex ("Texture", any) = "" {}
 		_Color("Multiplicative color", Color) = (1.0, 1.0, 1.0, 1.0)
 	}
-	SubShader { 
+	SubShader {
 		Pass {
- 			ZTest Always Cull Off ZWrite Off
+			ZTest Always Cull Off ZWrite Off
 
 			CGPROGRAM
 			#pragma vertex vert
@@ -43,9 +43,9 @@ Shader "Hidden/BlitCopy" {
 			{
 				return tex2D(_MainTex, i.texcoord) * _Color;
 			}
-			ENDCG 
+			ENDCG
 
 		}
 	}
-	Fallback Off 
+	Fallback Off
 }

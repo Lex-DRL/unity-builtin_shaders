@@ -12,7 +12,7 @@ Shader "UI/Lit/Detail"
 		_DetailBump ("Detail Bump Map", 2D) = "bump" {}
 		_Strength ("Detail Strength", Range(0.0, 1.0)) = 0.2
 		_Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -23,7 +23,7 @@ Shader "UI/Lit/Detail"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
-	
+
 	SubShader
 	{
 		LOD 100
@@ -40,11 +40,11 @@ Shader "UI/Lit/Detail"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
-		
+
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -54,12 +54,12 @@ Shader "UI/Lit/Detail"
 
 		CGPROGRAM
 			#pragma surface surf PPL alpha noshadow novertexlights nolightmap vertex:vert nofog
-			
+
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-	
+
 			struct appdata_t
 			{
 				float4 vertex : POSITION;
@@ -70,7 +70,7 @@ Shader "UI/Lit/Detail"
 				float4 tangent : TANGENT;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
-	
+
 			struct Input
 			{
 				float2 uv_MainTex;
@@ -101,7 +101,7 @@ Shader "UI/Lit/Detail"
 				v.texcoord1.xy *= _DetailTex_TexelSize.xy;
 				v.color = v.color * _Color;
 			}
-				
+
 			void surf (Input IN, inout SurfaceOutput o)
 			{
 				fixed4 col = tex2D(_MainTex, IN.uv_MainTex) + _TextureSampleAdd;
@@ -125,7 +125,7 @@ Shader "UI/Lit/Detail"
 				o.Alpha = col.a;
 
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);
 				#endif
@@ -144,7 +144,7 @@ Shader "UI/Lit/Detail"
 
 				// Blinn-Phong shading model
 				//half reflectiveFactor = max(0.0, dot(s.Normal, normalize(lightDir + viewDir)));
-				
+
 				half diffuseFactor = max(0.0, dot(s.Normal, lightDir));
 				half specularFactor = pow(reflectiveFactor, shininess) * s.Specular;
 

@@ -12,11 +12,11 @@ Properties {
 SubShader {
 	Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 	LOD 100
-	
+
 	ZWrite Off
-	Blend SrcAlpha OneMinusSrcAlpha 
+	Blend SrcAlpha OneMinusSrcAlpha
 	ColorMask RGB
-		
+
 	// Non-lightmapped
 	Pass {
 		Tags { "LightMode" = "Vertex" }
@@ -25,19 +25,19 @@ SubShader {
 			Ambient [_Color]
 			Shininess [_Shininess]
 			Specular [_SpecColor]
-			Emission [_Emission]	
+			Emission [_Emission]
 		}
 		Lighting On
 		SeparateSpecular On
 		SetTexture [_MainTex] {
 			Combine texture * primary DOUBLE, texture * primary
-		} 
+		}
 	}
-	
+
 	// Lightmapped, encoded as dLDR
 	Pass {
 		Tags { "LightMode" = "VertexLM" }
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
@@ -53,11 +53,11 @@ SubShader {
 			combine texture * previous DOUBLE, texture * primary
 		}
 	}
-	
+
 	// Lightmapped, encoded as RGBM
 	Pass {
 		Tags { "LightMode" = "VertexLMRGBM" }
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
@@ -65,7 +65,7 @@ SubShader {
 			Bind "texcoord1", texcoord1 // unused
 			Bind "texcoord", texcoord2 // main uses 1st uv
 		}
-		
+
 		SetTexture [unity_Lightmap] {
 			matrix [unity_LightmapMatrix]
 			combine texture * texture alpha DOUBLE

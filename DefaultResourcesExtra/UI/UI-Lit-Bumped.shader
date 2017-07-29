@@ -9,7 +9,7 @@ Shader "UI/Lit/Bumped"
 		_MainTex ("Diffuse (RGB), Alpha (A)", 2D) = "white" {}
 		[NoScaleOffset] _MainBump ("Diffuse Bump Map", 2D) = "bump" {}
 		_Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
-		
+
 		_StencilComp ("Stencil Comparison", Float) = 8
 		_Stencil ("Stencil ID", Float) = 0
 		_StencilOp ("Stencil Operation", Float) = 0
@@ -20,7 +20,7 @@ Shader "UI/Lit/Bumped"
 
 		[Toggle(UNITY_UI_ALPHACLIP)] _UseUIAlphaClip ("Use Alpha Clip", Float) = 0
 	}
-	
+
 	SubShader
 	{
 		LOD 400
@@ -37,11 +37,11 @@ Shader "UI/Lit/Bumped"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
-		
+
 		Cull Off
 		Lighting Off
 		ZWrite Off
@@ -56,7 +56,7 @@ Shader "UI/Lit/Bumped"
 			#include "UnityUI.cginc"
 
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
-	
+
 			struct appdata_t
 			{
 				float4 vertex : POSITION;
@@ -83,7 +83,7 @@ Shader "UI/Lit/Bumped"
 			half _Shininess;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
-			
+
 			void vert (inout appdata_t v, out Input o)
 			{
 				UNITY_INITIALIZE_OUTPUT(Input, o);
@@ -103,9 +103,9 @@ Shader "UI/Lit/Bumped"
 				o.Specular = _Specular.a;
 				o.Gloss = _Shininess;
 				o.Alpha = col.a;
-				
+
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
-				
+
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);
 				#endif
@@ -124,7 +124,7 @@ Shader "UI/Lit/Bumped"
 
 				// Blinn-Phong shading model
 				//half reflectiveFactor = max(0.0, dot(s.Normal, normalize(lightDir + viewDir)));
-				
+
 				half diffuseFactor = max(0.0, dot(s.Normal, lightDir));
 				half specularFactor = pow(reflectiveFactor, shininess) * s.Specular;
 

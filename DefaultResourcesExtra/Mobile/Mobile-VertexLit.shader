@@ -13,33 +13,33 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 80
-	
+
 	// Non-lightmapped
 	Pass {
 		Tags { "LightMode" = "Vertex" }
-		
+
 		Material {
 			Diffuse (1,1,1,1)
 			Ambient (1,1,1,1)
-		} 
+		}
 		Lighting On
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			Combine texture * primary DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
-		} 
+		}
 	}
-	
+
 	// Lightmapped, encoded as dLDR
 	Pass {
 		Tags { "LightMode" = "VertexLM" }
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
 			Bind "texcoord1", texcoord0 // lightmap uses 2nd uv
 			Bind "texcoord", texcoord1 // main uses 1st uv
 		}
-		
+
 		SetTexture [unity_Lightmap] {
 			matrix [unity_LightmapMatrix]
 			combine texture
@@ -49,18 +49,18 @@ SubShader {
 			combine texture * previous DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
 		}
 	}
-	
+
 	// Lightmapped, encoded as RGBM
 	Pass {
 		Tags { "LightMode" = "VertexLMRGBM" }
-		
+
 		BindChannels {
 			Bind "Vertex", vertex
 			Bind "normal", normal
 			Bind "texcoord1", texcoord0 // lightmap uses 2nd uv
 			Bind "texcoord", texcoord1 // main uses 1st uv
 		}
-		
+
 		SetTexture [unity_Lightmap] {
 			matrix [unity_LightmapMatrix]
 			combine texture * texture alpha DOUBLE
@@ -69,14 +69,14 @@ SubShader {
 			constantColor (1,1,1,1)
 			combine texture * previous QUAD, constant // UNITY_OPAQUE_ALPHA_FFP
 		}
-	}	
-	
+	}
+
 	// Pass to render object as a shadow caster
-	Pass 
+	Pass
 	{
 		Name "ShadowCaster"
 		Tags { "LightMode" = "ShadowCaster" }
-		
+
 		ZWrite On ZTest LEqual Cull Off
 
 		CGPROGRAM
@@ -86,7 +86,7 @@ SubShader {
 		#pragma multi_compile_shadowcaster
 		#include "UnityCG.cginc"
 
-		struct v2f { 
+		struct v2f {
 			V2F_SHADOW_CASTER;
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
@@ -105,6 +105,6 @@ SubShader {
 			SHADOW_CASTER_FRAGMENT(i)
 		}
 		ENDCG
-	}	
+	}
 }
 }

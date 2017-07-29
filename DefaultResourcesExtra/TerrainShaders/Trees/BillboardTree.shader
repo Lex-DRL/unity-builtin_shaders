@@ -4,15 +4,15 @@ Shader "Hidden/TerrainEngine/BillboardTree" {
 	Properties {
 		_MainTex ("Base (RGB) Alpha (A)", 2D) = "white" {}
 	}
-	
+
 	SubShader {
 		Tags { "Queue" = "Transparent-100" "IgnoreProjector"="True" "RenderType"="TreeBillboard" }
-		
+
 		Pass {
 			ColorMask rgb
 			Blend SrcAlpha OneMinusSrcAlpha
 			ZWrite Off Cull Off
-			
+
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -50,7 +50,7 @@ Shader "Hidden/TerrainEngine/BillboardTree" {
 				UNITY_APPLY_FOG(input.fogCoord, col);
 				return col;
 			}
-			ENDCG			
+			ENDCG
 		}
 	}
 

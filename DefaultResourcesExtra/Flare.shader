@@ -14,7 +14,7 @@ SubShader {
 	Cull Off Lighting Off ZWrite Off Ztest Always
 	Blend One One
 
-	Pass {	
+	Pass {
 		CGPROGRAM
 		#pragma vertex vert
 		#pragma fragment frag
@@ -24,7 +24,7 @@ SubShader {
 
 		sampler2D _MainTex;
 		fixed4 _TintColor;
-		
+
 		struct appdata_t {
 			float4 vertex : POSITION;
 			fixed4 color : COLOR;
@@ -40,7 +40,7 @@ SubShader {
 		};
 
 		float4 _MainTex_ST;
-		
+
 		v2f vert (appdata_t v)
 		{
 			v2f o;
@@ -60,8 +60,8 @@ SubShader {
 			col.a = tex.a;
 			return col;
 		}
-		ENDCG 
+		ENDCG
 	}
-} 	
+}
 
 }

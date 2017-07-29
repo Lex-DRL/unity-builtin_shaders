@@ -13,7 +13,7 @@ Properties {
 SubShader {
 	LOD 100
 	Tags { "RenderType"="Opaque" }
-	
+
 	Pass {
 		Name "BASE"
 		Tags {"LightMode" = "Vertex"}
@@ -38,7 +38,7 @@ SubShader {
 	// This pass it not used during regular rendering.
 	Pass
 	{
-		Name "META" 
+		Name "META"
 		Tags { "LightMode" = "Meta" }
 		CGPROGRAM
 		#pragma vertex vert

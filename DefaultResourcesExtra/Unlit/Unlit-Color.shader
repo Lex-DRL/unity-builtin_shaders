@@ -13,14 +13,14 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 100
-	
-	Pass {  
+
+	Pass {
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
 			#pragma target 2.0
 			#pragma multi_compile_fog
-			
+
 			#include "UnityCG.cginc"
 
 			struct appdata_t {
@@ -35,7 +35,7 @@ SubShader {
 			};
 
 			fixed4 _Color;
-			
+
 			v2f vert (appdata_t v)
 			{
 				v2f o;
@@ -45,7 +45,7 @@ SubShader {
 				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
-			
+
 			fixed4 frag (v2f i) : COLOR
 			{
 				fixed4 col = _Color;

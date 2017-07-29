@@ -13,7 +13,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
 	LOD 400
-	
+
 CGPROGRAM
 #pragma surface surf BlinnPhong alphatest:_Cutoff
 #pragma target 3.0

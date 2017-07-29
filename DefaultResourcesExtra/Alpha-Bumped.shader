@@ -10,7 +10,7 @@ Properties {
 SubShader {
 	Tags {"Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent"}
 	LOD 300
-	
+
 CGPROGRAM
 #pragma surface surf Lambert alpha:fade
 

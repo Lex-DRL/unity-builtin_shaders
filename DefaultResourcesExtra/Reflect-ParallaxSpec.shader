@@ -15,7 +15,7 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 600
-	
+
 CGPROGRAM
 #pragma surface surf BlinnPhong
 #pragma target 3.0
@@ -43,14 +43,14 @@ void surf (Input IN, inout SurfaceOutput o) {
 	float2 offset = ParallaxOffset (h, _Parallax, IN.viewDir);
 	IN.uv_MainTex += offset;
 	IN.uv_BumpMap += offset;
-	
+
 	fixed4 tex = tex2D(_MainTex, IN.uv_MainTex);
 	o.Albedo = tex.rgb * _Color.rgb;
 	o.Gloss = tex.a;
 	o.Specular = _Shininess;
-	
+
 	o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
-	
+
 	float3 worldRefl = WorldReflectionVector (IN, o.Normal);
 	fixed4 reflcol = texCUBE (_Cube, worldRefl);
 	reflcol *= tex.a;

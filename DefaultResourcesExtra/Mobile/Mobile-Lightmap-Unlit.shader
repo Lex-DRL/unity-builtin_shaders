@@ -13,7 +13,7 @@ Properties {
 SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 100
-	
+
 	// Non-lightmapped
 	Pass {
 		Tags { "LightMode" = "Vertex" }
@@ -21,9 +21,9 @@ SubShader {
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			combine texture, constant // UNITY_OPAQUE_ALPHA_FFP
-		}  
+		}
 	}
-	
+
 	// Lightmapped, encoded as dLDR
 	Pass {
 		Tags { "LightMode" = "VertexLM" }
@@ -34,7 +34,7 @@ SubShader {
 			Bind "texcoord1", texcoord0 // lightmap uses 2nd uv
 			Bind "texcoord", texcoord1 // main uses 1st uv
 		}
-		
+
 		SetTexture [unity_Lightmap] {
 			matrix [unity_LightmapMatrix]
 			combine texture
@@ -44,7 +44,7 @@ SubShader {
 			combine texture * previous DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
 		}
 	}
-	
+
 	// Lightmapped, encoded as RGBM
 	Pass {
 		Tags { "LIGHTMODE"="VertexLMRGBM" "RenderType"="Opaque" }
@@ -121,7 +121,7 @@ SubShader {
 				tex = tex2D(_MainTex, IN.uv1.xy);
 				col.rgb = tex.rgb * col.rgb;
 				col.a = 1;
-		
+
 				// fog
 			#if USING_FOG
 				col.rgb = lerp(unity_FogColor.rgb, col.rgb, IN.fog);
@@ -133,6 +133,3 @@ SubShader {
 	}
 }
 }
-
-
-

@@ -32,7 +32,7 @@ SubShader {
 			Bind "texcoord1", texcoord1 // lightmap uses 2nd uv
 			Bind "texcoord", texcoord2 // main uses 1st uv
 		}
-		
+
 		SetTexture [_LightMap] {
 			constantColor [_Color]
 			combine texture * constant

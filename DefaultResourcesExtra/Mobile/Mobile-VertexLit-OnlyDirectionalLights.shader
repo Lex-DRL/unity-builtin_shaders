@@ -14,7 +14,7 @@ Shader "Mobile/VertexLit (Only Directional Lights)" {
 	SubShader {
 		Tags { "RenderType"="Opaque" }
 		LOD 80
-		
+
 	Pass {
 		Name "FORWARD"
 		Tags { "LightMode" = "ForwardBase" }
@@ -31,7 +31,7 @@ CGPROGRAM
 
 		inline float3 LightingLambertVS (float3 normal, float3 lightDir)
 		{
-			fixed diff = max (0, dot (normal, lightDir));			
+			fixed diff = max (0, dot (normal, lightDir));
 			return _LightColor0.rgb * diff;
 		}
 
@@ -78,10 +78,10 @@ v2f_surf vert_surf (appdata_full v)
 	o.normal = worldN;
 	#endif
 	#ifndef LIGHTMAP_ON
-	
+
 	o.vlight = ShadeSH9 (float4(worldN,1.0));
 	o.vlight += LightingLambertVS (worldN, _WorldSpaceLightPos0.xyz);
-	
+
 	#endif
 	TRANSFER_VERTEX_TO_FRAGMENT(o);
 	UNITY_TRANSFER_FOG(o,o.pos);
