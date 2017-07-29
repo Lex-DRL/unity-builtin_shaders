@@ -28,9 +28,9 @@ Shader "Nature/SpeedTree"
 		Cull [_Cull]
 
 		CGPROGRAM
-			#pragma surface surf Lambert vertex:SpeedTreeVert nodirlightmap nodynlightmap noshadowmask
+			#pragma surface surf Lambert vertex:SpeedTreeVert nodirlightmap nodynlightmap noshadowmask dithercrossfade
 			#pragma target 3.0
-			#pragma multi_compile __ LOD_FADE_PERCENTAGE LOD_FADE_CROSSFADE
+			#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE
 			#pragma instancing_options assumeuniformscaling lodfade maxcount:50
 			#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
 			#pragma shader_feature EFFECT_BUMP
@@ -54,7 +54,8 @@ Shader "Nature/SpeedTree"
 				#pragma vertex vert
 				#pragma fragment frag
 				#pragma target 3.0
-				#pragma multi_compile __ LOD_FADE_PERCENTAGE LOD_FADE_CROSSFADE
+				#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE LOD_FADE_CROSSFADE
+				#pragma multi_compile_fragment __ LOD_FADE_CROSSFADE
 				#pragma multi_compile_instancing
 				#pragma instancing_options assumeuniformscaling lodfade maxcount:50
 				#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
@@ -62,13 +63,12 @@ Shader "Nature/SpeedTree"
 				#define ENABLE_WIND
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f 
+				struct v2f
 				{
 					V2F_SHADOW_CASTER;
 					#ifdef SPEEDTREE_ALPHATEST
 						float2 uv : TEXCOORD1;
 					#endif
-					UNITY_DITHER_CROSSFADE_COORDS_IDX(2)
 					UNITY_VERTEX_INPUT_INSTANCE_ID
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
@@ -84,7 +84,6 @@ Shader "Nature/SpeedTree"
 					#endif
 					OffsetSpeedTreeVertex(v, unity_LODFade.x);
 					TRANSFER_SHADOW_CASTER_NORMALOFFSET(o)
-					UNITY_TRANSFER_DITHER_CROSSFADE_HPOS(o, o.pos)
 
 					return o;
 				}
@@ -95,7 +94,7 @@ Shader "Nature/SpeedTree"
 					#ifdef SPEEDTREE_ALPHATEST
 						clip(tex2D(_MainTex, i.uv).a * _Color.a - _Cutoff);
 					#endif
-					UNITY_APPLY_DITHER_CROSSFADE(i)
+					UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
 					SHADOW_CASTER_FRAGMENT(i)
 				}
 			ENDCG
@@ -110,7 +109,8 @@ Shader "Nature/SpeedTree"
 				#pragma fragment frag
 				#pragma target 3.0
 				#pragma multi_compile_fog
-				#pragma multi_compile __ LOD_FADE_PERCENTAGE LOD_FADE_CROSSFADE
+				#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE LOD_FADE_CROSSFADE
+				#pragma multi_compile_fragment __ LOD_FADE_CROSSFADE
 				#pragma multi_compile_instancing
 				#pragma instancing_options assumeuniformscaling lodfade maxcount:50
 				#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
@@ -118,11 +118,11 @@ Shader "Nature/SpeedTree"
 				#define ENABLE_WIND
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f 
+				struct v2f
 				{
-					float4 vertex	: SV_POSITION;
+					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
-					Input data		: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_INPUT_INSTANCE_ID
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
@@ -145,6 +145,7 @@ Shader "Nature/SpeedTree"
 					UNITY_SETUP_INSTANCE_ID(i);
 					SpeedTreeFragOut o;
 					SpeedTreeFrag(i.data, o);
+					UNITY_APPLY_DITHER_CROSSFADE(i.vertex.xy);
 					fixed4 c = fixed4(o.Albedo, o.Alpha);
 					UNITY_APPLY_FOG(i.fogCoord, c);
 					return c;
@@ -153,7 +154,7 @@ Shader "Nature/SpeedTree"
 		}
 	}
 
-	// targeting SM2.0: Cross-fading, Normal-mapping, Hue variation and Wind animation are turned off for less instructions
+	// targeting SM2.0: Normal-mapping, Hue variation and Wind animation are turned off for less instructions
 	SubShader
 	{
 		Tags
@@ -168,7 +169,7 @@ Shader "Nature/SpeedTree"
 
 		CGPROGRAM
 			#pragma surface surf Lambert vertex:SpeedTreeVert nodirlightmap nodynlightmap noshadowmask
-			#pragma multi_compile __ LOD_FADE_PERCENTAGE
+			#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE
 			#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
 			#include "SpeedTreeCommon.cginc"
 
@@ -187,12 +188,12 @@ Shader "Nature/SpeedTree"
 			CGPROGRAM
 				#pragma vertex vert
 				#pragma fragment frag
-				#pragma multi_compile __ LOD_FADE_PERCENTAGE
+				#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE
 				#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
 				#pragma multi_compile_shadowcaster
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f 
+				struct v2f
 				{
 					V2F_SHADOW_CASTER;
 					#ifdef SPEEDTREE_ALPHATEST
@@ -229,15 +230,15 @@ Shader "Nature/SpeedTree"
 				#pragma vertex vert
 				#pragma fragment frag
 				#pragma multi_compile_fog
-				#pragma multi_compile __ LOD_FADE_PERCENTAGE
+				#pragma multi_compile_vertex __ LOD_FADE_PERCENTAGE
 				#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f 
+				struct v2f
 				{
-					float4 vertex	: SV_POSITION;
+					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
-					Input data		: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
 

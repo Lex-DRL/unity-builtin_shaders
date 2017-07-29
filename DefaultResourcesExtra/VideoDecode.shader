@@ -89,6 +89,27 @@ Shader "Hidden/VideoDecode"
 			));
 		}
 
+		fixed4 fragmentNV12RGBOne(v2f i) : SV_Target
+		{
+			fixed4 result;
+			if (i.texcoord.x < 0.0f || i.texcoord.y < 0.0f || i.texcoord.x > 1.0f || i.texcoord.y > 1.0f)
+			{
+				result = fixed4(0.0f, 0.0f, 0.0f, 1.0f);
+			}
+			else
+			{
+				float3 yCbCr = float3( tex2D(_MainTex, i.texcoord).a - 0.0625,
+									   tex2D(_SecondTex, i.texcoord).r - 0.5,
+									   tex2D(_SecondTex, i.texcoord).g - 0.5 );
+
+				result = fixed4( dot(float3(1.1644f, 0.0f, 1.7927f), yCbCr),        // R
+								 dot(float3(1.1644f, -0.2133f, -0.5329f), yCbCr),   // G
+								 dot(float3(1.1644f, 2.1124f, 0.0f), yCbCr),        // B
+								 1.0f );
+			}
+			return AdjustForColorSpace(result);
+		}
+
 		fixed4 fragmentRGB_FullAlpha(v2f i) : SV_Target
 		{
 			float2 tc = float2(0.5f * i.texcoord.x, i.texcoord.y);
@@ -249,6 +270,17 @@ Shader "Hidden/VideoDecode"
 			CGPROGRAM
 			#pragma vertex vertexFlip
 			#pragma fragment fragmentSemiPRGBA
+			ENDCG
+		}
+
+		// 8 - NV12 format Y plane (_MainTex / 8-bit) followed by interleaved U/V plane (_SecondTex / 8-bit each component) with 2x2 subsampling (so half width/height)
+		Pass
+		{
+			Name "Flip_NV12_To_RGB1"
+			ZTest Always Cull Off ZWrite Off Blend Off
+			CGPROGRAM
+			#pragma vertex vertexFlip
+			#pragma fragment fragmentNV12RGBOne
 			ENDCG
 		}
 	}

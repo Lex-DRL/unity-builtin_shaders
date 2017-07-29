@@ -4,6 +4,8 @@
 #define UNITY_STANDARD_CORE_INCLUDED
 
 #include "UnityCG.cginc"
+#include "UnityShaderVariables.cginc"
+#include "UnityInstancing.cginc"
 #include "UnityStandardConfig.cginc"
 #include "UnityStandardInput.cginc"
 #include "UnityPBSLighting.cginc"
@@ -222,7 +224,8 @@ inline FragmentCommonData MetallicSetup (float4 i_tex)
 	return o;
 }
 
-inline FragmentCommonData FragmentSetup (float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], half3 i_posWorld)
+// parallax transformed texcoord is used to sample occlusion
+inline FragmentCommonData FragmentSetup (inout float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], half3 i_posWorld)
 {
 	i_tex = Parallax(i_tex, i_viewDirForParallax);
 
@@ -334,7 +337,7 @@ inline half4 VertexGIForward(VertexInput v, float3 posWorld, half3 normalWorld)
 
 struct VertexOutputForwardBase
 {
-	float4 pos                          : SV_POSITION;
+	UNITY_POSITION(pos);
 	float4 tex                          : TEXCOORD0;
 	half3 eyeVec                        : TEXCOORD1;
 	half4 tangentToWorldAndPackedData[3]    : TEXCOORD2;    // [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
@@ -406,6 +409,8 @@ VertexOutputForwardBase vertForwardBase (VertexInput v)
 
 half4 fragForwardBaseInternal (VertexOutputForwardBase i)
 {
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
+
 	FRAGMENT_SETUP(s)
 
 	UNITY_SETUP_INSTANCE_ID(i);
@@ -434,7 +439,7 @@ half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target   // backward comp
 
 struct VertexOutputForwardAdd
 {
-	float4 pos                          : SV_POSITION;
+	UNITY_POSITION(pos);
 	float4 tex                          : TEXCOORD0;
 	half3 eyeVec                        : TEXCOORD1;
 	half4 tangentToWorldAndLightDir[3]  : TEXCOORD2;    // [3x3:tangentToWorld | 1x3:lightDir]
@@ -498,6 +503,8 @@ VertexOutputForwardAdd vertForwardAdd (VertexInput v)
 
 half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 {
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
+
 	FRAGMENT_SETUP_FWDADD(s)
 
 	UNITY_LIGHT_ATTENUATION(atten, i, s.posWorld)
@@ -520,7 +527,7 @@ half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target     // backward comp
 
 struct VertexOutputDeferred
 {
-	float4 pos                          : SV_POSITION;
+	UNITY_POSITION(pos);
 	float4 tex                          : TEXCOORD0;
 	half3 eyeVec                        : TEXCOORD1;
 	half4 tangentToWorldAndPackedData[3]: TEXCOORD2;    // [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
@@ -611,6 +618,8 @@ void fragDeferred (
 		#endif
 		return;
 	#endif
+
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
 
 	FRAGMENT_SETUP(s)
 

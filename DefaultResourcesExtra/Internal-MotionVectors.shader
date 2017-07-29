@@ -8,8 +8,14 @@ Shader "Hidden/Internal-MotionVectors"
 		#include "UnityCG.cginc"
 
 		// Object rendering things
+
+#if defined(USING_STEREO_MATRICES)
+		float4x4 _StereoNonJitteredVP[2];
+		float4x4 _StereoPreviousVP[2];
+#else
 		float4x4 _NonJitteredVP;
 		float4x4 _PreviousVP;
+#endif
 		float4x4 _PreviousM;
 		bool _HasLastPositionData;
 		bool _ForceNoMotion;
@@ -44,8 +50,14 @@ Shader "Hidden/Internal-MotionVectors"
 #else
 			o.pos.z += _MotionVectorDepthBias * o.pos.w;
 #endif
+
+#if defined(USING_STEREO_MATRICES)
+			o.transferPos = mul(_StereoNonJitteredVP[unity_StereoEyeIndex], mul(unity_ObjectToWorld, v.vertex));
+			o.transferPosOld = mul(_StereoPreviousVP[unity_StereoEyeIndex], mul(_PreviousM, _HasLastPositionData ? float4(v.oldPos, 1) : v.vertex));
+#else
 			o.transferPos = mul(_NonJitteredVP, mul(unity_ObjectToWorld, v.vertex));
 			o.transferPosOld = mul(_PreviousVP, mul(_PreviousM, _HasLastPositionData ? float4(v.oldPos, 1) : v.vertex));
+#endif
 			return o;
 		}
 
@@ -108,10 +120,14 @@ Shader "Hidden/Internal-MotionVectors"
 			float3 vPos = ray * depth;
 			float4 worldPos = mul(unity_CameraToWorld, float4(vPos, 1.0));
 
+#if defined(USING_STEREO_MATRICES)
+			float4 prevClipPos = mul(_StereoPreviousVP[unity_StereoEyeIndex], worldPos);
+			float4 curClipPos = mul(_StereoNonJitteredVP[unity_StereoEyeIndex], worldPos);
+#else
 			float4 prevClipPos = mul(_PreviousVP, worldPos);
-			float2 prevHPos = prevClipPos.xy / prevClipPos.w;
-
 			float4 curClipPos = mul(_NonJitteredVP, worldPos);
+#endif
+			float2 prevHPos = prevClipPos.xy / prevClipPos.w;
 			float2 curHPos = curClipPos.xy / curClipPos.w;
 
 			// V is the viewport position at this pixel in the range 0 to 1.

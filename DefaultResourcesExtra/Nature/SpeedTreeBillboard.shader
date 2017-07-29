@@ -25,9 +25,8 @@ Shader "Nature/SpeedTree Billboard"
 		LOD 400
 
 		CGPROGRAM
-			#pragma surface surf Lambert vertex:SpeedTreeBillboardVert nolightmap addshadow noinstancing
+			#pragma surface surf Lambert vertex:SpeedTreeBillboardVert nolightmap addshadow noinstancing dithercrossfade
 			#pragma target 3.0
-			#pragma multi_compile __ LOD_FADE_CROSSFADE
 			#pragma multi_compile __ BILLBOARD_FACE_CAMERA_POS
 			#pragma shader_feature EFFECT_BUMP
 			#pragma shader_feature EFFECT_HUE_VARIATION
@@ -59,7 +58,7 @@ Shader "Nature/SpeedTree Billboard"
 
 				struct v2f
 				{
-					float4 vertex	: SV_POSITION;
+					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
 					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
@@ -81,6 +80,7 @@ Shader "Nature/SpeedTree Billboard"
 				{
 					SpeedTreeFragOut o;
 					SpeedTreeFrag(i.data, o);
+					UNITY_APPLY_DITHER_CROSSFADE(i.vertex.xy);
 					fixed4 c = fixed4(o.Albedo, o.Alpha);
 					UNITY_APPLY_FOG(i.fogCoord, c);
 					return c;
@@ -89,7 +89,7 @@ Shader "Nature/SpeedTree Billboard"
 		}
 	}
 
-	// targeting SM2.0: Cross-fading, Hue variation and Camera-facing billboard are turned off for less instructions
+	// targeting SM2.0: Hue variation and Camera-facing billboard are turned off for less instructions
 	SubShader
 	{
 		Tags
@@ -125,7 +125,7 @@ Shader "Nature/SpeedTree Billboard"
 
 				struct v2f
 				{
-					float4 vertex	: SV_POSITION;
+					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
 					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
