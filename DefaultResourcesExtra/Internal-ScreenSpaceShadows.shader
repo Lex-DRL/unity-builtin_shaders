@@ -188,9 +188,9 @@ float2 getReceiverPlaneDepthBias (float3 shadowCoord)
 	float3 dy = ddy (shadowCoord);
 
 	biasUV.x = dy.y * dx.z - dx.y * dy.z;
-    biasUV.y = dx.x * dy.z - dy.x * dx.z;
-    biasUV *= 1.0f / ((dx.x * dy.y) - (dx.y * dy.x));
-    return biasUV;
+	biasUV.y = dx.x * dy.z - dy.x * dx.z;
+	biasUV *= 1.0f / ((dx.x * dy.y) - (dx.y * dy.x));
+	return biasUV;
 }
 
 /**
@@ -268,18 +268,18 @@ half sampleShadowmap_PCF3x3 (float4 coord, float2 receiverPlaneDepthBias)
 	float2 v = float2( (2-st.y) / vw.x - 1, (st.y)/vw.y + 1);
 	v *= _ShadowMapTexture_TexelSize.y;
 
-    half shadow;
+	half shadow;
 	half sum = 0;
 
-    sum += uw[0] * vw[0] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[0], v[0]), coord.z, receiverPlaneDepthBias) );
-    sum += uw[1] * vw[0] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[1], v[0]), coord.z, receiverPlaneDepthBias) );
-    sum += uw[0] * vw[1] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[0], v[1]), coord.z, receiverPlaneDepthBias) );
-    sum += uw[1] * vw[1] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[1], v[1]), coord.z, receiverPlaneDepthBias) );
+	sum += uw[0] * vw[0] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[0], v[0]), coord.z, receiverPlaneDepthBias) );
+	sum += uw[1] * vw[0] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[1], v[0]), coord.z, receiverPlaneDepthBias) );
+	sum += uw[0] * vw[1] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[0], v[1]), coord.z, receiverPlaneDepthBias) );
+	sum += uw[1] * vw[1] * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u[1], v[1]), coord.z, receiverPlaneDepthBias) );
 
-    shadow = sum / 16.0f;
-    shadow = lerp (_LightShadowData.r, 1.0f, shadow);
+	shadow = sum / 16.0f;
+	shadow = lerp (_LightShadowData.r, 1.0f, shadow);
 
-    return shadow;
+	return shadow;
 }
 
 /**
@@ -311,20 +311,20 @@ half sampleShadowmap_PCF5x5 (float4 coord, float2 receiverPlaneDepthBias)
 
 	half3 accum = uw * vw.x;
 	sum += accum.x * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.x,v.x), coord.z, receiverPlaneDepthBias) );
-    sum += accum.y * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.x), coord.z, receiverPlaneDepthBias) );
-    sum += accum.z * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.x), coord.z, receiverPlaneDepthBias) );
+	sum += accum.y * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.x), coord.z, receiverPlaneDepthBias) );
+	sum += accum.z * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.x), coord.z, receiverPlaneDepthBias) );
 
 	accum = uw * vw.y;
-    sum += accum.x *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.x,v.y), coord.z, receiverPlaneDepthBias) );
-    sum += accum.y *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.y), coord.z, receiverPlaneDepthBias) );
-    sum += accum.z *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.y), coord.z, receiverPlaneDepthBias) );
+	sum += accum.x *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.x,v.y), coord.z, receiverPlaneDepthBias) );
+	sum += accum.y *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.y), coord.z, receiverPlaneDepthBias) );
+	sum += accum.z *  UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.y), coord.z, receiverPlaneDepthBias) );
 
 	accum = uw * vw.z;
-    sum += accum.x * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.x,v.z), coord.z, receiverPlaneDepthBias) );
-    sum += accum.y * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.z), coord.z, receiverPlaneDepthBias) );
-    sum += accum.z * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.z), coord.z, receiverPlaneDepthBias) );
+	sum += accum.x * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.x,v.z), coord.z, receiverPlaneDepthBias) );
+	sum += accum.y * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.y,v.z), coord.z, receiverPlaneDepthBias) );
+	sum += accum.z * UNITY_SAMPLE_SHADOW( _ShadowMapTexture, combineShadowcoordComponents( base_uv, float2(u.z,v.z), coord.z, receiverPlaneDepthBias) );
 
-    shadow = sum / 144.0f;
+	shadow = sum / 144.0f;
 
 #else // #if defined(SHADOWS_NATIVE)
 
@@ -347,10 +347,10 @@ half sampleShadowmap_PCF5x5 (float4 coord, float2 receiverPlaneDepthBias)
 
 #endif // else of #if defined(SHADOWS_NATIVE)
 
-    shadow = lerp (_LightShadowData.r, 1.0f, shadow);
+	shadow = lerp (_LightShadowData.r, 1.0f, shadow);
 
 
-    return shadow;
+	return shadow;
 }
 
 /**
@@ -368,7 +368,7 @@ half unity_sampleShadowmap( float4 coord )
  */
 fixed4 frag_hard (v2f i) : SV_Target
 {
-    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
+	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
 
 	float3 vpos = computeCameraSpacePosFromDepth(i);
 
@@ -386,7 +386,7 @@ fixed4 frag_hard (v2f i) : SV_Target
  */
 fixed4 frag_pcf5x5(v2f i) : SV_Target
 {
-    UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
+	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
 
 	float3 vpos = computeCameraSpacePosFromDepth(i);
 

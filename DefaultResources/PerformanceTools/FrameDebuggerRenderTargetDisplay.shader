@@ -8,8 +8,8 @@ Shader "Hidden/FrameDebuggerRenderTargetDisplay" {
 	CGINCLUDE
 	#include "UnityCG.cginc"
 	struct appdata {
-	    float4 vertex : POSITION;
-	    float3 uv : TEXCOORD0;
+		float4 vertex : POSITION;
+		float3 uv : TEXCOORD0;
 	};
 
 	struct v2f {

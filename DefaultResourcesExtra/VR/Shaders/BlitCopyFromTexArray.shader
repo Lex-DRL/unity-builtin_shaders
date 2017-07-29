@@ -41,13 +41,13 @@ Shader "Hidden/VR/BlitCopyFromTexArray" {
 				return o;
 			}
 
-            fixed4 frag (v2f i) : SV_Target
-            {
-                UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
-                return UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(i.texcoord.xy, unity_StereoEyeIndex));
-            }
-            ENDCG
-        }
-    }
-    Fallback Off
+			fixed4 frag (v2f i) : SV_Target
+			{
+				UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i);
+				return UNITY_SAMPLE_TEX2DARRAY(_MainTex, float3(i.texcoord.xy, unity_StereoEyeIndex));
+			}
+			ENDCG
+		}
+	}
+	Fallback Off
 }

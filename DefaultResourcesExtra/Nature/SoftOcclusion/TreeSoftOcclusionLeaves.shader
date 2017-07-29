@@ -67,10 +67,10 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 			};
 			
 			struct appdata {
-			    float4 vertex : POSITION;
+				float4 vertex : POSITION;
 				float3 normal : NORMAL;
-			    fixed4 color : COLOR;
-			    float4 texcoord : TEXCOORD0;
+				fixed4 color : COLOR;
+				float4 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
 			v2f vert( appdata v )

@@ -29,15 +29,15 @@
 // so we still add safety net, otherwise we might end up with shaders failing to compile
 
 #if SHADER_TARGET < 30
-    #undef UNITY_SPECCUBE_BOX_PROJECTION
-    #undef UNITY_SPECCUBE_BLENDING
-    #undef UNITY_ENABLE_DETAIL_NORMALMAP
-    #ifdef _PARALLAXMAP
-        #undef _PARALLAXMAP
-    #endif
+	#undef UNITY_SPECCUBE_BOX_PROJECTION
+	#undef UNITY_SPECCUBE_BLENDING
+	#undef UNITY_ENABLE_DETAIL_NORMALMAP
+	#ifdef _PARALLAXMAP
+		#undef _PARALLAXMAP
+	#endif
 #endif
 #if (SHADER_TARGET < 30) || defined(SHADER_API_GLES) || defined(SHADER_API_D3D11_9X) || defined (SHADER_API_PSP2)
-    #undef UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS
+	#undef UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS
 #endif
 
 #ifndef UNITY_SAMPLE_FULL_SH_PER_PIXEL
@@ -64,21 +64,21 @@
 
 // Simplified Standard Shader is off by default and should not be used for Legacy Shaders
 #ifndef UNITY_STANDARD_SIMPLE
-    #define UNITY_STANDARD_SIMPLE 0
+	#define UNITY_STANDARD_SIMPLE 0
 #endif
 
 // Setup a new define with meaningful name to know if we require world pos in fragment shader
 #if UNITY_STANDARD_SIMPLE
-    #define UNITY_REQUIRE_FRAG_WORLDPOS 0
+	#define UNITY_REQUIRE_FRAG_WORLDPOS 0
 #else
-    #define UNITY_REQUIRE_FRAG_WORLDPOS 1
+	#define UNITY_REQUIRE_FRAG_WORLDPOS 1
 #endif
 
 // Should we pack worldPos along tangent (saving an interpolator)
 #if UNITY_REQUIRE_FRAG_WORLDPOS && !defined(_PARALLAXMAP)
-    #define UNITY_PACK_WORLDPOS_WITH_TANGENT 1
+	#define UNITY_PACK_WORLDPOS_WITH_TANGENT 1
 #else
-    #define UNITY_PACK_WORLDPOS_WITH_TANGENT 0
+	#define UNITY_PACK_WORLDPOS_WITH_TANGENT 0
 #endif
 
 #endif // UNITY_STANDARD_CONFIG_INCLUDED
