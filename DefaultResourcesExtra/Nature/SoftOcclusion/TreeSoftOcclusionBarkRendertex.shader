@@ -19,7 +19,7 @@ Shader "Hidden/Nature/Tree Soft Occlusion Bark Rendertex" {
 		
 			CGPROGRAM
 			#pragma vertex bark
-			#pragma fragment frag 
+			#pragma fragment frag
 			#define WRITE_ALPHA_1 1
 			#define USE_CUSTOM_LIGHT_DIR 1
 			#include "UnityBuiltin2xTreeLibrary.cginc"

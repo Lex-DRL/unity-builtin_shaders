@@ -27,7 +27,7 @@ v2f BillboardVert (appdata_full v) {
 	
 	o.color.rgb *= ShadeVertexLights (v.vertex, v.normal);
 		
-	o.pos = UnityObjectToClipPos(v.vertex);	
+	o.pos = UnityObjectToClipPos(v.vertex);
 	o.uv = v.texcoord;
 	return o;
 }
@@ -63,7 +63,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha *= IN.color.a;
 }
 
-ENDCG			
+ENDCG
 	}
 
 	Fallback Off

@@ -112,7 +112,7 @@ float4 _ShadowMapTexture_TexelSize;
 	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights)	getShadowCoord(wpos,cascadeWeights)
 #endif
 
-// prototypes 
+// prototypes
 inline float3 computeCameraSpacePosFromDepth(v2f i);
 inline fixed4 getCascadeWeights(float3 wpos, float z);		// calculates the cascade weights based on the world position of the fragment and plane positions
 inline fixed4 getCascadeWeights_splitSpheres(float3 wpos);	// calculates the cascade weights based on world pos and split spheres positions
@@ -177,8 +177,8 @@ inline float4 getShadowCoord_SingleCascade( float4 wpos )
 
 /**
  * Computes the receiver plane depth bias for the given shadow coord in screen space.
- * Inspirations: 
- *		http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/ 
+ * Inspirations:
+ *		http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/
  *		http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Isidoro-ShadowMapping.pdf
  */
 float2 getReceiverPlaneDepthBias (float3 shadowCoord)
@@ -364,7 +364,7 @@ half unity_sampleShadowmap( float4 coord )
 }
 
 /**
- *	Hard shadow 
+ *	Hard shadow
  */
 fixed4 frag_hard (v2f i) : SV_Target
 {
@@ -402,7 +402,7 @@ fixed4 frag_pcf5x5(v2f i) : SV_Target
 	// as it would be in first cascade; otherwise derivatives
 	// at cascade boundaries will be all wrong. So compute
 	// it from cascade 0 UV, and scale based on which cascade we're in.
-	// 
+	//
 	float3 coordCascade0 = getShadowCoord_SingleCascade(wpos);
 	receiverPlaneDepthBiasCascade0 = getReceiverPlaneDepthBias(coordCascade0.xyz);
 	float biasMultiply = dot(cascadeWeights,unity_ShadowCascadeScales);

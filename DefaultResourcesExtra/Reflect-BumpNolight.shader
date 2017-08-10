@@ -58,7 +58,7 @@ v2f vert(appdata_tan v)
 	o.TtoW2 = float3(worldTangent.z, worldBinormal.z, worldNormal.z);
 	
 	UNITY_TRANSFER_FOG(o,o.pos);
-	return o; 
+	return o;
 }
 
 uniform sampler2D _BumpMap;
@@ -69,7 +69,7 @@ uniform fixed4 _Color;
 
 fixed4 frag (v2f i) : SV_Target
 {
-	// Sample and expand the normal map texture	
+	// Sample and expand the normal map texture
 	fixed3 normal = UnpackNormal(tex2D(_BumpMap, i.uv2));
 	
 	fixed4 texcol = tex2D(_MainTex,i.uv);
@@ -91,9 +91,9 @@ fixed4 frag (v2f i) : SV_Target
 	UNITY_OPAQUE_ALPHA(c.a);
 	return c;
 }
-ENDCG  
-		} 
-	}	
+ENDCG
+		}
+	}
 }
 	
 FallBack "Legacy Shaders/VertexLit"

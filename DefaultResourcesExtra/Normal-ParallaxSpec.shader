@@ -10,7 +10,7 @@ Properties {
 	_BumpMap ("Normalmap", 2D) = "bump" {}
 	_ParallaxMap ("Heightmap (A)", 2D) = "black" {}
 }
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 600
 	

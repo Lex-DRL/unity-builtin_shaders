@@ -36,7 +36,7 @@ Shader "UI/Lit/Transparent"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp] 
+			Pass [_StencilOp]
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -90,7 +90,7 @@ Shader "UI/Lit/Transparent"
 			}
 
 			void surf (Input IN, inout SurfaceOutput o)
-			{			
+			{
 				fixed4 col = (tex2D(_MainTex, IN.uv_MainTex) + _TextureSampleAdd) * IN.color;
 				o.Albedo = col.rgb;
 				o.Alpha = col.a;

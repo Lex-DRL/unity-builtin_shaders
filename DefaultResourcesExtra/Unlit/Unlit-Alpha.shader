@@ -15,9 +15,9 @@ SubShader {
 	LOD 100
 	
 	ZWrite Off
-	Blend SrcAlpha OneMinusSrcAlpha 
+	Blend SrcAlpha OneMinusSrcAlpha
 	
-	Pass {  
+	Pass {
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

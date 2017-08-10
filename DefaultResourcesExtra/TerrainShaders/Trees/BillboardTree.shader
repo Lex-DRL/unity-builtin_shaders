@@ -50,7 +50,7 @@ Shader "Hidden/TerrainEngine/BillboardTree" {
 				UNITY_APPLY_FOG(input.fogCoord, col);
 				return col;
 			}
-			ENDCG			
+			ENDCG
 		}
 	}
 

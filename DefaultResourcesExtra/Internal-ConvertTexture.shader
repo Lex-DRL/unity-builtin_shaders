@@ -1,7 +1,7 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
 Shader "Hidden/ConvertTexture" {
-	SubShader { 
+	SubShader {
 		// Cubemap blit.  Takes a face index.
 		Pass {
  			ZTest Always Cull Off ZWrite Off
@@ -51,9 +51,9 @@ Shader "Hidden/ConvertTexture" {
 			{
 				return texCUBE(_MainTex, i.texcoord);
 			}
-			ENDCG 
+			ENDCG
 
-		}		
+		}
 	}
-	Fallback Off 
+	Fallback Off
 }

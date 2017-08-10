@@ -51,7 +51,7 @@ half4 frag (v2f i) : SV_Target
 	half3 res = lerp(texA, texB, _value);
 	return half4(res, 1.0);
 }
-ENDCG 
+ENDCG
 
 SubShader {
 	Tags { "Queue"="Background" "RenderType"="Background" }
@@ -62,7 +62,7 @@ SubShader {
 		#pragma target 3.0
 		ENDCG
 	}
-} 	
+}
 
 SubShader {
 	Tags { "Queue"="Background" "RenderType"="Background" }
@@ -74,7 +74,7 @@ SubShader {
 		#pragma target 2.0
 		ENDCG
 	}
-} 	
+}
 
 Fallback Off
 

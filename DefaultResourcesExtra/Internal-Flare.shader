@@ -1,7 +1,7 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
 
-Shader "Hidden/Internal-Flare" 
+Shader "Hidden/Internal-Flare"
 {
 	SubShader {
 
@@ -11,7 +11,7 @@ Shader "Hidden/Internal-Flare"
 		Blend One One
 		ColorMask RGB
 
-		Pass {	
+		Pass {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -52,7 +52,7 @@ Shader "Hidden/Internal-Flare"
 			{
 				return tex2D(_FlareTexture, i.texcoord) * i.color;
 			}
-			ENDCG 
+			ENDCG
 		}
 	}
 }

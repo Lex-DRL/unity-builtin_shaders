@@ -14,7 +14,7 @@ SubShader {
 	Cull Off Lighting Off ZWrite Off Ztest Always
 	Blend One One
 
-	Pass {	
+	Pass {
 		CGPROGRAM
 		#pragma vertex vert
 		#pragma fragment frag
@@ -60,8 +60,8 @@ SubShader {
 			col.a = tex.a;
 			return col;
 		}
-		ENDCG 
+		ENDCG
 	}
-} 	
+}
 
 }

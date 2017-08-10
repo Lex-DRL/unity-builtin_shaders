@@ -10,7 +10,7 @@ Properties {
 	_SpecColor ("Specular Color", Color) = (0.5, 0.5, 0.5, 1)
 }
 
-SubShader {  
+SubShader {
 	Pass {
 CGPROGRAM
 #pragma vertex vert
@@ -71,7 +71,7 @@ sampler2D _TranslucencyMap;
 fixed4 _SpecColor;
 
 void ApplyTreeLighting(inout half3 light, half3 albedo, half gloss, half specular, half3 lightColor, float2 param)
-{	
+{
 	half nl = param.r;
 	light += albedo * lightColor * nl;
 	

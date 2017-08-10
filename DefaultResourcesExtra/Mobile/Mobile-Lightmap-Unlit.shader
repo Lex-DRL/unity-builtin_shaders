@@ -21,7 +21,7 @@ SubShader {
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			combine texture, constant // UNITY_OPAQUE_ALPHA_FFP
-		}  
+		}
 	}
 	
 	// Lightmapped, encoded as dLDR

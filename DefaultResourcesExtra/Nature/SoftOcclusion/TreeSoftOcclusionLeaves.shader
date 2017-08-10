@@ -60,7 +60,7 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 			#include "UnityCG.cginc"
 			#include "TerrainEngine.cginc"
 			
-			struct v2f { 
+			struct v2f {
 				V2F_SHADOW_CASTER;
 				float2 uv : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO
@@ -93,7 +93,7 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 				clip( texcol.a - _Cutoff );
 				SHADOW_CASTER_FRAGMENT(i)
 			}
-			ENDCG	
+			ENDCG
 		}
 	}
 	
@@ -120,7 +120,7 @@ Shader "Nature/Tree Soft Occlusion Leaves" {
 				Ambient [_Color]
 			}
 			SetTexture [_MainTex] { combine primary * texture DOUBLE, texture }
-		}		
+		}
 	}
 
 	Dependency "BillboardShader" = "Hidden/Nature/Tree Soft Occlusion Leaves Rendertex"

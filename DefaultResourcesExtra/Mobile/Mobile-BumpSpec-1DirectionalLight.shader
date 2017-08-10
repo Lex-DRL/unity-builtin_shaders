@@ -15,7 +15,7 @@ Properties {
 	_MainTex ("Base (RGB) Gloss (A)", 2D) = "white" {}
 	[NoScaleOffset] _BumpMap ("Normalmap", 2D) = "bump" {}
 }
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 250
 	

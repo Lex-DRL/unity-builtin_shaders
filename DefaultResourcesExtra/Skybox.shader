@@ -71,7 +71,7 @@ SubShader {
 		sampler2D _FrontTex;
 		half4 _FrontTex_HDR;
 		half4 frag (v2f i) : SV_Target { return skybox_frag(i,_FrontTex, _FrontTex_HDR); }
-		ENDCG 
+		ENDCG
 	}
 	Pass{
 		CGPROGRAM
@@ -81,7 +81,7 @@ SubShader {
 		sampler2D _BackTex;
 		half4 _BackTex_HDR;
 		half4 frag (v2f i) : SV_Target { return skybox_frag(i,_BackTex, _BackTex_HDR); }
-		ENDCG 
+		ENDCG
 	}
 	Pass{
 		CGPROGRAM
@@ -102,7 +102,7 @@ SubShader {
 		half4 _RightTex_HDR;
 		half4 frag (v2f i) : SV_Target { return skybox_frag(i,_RightTex, _RightTex_HDR); }
 		ENDCG
-	}	
+	}
 	Pass{
 		CGPROGRAM
 		#pragma vertex vert
@@ -112,7 +112,7 @@ SubShader {
 		half4 _UpTex_HDR;
 		half4 frag (v2f i) : SV_Target { return skybox_frag(i,_UpTex, _UpTex_HDR); }
 		ENDCG
-	}	
+	}
 	Pass{
 		CGPROGRAM
 		#pragma vertex vert

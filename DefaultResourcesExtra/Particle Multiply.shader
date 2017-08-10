@@ -79,7 +79,7 @@ Category {
 				UNITY_APPLY_FOG_COLOR(i.fogCoord, col, fixed4(1,1,1,1)); // fog towards white due to our blend mode
 				return col;
 			}
-			ENDCG 
+			ENDCG
 		}
 	}
 }

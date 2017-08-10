@@ -1,21 +1,21 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
 
-Shader "Hidden/Internal-GUITexture" 
+Shader "Hidden/Internal-GUITexture"
 {
-	Properties { _MainTex ("Texture", any) = "" {} } 
+	Properties { _MainTex ("Texture", any) = "" {} }
 
 	SubShader {
 
-		Tags { "ForceSupported" = "True" "RenderType"="Overlay" } 
+		Tags { "ForceSupported" = "True" "RenderType"="Overlay" }
 		
-		Lighting Off 
-		Blend SrcAlpha OneMinusSrcAlpha 
-		Cull Off 
-		ZWrite Off 
-		ZTest Always 
+		Lighting Off
+		Blend SrcAlpha OneMinusSrcAlpha
+		Cull Off
+		ZWrite Off
+		ZTest Always
 		
-		Pass {	
+		Pass {
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag
@@ -56,9 +56,9 @@ Shader "Hidden/Internal-GUITexture"
 			{
 				return 2.0f * tex2D(_MainTex, i.texcoord) * i.color;
 			}
-			ENDCG 
+			ENDCG
 		}
-	} 
+	}
 	
-	Fallback off 
+	Fallback off
 }

@@ -127,7 +127,7 @@ fixed4 frag (v2f i) : SV_Target
 {
 	return -log2(tex2D(_LightBuffer, i.texcoord));
 }
-ENDCG 
+ENDCG
 }
 
 }

@@ -31,7 +31,7 @@ CGPROGRAM
 
 		inline float3 LightingLambertVS (float3 normal, float3 lightDir)
 		{
-			fixed diff = max (0, dot (normal, lightDir));			
+			fixed diff = max (0, dot (normal, lightDir));
 			return _LightColor0.rgb * diff;
 		}
 

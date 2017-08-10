@@ -10,7 +10,7 @@ Shader "Hidden/TerrainEngine/Splatmap/Specular-Base" {
 		_Color ("Main Color", Color) = (1,1,1,1)
 	}
 
-	SubShader { 
+	SubShader {
 		Tags {
 			"RenderType" = "Opaque"
 			"Queue" = "Geometry-100"

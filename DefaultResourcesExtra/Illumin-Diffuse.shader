@@ -35,7 +35,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha = c.a;
 }
 ENDCG
-} 
+}
 FallBack "Legacy Shaders/Self-Illumin/VertexLit"
 CustomEditor "LegacyIlluminShaderGUI"
 }

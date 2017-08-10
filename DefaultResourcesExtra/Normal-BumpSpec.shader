@@ -30,7 +30,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 }
 ENDCG
 
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 400
 	
@@ -40,7 +40,7 @@ SubShader {
 	ENDCG
 }
 
-SubShader { 
+SubShader {
 	Tags { "RenderType"="Opaque" }
 	LOD 400
 	

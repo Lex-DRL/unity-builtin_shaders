@@ -53,7 +53,7 @@ Shader "Nature/Tree Soft Occlusion Bark" {
 			#include "UnityCG.cginc"
 			#include "TerrainEngine.cginc"
 			
-			struct v2f { 
+			struct v2f {
 				V2F_SHADOW_CASTER;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
@@ -78,7 +78,7 @@ Shader "Nature/Tree Soft Occlusion Bark" {
 			{
 				SHADOW_CASTER_FRAGMENT(i)
 			}
-			ENDCG	
+			ENDCG
 		}
 	}
 	
