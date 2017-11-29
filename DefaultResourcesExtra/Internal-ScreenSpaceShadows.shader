@@ -101,7 +101,7 @@ float4 _ShadowMapTexture_TexelSize;
 // Keywords based defines
 //
 #if defined (SHADOWS_SPLIT_SPHERES)
-	#define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights_splitSpheres(wpos)
+	#define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights_splitSpheres(wpos)
 #else
 	#define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights( wpos, z )
 #endif
@@ -112,7 +112,7 @@ float4 _ShadowMapTexture_TexelSize;
 	#define GET_SHADOW_COORDINATES(wpos,cascadeWeights)	getShadowCoord(wpos,cascadeWeights)
 #endif
 
-// prototypes
+// prototypes 
 inline float3 computeCameraSpacePosFromDepth(v2f i);
 inline fixed4 getCascadeWeights(float3 wpos, float z);		// calculates the cascade weights based on the world position of the fragment and plane positions
 inline fixed4 getCascadeWeights_splitSpheres(float3 wpos);	// calculates the cascade weights based on world pos and split spheres positions
@@ -177,8 +177,8 @@ inline float4 getShadowCoord_SingleCascade( float4 wpos )
 
 /**
  * Computes the receiver plane depth bias for the given shadow coord in screen space.
- * Inspirations:
- *		http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/
+ * Inspirations: 
+ *		http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/ 
  *		http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Isidoro-ShadowMapping.pdf
  */
 float2 getReceiverPlaneDepthBias (float3 shadowCoord)
@@ -335,13 +335,13 @@ half sampleShadowmap_PCF5x5 (float4 coord, float2 receiverPlaneDepthBias)
 	float2 base_uv = coord.xy;
 	float2 ts = _ShadowMapTexture_TexelSize.xy;
 	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(-ts.x,-ts.y), coord.z, receiverPlaneDepthBias));
-	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(    0,-ts.y), coord.z, receiverPlaneDepthBias));
+	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(	0,-ts.y), coord.z, receiverPlaneDepthBias));
 	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2( ts.x,-ts.y), coord.z, receiverPlaneDepthBias));
-	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(-ts.x,    0), coord.z, receiverPlaneDepthBias));
-	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(    0,    0), coord.z, receiverPlaneDepthBias));
-	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2( ts.x,    0), coord.z, receiverPlaneDepthBias));
+	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(-ts.x,	0), coord.z, receiverPlaneDepthBias));
+	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(	0,	0), coord.z, receiverPlaneDepthBias));
+	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2( ts.x,	0), coord.z, receiverPlaneDepthBias));
 	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(-ts.x, ts.y), coord.z, receiverPlaneDepthBias));
-	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(    0, ts.y), coord.z, receiverPlaneDepthBias));
+	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2(	0, ts.y), coord.z, receiverPlaneDepthBias));
 	shadow += UNITY_SAMPLE_SHADOW(_ShadowMapTexture, combineShadowcoordComponents(base_uv, float2( ts.x, ts.y), coord.z, receiverPlaneDepthBias));
 	shadow /= 9.0;
 
@@ -364,7 +364,7 @@ half unity_sampleShadowmap( float4 coord )
 }
 
 /**
- *	Hard shadow
+ *	Hard shadow 
  */
 fixed4 frag_hard (v2f i) : SV_Target
 {
@@ -402,7 +402,7 @@ fixed4 frag_pcf5x5(v2f i) : SV_Target
 	// as it would be in first cascade; otherwise derivatives
 	// at cascade boundaries will be all wrong. So compute
 	// it from cascade 0 UV, and scale based on which cascade we're in.
-	//
+	// 
 	float3 coordCascade0 = getShadowCoord_SingleCascade(wpos);
 	receiverPlaneDepthBiasCascade0 = getReceiverPlaneDepthBias(coordCascade0.xyz);
 	float biasMultiply = dot(cascadeWeights,unity_ShadowCascadeScales);

@@ -14,24 +14,24 @@
 
 struct VertexOutputBaseSimple
 {
-	float4 pos                          : SV_POSITION;
-	float4 tex                          : TEXCOORD0;
-	half4 eyeVec                        : TEXCOORD1; // w: grazingTerm
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	half4 eyeVec						: TEXCOORD1; // w: grazingTerm
 
-	half4 ambientOrLightmapUV           : TEXCOORD2; // SH or Lightmap UV
+	half4 ambientOrLightmapUV		   : TEXCOORD2; // SH or Lightmap UV
 	SHADOW_COORDS(3)
 	UNITY_FOG_COORDS_PACKED(4, half4) // x: fogCoord, yzw: reflectVec
 
-	half4 normalWorld                   : TEXCOORD5; // w: fresnelTerm
+	half4 normalWorld				   : TEXCOORD5; // w: fresnelTerm
 
 #ifdef _NORMALMAP
-	half3 tangentSpaceLightDir          : TEXCOORD6;
+	half3 tangentSpaceLightDir		  : TEXCOORD6;
 	#if SPECULAR_HIGHLIGHTS
-		half3 tangentSpaceEyeVec        : TEXCOORD7;
+		half3 tangentSpaceEyeVec		: TEXCOORD7;
 	#endif
 #endif
 #if UNITY_REQUIRE_FRAG_WORLDPOS
-	float3 posWorld                     : TEXCOORD8;
+	float3 posWorld					 : TEXCOORD8;
 #endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -229,9 +229,9 @@ half4 fragForwardBaseSimple (VertexOutputBaseSimple i) : SV_Target  // backward 
 
 struct VertexOutputForwardAddSimple
 {
-	float4 pos                          : SV_POSITION;
-	float4 tex                          : TEXCOORD0;
-	float3 posWorld                     : TEXCOORD1;
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	float3 posWorld					 : TEXCOORD1;
 
 	UNITY_SHADOW_COORDS(2)
 
@@ -241,14 +241,14 @@ struct VertexOutputForwardAddSimple
 	UNITY_FOG_COORDS_PACKED(3, half1)
 #endif
 
-	half3 lightDir                      : TEXCOORD4;
+	half3 lightDir					  : TEXCOORD4;
 
 #if defined(_NORMALMAP)
 	#if SPECULAR_HIGHLIGHTS
-		half3 tangentSpaceEyeVec        : TEXCOORD5;
+		half3 tangentSpaceEyeVec		: TEXCOORD5;
 	#endif
 #else
-	half3 normalWorld                   : TEXCOORD5;
+	half3 normalWorld				   : TEXCOORD5;
 #endif
 
 	UNITY_VERTEX_OUTPUT_STEREO

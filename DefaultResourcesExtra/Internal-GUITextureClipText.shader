@@ -8,13 +8,13 @@ Shader "Hidden/Internal-GUITextureClipText"
 	SubShader {
 		Tags { "ForceSupported" = "True" }
 
-		Lighting Off
-		Blend SrcAlpha OneMinusSrcAlpha
-		Cull Off
-		ZWrite Off
+		Lighting Off 
+		Blend SrcAlpha OneMinusSrcAlpha 
+		Cull Off 
+		ZWrite Off 
 		ZTest Always
 
-		Pass {
+		Pass {	
 			CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

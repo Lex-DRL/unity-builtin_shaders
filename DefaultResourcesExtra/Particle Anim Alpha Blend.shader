@@ -55,7 +55,7 @@ Category {
 			{
 				v2f o;
 				UNITY_SETUP_INSTANCE_ID(v);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); 
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				#ifdef SOFTPARTICLES_ON
 				o.projPos = ComputeScreenPos (o.vertex);
@@ -87,8 +87,8 @@ Category {
 				UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
 			}
-			ENDCG
+			ENDCG 
 		}
-	}
+	}	
 }
 }

@@ -56,52 +56,52 @@
 // SV_Target[n] / SV_Depth defines, if not defined by compiler already
 #if !defined(SV_Target)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Target COLOR
+#	   define SV_Target COLOR
 #   endif
 #endif
 #if !defined(SV_Target0)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Target0 COLOR0
+#	   define SV_Target0 COLOR0
 #   endif
 #endif
 #if !defined(SV_Target1)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Target1 COLOR1
+#	   define SV_Target1 COLOR1
 #   endif
 #endif
 #if !defined(SV_Target2)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Target2 COLOR2
+#	   define SV_Target2 COLOR2
 #   endif
 #endif
 #if !defined(SV_Target3)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Target3 COLOR3
+#	   define SV_Target3 COLOR3
 #   endif
 #endif
 #if !defined(SV_Target4)
 #   if defined(SHADER_API_PSSL)
-#       define SV_Target4 S_TARGET_OUTPUT4
+#	   define SV_Target4 S_TARGET_OUTPUT4
 #   endif
 #endif
 #if !defined(SV_Target5)
 #   if defined(SHADER_API_PSSL)
-#       define SV_Target5 S_TARGET_OUTPUT5
+#	   define SV_Target5 S_TARGET_OUTPUT5
 #   endif
 #endif
 #if !defined(SV_Target6)
 #   if defined(SHADER_API_PSSL)
-#       define SV_Target6 S_TARGET_OUTPUT6
+#	   define SV_Target6 S_TARGET_OUTPUT6
 #   endif
 #endif
 #if !defined(SV_Target7)
 #   if defined(SHADER_API_PSSL)
-#       define SV_Target7 S_TARGET_OUTPUT7
+#	   define SV_Target7 S_TARGET_OUTPUT7
 #   endif
 #endif
 #if !defined(SV_Depth)
 #   if !defined(SHADER_API_XBOXONE)
-#       define SV_Depth DEPTH
+#	   define SV_Depth DEPTH
 #   endif
 #endif
 
@@ -248,19 +248,19 @@
 	// For tex2Dproj the PSP2 cg compiler doesn't like casting half3/4 to
 	// float3/4 with swizzle (optimizer generates invalid assembly), so declare
 	// explicit versions for half3/4
-	half4 tex2Dproj(sampler2D s, in half3 t)        { return tex2D(s, t.xy / t.z); }
-	half4 tex2Dproj(sampler2D s, in half4 t)        { return tex2D(s, t.xy / t.w); }
+	half4 tex2Dproj(sampler2D s, in half3 t)		{ return tex2D(s, t.xy / t.z); }
+	half4 tex2Dproj(sampler2D s, in half4 t)		{ return tex2D(s, t.xy / t.w); }
 
 	// As above but for sampling from single component textures, e.g. depth textures.
 	// NOTE that hardware PCF does not work with these versions, currently we have to ensure
 	// that tex coords for shadow sampling use float, not half; and for some reason casting half
 	// to float and using tex2Dproj also does not work.
-	half4 tex2DprojShadow(sampler2D s, in half3 t)      { return tex2D<float>(s, t.xy / t.z); }
-	half4 tex2DprojShadow(sampler2D s, in half4 t)      { return tex2D<float>(s, t.xy / t.w); }
+	half4 tex2DprojShadow(sampler2D s, in half3 t)	  { return tex2D<float>(s, t.xy / t.z); }
+	half4 tex2DprojShadow(sampler2D s, in half4 t)	  { return tex2D<float>(s, t.xy / t.w); }
 
 	// ...and versions of tex2DprojShadow for float uv.
-	half4 tex2DprojShadow(sampler2D s, in float3 t)     { return tex2Dproj<float>(s, t); }
-	half4 tex2DprojShadow(sampler2D s, in float4 t)     { return tex2Dproj<float>(s, t); }
+	half4 tex2DprojShadow(sampler2D s, in float3 t)	 { return tex2Dproj<float>(s, t); }
+	half4 tex2DprojShadow(sampler2D s, in float4 t)	 { return tex2Dproj<float>(s, t); }
 #endif
 
 
@@ -347,8 +347,8 @@
 	#define UNITY_SAMPLE_SHADOW_PROJ(tex,coord) tex2Dproj (tex,coord).r
 #elif defined(SHADER_API_PSSL)
 	// PS4: built-in PCF
-	#define UNITY_DECLARE_SHADOWMAP(tex)        Texture2D tex; SamplerComparisonState sampler##tex
-	#define UNITY_SAMPLE_SHADOW(tex,coord)      tex.SampleCmpLOD0(sampler##tex,(coord).xy,(coord).z)
+	#define UNITY_DECLARE_SHADOWMAP(tex)		Texture2D tex; SamplerComparisonState sampler##tex
+	#define UNITY_SAMPLE_SHADOW(tex,coord)	  tex.SampleCmpLOD0(sampler##tex,(coord).xy,(coord).z)
 	#define UNITY_SAMPLE_SHADOW_PROJ(tex,coord) tex.SampleCmpLOD0(sampler##tex,(coord).xy/(coord).w,(coord).z/(coord).w)
 #elif defined(SHADER_API_PSP2)
 	// Vita
@@ -370,8 +370,8 @@
 // the samplers.
 //  - UNITY_DECLARE_TEX*_NOSAMPLER declares a texture, without a sampler.
 //  - UNITY_SAMPLE_TEX*_SAMPLER samples a texture, using sampler from another texture.
-//      That another texture must also be actually used in the current shader, otherwise
-//      the correct sampler will not be set.
+//	  That another texture must also be actually used in the current shader, otherwise
+//	  the correct sampler will not be set.
 #if defined(SHADER_API_D3D11) || defined(SHADER_API_XBOXONE) || defined(UNITY_COMPILER_HLSLCC) || defined(SHADER_API_PSSL)
 	// DX11 style HLSL syntax; separate textures and samplers
 	// NB for HLSLcc we have special unity-specific syntax to pass sampler precision information
@@ -524,7 +524,7 @@
 #define texRECTproj tex2Dproj
 
 #if defined(SHADER_API_PSSL)
-#define VPOS            S_POSITION
+#define VPOS			S_POSITION
 #elif defined(UNITY_COMPILER_CG)
 // Cg seems to use WPOS instead of VPOS semantic?
 #define VPOS WPOS
@@ -595,10 +595,10 @@
 #endif
 
 // "platform caps" defines that were moved to editor, so they are set automatically when compiling shader
-// UNITY_NO_DXT5nm              - no DXT5NM support, so normal maps will encoded in rgb
-// UNITY_NO_RGBM                - no RGBM support, so doubleLDR
+// UNITY_NO_DXT5nm			  - no DXT5NM support, so normal maps will encoded in rgb
+// UNITY_NO_RGBM				- no RGBM support, so doubleLDR
 // UNITY_NO_SCREENSPACE_SHADOWS - no screenspace cascaded shadowmaps
-// UNITY_FRAMEBUFFER_FETCH_AVAILABLE    - framebuffer fetch
+// UNITY_FRAMEBUFFER_FETCH_AVAILABLE	- framebuffer fetch
 // UNITY_ENABLE_REFLECTION_BUFFERS - render reflection probes in deferred way, when using deferred shading
 
 
@@ -630,11 +630,11 @@
 
 #if defined(SHADER_API_D3D11) || defined(SHADER_API_GLES3) || defined(SHADER_API_GLCORE) || defined(SHADER_API_VULKAN) || defined(SHADER_API_PSSL)
 #define UNITY_CAN_COMPILE_TESSELLATION 1
-#   define UNITY_domain                 domain
-#   define UNITY_partitioning           partitioning
-#   define UNITY_outputtopology         outputtopology
-#   define UNITY_patchconstantfunc      patchconstantfunc
-#   define UNITY_outputcontrolpoints    outputcontrolpoints
+#   define UNITY_domain				 domain
+#   define UNITY_partitioning		   partitioning
+#   define UNITY_outputtopology		 outputtopology
+#   define UNITY_patchconstantfunc	  patchconstantfunc
+#   define UNITY_outputcontrolpoints	outputcontrolpoints
 #endif
 
 // Not really needed anymore, but did ship in Unity 4.0; with D3D11_9X remapping them to .r channel.
@@ -645,10 +645,10 @@
 
 // HLSL attributes
 #if defined(UNITY_COMPILER_HLSL)
-	#define UNITY_BRANCH    [branch]
+	#define UNITY_BRANCH	[branch]
 	#define UNITY_FLATTEN   [flatten]
-	#define UNITY_UNROLL    [unroll]
-	#define UNITY_LOOP      [loop]
+	#define UNITY_UNROLL	[unroll]
+	#define UNITY_LOOP	  [loop]
 	#define UNITY_FASTOPT   [fastopt]
 #else
 	#define UNITY_BRANCH

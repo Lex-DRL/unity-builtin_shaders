@@ -14,7 +14,7 @@ SubShader {
 	LOD 100
 	
 	ZWrite Off
-	Blend SrcAlpha OneMinusSrcAlpha
+	Blend SrcAlpha OneMinusSrcAlpha 
 	ColorMask RGB
 		
 	// Non-lightmapped
@@ -25,13 +25,13 @@ SubShader {
 			Ambient [_Color]
 			Shininess [_Shininess]
 			Specular [_SpecColor]
-			Emission [_Emission]
+			Emission [_Emission]	
 		}
 		Lighting On
 		SeparateSpecular On
 		SetTexture [_MainTex] {
 			Combine texture * primary DOUBLE, texture * primary
-		}
+		} 
 	}
 	
 	// Lightmapped, encoded as dLDR

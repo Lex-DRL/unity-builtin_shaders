@@ -61,7 +61,7 @@ Shader "Standard"
 		//  Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
-			Name "FORWARD"
+			Name "FORWARD" 
 			Tags { "LightMode" = "ForwardBase" }
 
 			Blend [_SrcBlend] [_DstBlend]
@@ -192,7 +192,7 @@ Shader "Standard"
 		// This pass it not used during regular rendering.
 		Pass
 		{
-			Name "META"
+			Name "META" 
 			Tags { "LightMode"="Meta" }
 
 			Cull Off
@@ -221,7 +221,7 @@ Shader "Standard"
 		//  Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
-			Name "FORWARD"
+			Name "FORWARD" 
 			Tags { "LightMode" = "ForwardBase" }
 
 			Blend [_SrcBlend] [_DstBlend]
@@ -232,8 +232,8 @@ Shader "Standard"
 			
 			#pragma shader_feature _NORMALMAP
 			#pragma shader_feature _ _ALPHATEST_ON _ALPHABLEND_ON _ALPHAPREMULTIPLY_ON
-			#pragma shader_feature _EMISSION
-			#pragma shader_feature _METALLICGLOSSMAP
+			#pragma shader_feature _EMISSION 
+			#pragma shader_feature _METALLICGLOSSMAP 
 			#pragma shader_feature _ _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
 			#pragma shader_feature _ _SPECULARHIGHLIGHTS_OFF
 			#pragma shader_feature _ _GLOSSYREFLECTIONS_OFF
@@ -312,7 +312,7 @@ Shader "Standard"
 		// This pass it not used during regular rendering.
 		Pass
 		{
-			Name "META"
+			Name "META" 
 			Tags { "LightMode"="Meta" }
 
 			Cull Off

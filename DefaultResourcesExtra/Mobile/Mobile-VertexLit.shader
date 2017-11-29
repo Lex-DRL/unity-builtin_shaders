@@ -21,12 +21,12 @@ SubShader {
 		Material {
 			Diffuse (1,1,1,1)
 			Ambient (1,1,1,1)
-		}
+		} 
 		Lighting On
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			Combine texture * primary DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
-		}
+		} 
 	}
 	
 	// Lightmapped, encoded as dLDR
@@ -69,10 +69,10 @@ SubShader {
 			constantColor (1,1,1,1)
 			combine texture * previous QUAD, constant // UNITY_OPAQUE_ALPHA_FFP
 		}
-	}
+	}	
 	
 	// Pass to render object as a shadow caster
-	Pass
+	Pass 
 	{
 		Name "ShadowCaster"
 		Tags { "LightMode" = "ShadowCaster" }
@@ -86,7 +86,7 @@ SubShader {
 		#pragma multi_compile_shadowcaster
 		#include "UnityCG.cginc"
 
-		struct v2f {
+		struct v2f { 
 			V2F_SHADOW_CASTER;
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
@@ -105,6 +105,6 @@ SubShader {
 			SHADOW_CASTER_FRAGMENT(i)
 		}
 		ENDCG
-	}
+	}	
 }
 }

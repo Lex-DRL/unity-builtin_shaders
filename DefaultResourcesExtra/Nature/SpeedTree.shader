@@ -62,7 +62,7 @@ Shader "Nature/SpeedTree"
 				#define ENABLE_WIND
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f
+				struct v2f 
 				{
 					V2F_SHADOW_CASTER;
 					#ifdef SPEEDTREE_ALPHATEST
@@ -118,7 +118,7 @@ Shader "Nature/SpeedTree"
 				#define ENABLE_WIND
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f
+				struct v2f 
 				{
 					float4 vertex	: SV_POSITION;
 					UNITY_FOG_COORDS(0)
@@ -192,7 +192,7 @@ Shader "Nature/SpeedTree"
 				#pragma multi_compile_shadowcaster
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f
+				struct v2f 
 				{
 					V2F_SHADOW_CASTER;
 					#ifdef SPEEDTREE_ALPHATEST
@@ -233,7 +233,7 @@ Shader "Nature/SpeedTree"
 				#pragma shader_feature GEOM_TYPE_BRANCH GEOM_TYPE_BRANCH_DETAIL GEOM_TYPE_FROND GEOM_TYPE_LEAF GEOM_TYPE_MESH
 				#include "SpeedTreeCommon.cginc"
 
-				struct v2f
+				struct v2f 
 				{
 					float4 vertex	: SV_POSITION;
 					UNITY_FOG_COORDS(0)

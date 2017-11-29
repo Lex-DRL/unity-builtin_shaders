@@ -101,7 +101,7 @@ half DisneyDiffuse(half NdotV, half NdotL, half LdotH, half perceptualRoughness)
 	half fd90 = 0.5 + 2 * LdotH * LdotH * perceptualRoughness;
 	// Two schlick fresnel term
 	half lightScatter   = (1 + (fd90 - 1) * Pow5(1 - NdotL));
-	half viewScatter    = (1 + (fd90 - 1) * Pow5(1 - NdotV));
+	half viewScatter	= (1 + (fd90 - 1) * Pow5(1 - NdotV));
 
 	return lightScatter * viewScatter;
 }
@@ -131,16 +131,16 @@ inline half SmithJointGGXVisibilityTerm (half NdotL, half NdotV, half roughness)
 {
 #if 0
 	// Original formulation:
-	//  lambda_v    = (-1 + sqrt(a2 * (1 - NdotL2) / NdotL2 + 1)) * 0.5f;
-	//  lambda_l    = (-1 + sqrt(a2 * (1 - NdotV2) / NdotV2 + 1)) * 0.5f;
-	//  G           = 1 / (1 + lambda_v + lambda_l);
+	//  lambda_v	= (-1 + sqrt(a2 * (1 - NdotL2) / NdotL2 + 1)) * 0.5f;
+	//  lambda_l	= (-1 + sqrt(a2 * (1 - NdotV2) / NdotV2 + 1)) * 0.5f;
+	//  G		   = 1 / (1 + lambda_v + lambda_l);
 
 	// Reorder code to be more optimal
-	half a          = roughness;
-	half a2         = a * a;
+	half a		  = roughness;
+	half a2		 = a * a;
 
-	half lambdaV    = NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
-	half lambdaL    = NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
+	half lambdaV	= NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
+	half lambdaL	= NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
 
 	// Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
 	return 0.5f / (lambdaV + lambdaL + 1e-5f);  // This function is not intended to be running on Mobile,
@@ -167,8 +167,8 @@ inline half PerceptualRoughnessToSpecPower (half perceptualRoughness)
 {
 	half m = PerceptualRoughnessToRoughness(perceptualRoughness);   // m is the true academic roughness.
 	half sq = max(1e-4f, m*m);
-	half n = (2.0 / sq) - 2.0;                          // https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
-	n = max(n, 1e-4f);                                  // prevent possible cases of pow(0,0), which could happen when roughness is 1.0 and NdotH is zero
+	half n = (2.0 / sq) - 2.0;						  // https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
+	n = max(n, 1e-4f);								  // prevent possible cases of pow(0,0), which could happen when roughness is 1.0 and NdotH is zero
 	return n;
 }
 
@@ -251,7 +251,7 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 
 	half nv = saturate(dot(normal, viewDir)); // TODO: this saturate should no be necessary here
 #else
-	half nv = abs(dot(normal, viewDir));    // This abs allow to limit artifact
+	half nv = abs(dot(normal, viewDir));	// This abs allow to limit artifact
 #endif
 
 	half nl = saturate(dot(normal, light.dir));
@@ -292,9 +292,9 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 	// surfaceReduction = Int D(NdotH) * NdotH * Id(NdotL>0) dH = 1/(roughness^2+1)
 	half surfaceReduction;
 #   ifdef UNITY_COLORSPACE_GAMMA
-		surfaceReduction = 1.0-0.28*roughness*perceptualRoughness;      // 1-0.28*x^3 as approximation for (1/(x^4+1))^(1/2.2) on the domain [0;1]
+		surfaceReduction = 1.0-0.28*roughness*perceptualRoughness;	  // 1-0.28*x^3 as approximation for (1/(x^4+1))^(1/2.2) on the domain [0;1]
 #   else
-		surfaceReduction = 1.0 / (roughness*roughness + 1.0);           // fade \in [0.5;1]
+		surfaceReduction = 1.0 / (roughness*roughness + 1.0);		   // fade \in [0.5;1]
 #   endif
 
 	// To provide true Lambert lighting, we need to be able to kill specular completely.

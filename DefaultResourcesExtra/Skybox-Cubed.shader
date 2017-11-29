@@ -66,9 +66,9 @@ SubShader {
 			c *= _Exposure;
 			return half4(c, 1);
 		}
-		ENDCG
+		ENDCG 
 	}
-}
+} 	
 
 
 Fallback Off

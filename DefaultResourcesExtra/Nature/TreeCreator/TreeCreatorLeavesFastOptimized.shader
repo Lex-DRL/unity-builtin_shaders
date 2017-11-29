@@ -17,7 +17,7 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader {
+SubShader { 
 	Tags {
 		"IgnoreProjector"="True"
 		"RenderType" = "TreeLeaf"
@@ -81,7 +81,7 @@ SubShader {
 			o.screenPos = ComputeScreenPos (o.pos);
 		#else
 			o.diffuse += mainLight;
-		#endif
+		#endif			
 			o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 			UNITY_TRANSFER_FOG(o,o.pos);
 			return o;

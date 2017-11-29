@@ -12,7 +12,7 @@ Properties {
 	_TranslucencyMap ("Trans (B) Gloss(A)", 2D) = "white" {}
 }
 
-SubShader {
+SubShader {  
 	
 	Pass {
 CGPROGRAM
@@ -24,7 +24,7 @@ CGPROGRAM
 struct v2f {
 	float4 pos : SV_POSITION;
 	float2 uv : TEXCOORD0;
-	float3 color : TEXCOORD1;
+	float3 color : TEXCOORD1; 
 	float3 backContrib : TEXCOORD2;
 	float3 nl : TEXCOORD3;
 	float3 nh : TEXCOORD4;
@@ -36,7 +36,7 @@ CBUFFER_START(UnityTerrainImposter)
 	float4 _TerrainTreeLightColors[4];
 CBUFFER_END
 
-v2f vert (appdata_full v) {
+v2f vert (appdata_full v) {	
 	v2f o;
 	UNITY_SETUP_INSTANCE_ID(v);
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
@@ -105,7 +105,7 @@ fixed4 frag (v2f i) : SV_Target {
 		half3 lightColor = _TerrainTreeLightColors[j].rgb;
 		half3 translucencyColor = backContribs[j] * _TranslucencyColor;
 		
-		half nl = i.nl[j];
+		half nl = i.nl[j];		
 		half nh = i.nh[j];
 		half spec = pow (nh, specular) * gloss;
 		light += (albedo * (translucencyColor + nl) + _SpecColor.rgb * spec) * lightColor;

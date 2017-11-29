@@ -37,7 +37,7 @@ Shader "UI/Lit/Bumped"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp]
+			Pass [_StencilOp] 
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}

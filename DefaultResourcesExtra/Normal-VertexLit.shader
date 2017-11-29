@@ -23,13 +23,13 @@ SubShader {
 			Shininess [_Shininess]
 			Specular [_SpecColor]
 			Emission [_Emission]
-		}
+		} 
 		Lighting On
 		SeparateSpecular On
 		SetTexture [_MainTex] {
 			constantColor (1,1,1,1)
 			Combine texture * primary DOUBLE, constant // UNITY_OPAQUE_ALPHA_FFP
-		}
+		} 
 	}
 	
 	// Lightmapped, encoded as dLDR
@@ -93,7 +93,7 @@ CGPROGRAM
 #pragma multi_compile_instancing // allow instanced shadow pass for most of the shaders
 #include "UnityCG.cginc"
 
-struct v2f {
+struct v2f { 
 	V2F_SHADOW_CASTER;
 	UNITY_VERTEX_OUTPUT_STEREO
 };

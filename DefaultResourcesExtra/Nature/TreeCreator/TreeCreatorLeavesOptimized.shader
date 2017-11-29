@@ -20,7 +20,7 @@ Properties {
 	[HideInInspector] _SquashAmount ("Squash", Float) = 1
 }
 
-SubShader {
+SubShader { 
 	Tags {
 		"IgnoreProjector"="True"
 		"RenderType"="TreeLeaf"

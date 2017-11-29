@@ -11,17 +11,17 @@
 
 struct appdata_customrendertexture
 {
-	uint    vertexID    : SV_VertexID;
+	uint	vertexID	: SV_VertexID;
 };
 
 // User facing vertex to fragment shader structure
 struct v2f_customrendertexture
 {
-	float4 vertex           : SV_POSITION;
-	float3 localTexcoord    : TEXCOORD0;    // Texcoord local to the update zone (== globalTexcoord if no partial update zone is specified)
-	float3 globalTexcoord   : TEXCOORD1;    // Texcoord relative to the complete custom texture
-	uint primitiveID        : TEXCOORD2;    // Index of the update zone (correspond to the index in the updateZones of the Custom Texture)
-	float3 direction        : TEXCOORD3;    // For cube textures, direction of the pixel being rendered in the cubemap
+	float4 vertex		   : SV_POSITION;
+	float3 localTexcoord	: TEXCOORD0;	// Texcoord local to the update zone (== globalTexcoord if no partial update zone is specified)
+	float3 globalTexcoord   : TEXCOORD1;	// Texcoord relative to the complete custom texture
+	uint primitiveID		: TEXCOORD2;	// Index of the update zone (correspond to the index in the updateZones of the Custom Texture)
+	float3 direction		: TEXCOORD3;	// For cube textures, direction of the pixel being rendered in the cubemap
 };
 
 float2 CustomRenderTextureRotate2D(float2 pos, float angle)
@@ -33,17 +33,17 @@ float2 CustomRenderTextureRotate2D(float2 pos, float angle)
 }
 
 // Internal
-float4      CustomRenderTextureCenters[kCustomTextureBatchSize];
-float4      CustomRenderTextureSizesAndRotations[kCustomTextureBatchSize];
-float       CustomRenderTexturePrimitiveIDs[kCustomTextureBatchSize];
+float4	  CustomRenderTextureCenters[kCustomTextureBatchSize];
+float4	  CustomRenderTextureSizesAndRotations[kCustomTextureBatchSize];
+float	   CustomRenderTexturePrimitiveIDs[kCustomTextureBatchSize];
 
-float4      CustomRenderTextureParameters;
-#define     CustomRenderTextureUpdateSpace  CustomRenderTextureParameters.x // Normalized(0)/PixelSpace(1)
-#define     CustomRenderTexture3DTexcoordW  CustomRenderTextureParameters.y
-#define     CustomRenderTextureIs3D         CustomRenderTextureParameters.z
+float4	  CustomRenderTextureParameters;
+#define	 CustomRenderTextureUpdateSpace  CustomRenderTextureParameters.x // Normalized(0)/PixelSpace(1)
+#define	 CustomRenderTexture3DTexcoordW  CustomRenderTextureParameters.y
+#define	 CustomRenderTextureIs3D		 CustomRenderTextureParameters.z
 
 // User facing uniform variables
-float4      _CustomRenderTextureInfo; // x = width, y = height, z = depth, w = face/3DSlice
+float4	  _CustomRenderTextureInfo; // x = width, y = height, z = depth, w = face/3DSlice
 
 // Helpers
 #define _CustomRenderTextureWidth   _CustomRenderTextureInfo.x
@@ -51,8 +51,8 @@ float4      _CustomRenderTextureInfo; // x = width, y = height, z = depth, w = f
 #define _CustomRenderTextureDepth   _CustomRenderTextureInfo.z
 
 // Those two are mutually exclusive so we can use the same slot
-#define _CustomRenderTextureCubeFace    _CustomRenderTextureInfo.w
-#define _CustomRenderTexture3DSlice     _CustomRenderTextureInfo.w
+#define _CustomRenderTextureCubeFace	_CustomRenderTextureInfo.w
+#define _CustomRenderTexture3DSlice	 _CustomRenderTextureInfo.w
 
 sampler2D   _SelfTexture2D;
 samplerCUBE _SelfTextureCube;

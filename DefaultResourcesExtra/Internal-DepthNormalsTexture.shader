@@ -178,7 +178,7 @@ fixed4 frag(v2f i) : SV_Target {
 }
 ENDCG
 	}
-}
+} 
 
 SubShader {
 	Tags { "RenderType"="TreeTransparentCutout" "DisableBatching"="True" }
@@ -308,7 +308,7 @@ ENDCG
 SubShader {
 	Tags { "RenderType"="GrassBillboard" }
 	Pass {
-		Cull Off
+		Cull Off		
 CGPROGRAM
 #pragma vertex vert
 #pragma fragment frag

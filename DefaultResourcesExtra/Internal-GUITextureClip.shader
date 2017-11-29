@@ -9,10 +9,10 @@ Shader "Hidden/Internal-GUITextureClip"
 
 		Tags { "ForceSupported" = "True" }
 
-		Lighting Off
-		Blend SrcAlpha OneMinusSrcAlpha
-		Cull Off
-		ZWrite Off
+		Lighting Off 
+		Blend SrcAlpha OneMinusSrcAlpha 
+		Cull Off 
+		ZWrite Off 
 		ZTest Always
 
 		Pass {

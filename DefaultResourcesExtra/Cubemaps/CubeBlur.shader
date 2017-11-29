@@ -268,7 +268,7 @@
 
 			return s/w;
 
-		#endif
+		#endif		
 	}
 	ENDCG
 

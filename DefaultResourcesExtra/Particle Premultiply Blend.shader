@@ -8,7 +8,7 @@ Properties {
 
 Category {
 	Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" "PreviewType"="Plane" }
-	Blend One OneMinusSrcAlpha
+	Blend One OneMinusSrcAlpha 
 	ColorMask RGB
 	Cull Off Lighting Off ZWrite Off
 
@@ -74,7 +74,7 @@ Category {
 				
 				return i.color * tex2D(_MainTex, i.texcoord) * i.color.a;
 			}
-			ENDCG
+			ENDCG 
 		}
 	}
 }

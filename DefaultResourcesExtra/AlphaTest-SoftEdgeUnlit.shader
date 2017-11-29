@@ -27,7 +27,7 @@ SubShader {
 	
 	// first pass:
 	//   render any pixels that are more than [_Cutoff] opaque
-	Pass {
+	Pass {  
 		CGPROGRAM
 			#pragma vertex vert
 			#pragma fragment frag

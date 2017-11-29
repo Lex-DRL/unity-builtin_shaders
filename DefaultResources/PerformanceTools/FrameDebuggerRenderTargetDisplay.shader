@@ -81,6 +81,6 @@ Shader "Hidden/FrameDebuggerRenderTargetDisplay" {
 			}
 			ENDCG
 		}
-	}
+	} 
 	FallBack off
 }

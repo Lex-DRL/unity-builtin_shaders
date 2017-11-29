@@ -8,8 +8,8 @@
 CBUFFER_START(UnityTerrain)
 	// grass
 	fixed4 _WavingTint;
-	float4 _WaveAndDistance;    // wind speed, wave size, wind amount, max sqr distance
-	float4 _CameraPosition;     // .xyz = camera position, .w = 1 / (max sqr distance)
+	float4 _WaveAndDistance;	// wind speed, wave size, wind amount, max sqr distance
+	float4 _CameraPosition;	 // .xyz = camera position, .w = 1 / (max sqr distance)
 	float3 _CameraRight, _CameraUp;
 
 	// trees
@@ -31,18 +31,18 @@ CBUFFER_END
 // ---- Vertex input structures
 
 struct appdata_tree {
-	float4 vertex : POSITION;       // position
-	float4 tangent : TANGENT;       // directional AO
-	float3 normal : NORMAL;         // normal
-	fixed4 color : COLOR;           // .w = bend factor
-	float4 texcoord : TEXCOORD0;    // UV
+	float4 vertex : POSITION;	   // position
+	float4 tangent : TANGENT;	   // directional AO
+	float3 normal : NORMAL;		 // normal
+	fixed4 color : COLOR;		   // .w = bend factor
+	float4 texcoord : TEXCOORD0;	// UV
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
 struct appdata_tree_billboard {
 	float4 vertex : POSITION;
-	fixed4 color : COLOR;           // Color
-	float4 texcoord : TEXCOORD0;    // UV Coordinates
+	fixed4 color : COLOR;		   // Color
+	float4 texcoord : TEXCOORD0;	// UV Coordinates
 	float2 texcoord1 : TEXCOORD1;   // Billboard extrusion
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -50,20 +50,20 @@ struct appdata_tree_billboard {
 // ---- Grass helpers
 
 // Calculate a 4 fast sine-cosine pairs
-// val:     the 4 input values - each must be in the range (0 to 1)
-// s:       The sine of each of the 4 values
-// c:       The cosine of each of the 4 values
+// val:	 the 4 input values - each must be in the range (0 to 1)
+// s:	   The sine of each of the 4 values
+// c:	   The cosine of each of the 4 values
 void FastSinCos (float4 val, out float4 s, out float4 c) {
 	val = val * 6.408849 - 3.1415927;
 	// powers for taylor series
-	float4 r5 = val * val;                  // wavevec ^ 2
-	float4 r6 = r5 * r5;                        // wavevec ^ 4;
-	float4 r7 = r6 * r5;                        // wavevec ^ 6;
-	float4 r8 = r6 * r5;                        // wavevec ^ 8;
+	float4 r5 = val * val;				  // wavevec ^ 2
+	float4 r6 = r5 * r5;						// wavevec ^ 4;
+	float4 r7 = r6 * r5;						// wavevec ^ 6;
+	float4 r8 = r6 * r5;						// wavevec ^ 8;
 
-	float4 r1 = r5 * val;                   // wavevec ^ 3
-	float4 r2 = r1 * r5;                        // wavevec ^ 5;
-	float4 r3 = r2 * r5;                        // wavevec ^ 7;
+	float4 r1 = r5 * val;				   // wavevec ^ 3
+	float4 r2 = r1 * r5;						// wavevec ^ 5;
+	float4 r3 = r2 * r5;						// wavevec ^ 7;
 
 
 	//Vectors for taylor's series expansion of sin and cos
@@ -134,11 +134,11 @@ void TerrainBillboardGrass( inout float4 pos, float2 offset )
 }
 
 // Grass: appdata_full usage
-// color        - .xyz = color, .w = wave scale
-// normal       - normal
+// color		- .xyz = color, .w = wave scale
+// normal	   - normal
 // tangent.xy   - billboard extrusion
-// texcoord     - UV coords
-// texcoord1    - 2nd UV coords
+// texcoord	 - UV coords
+// texcoord1	- 2nd UV coords
 
 void WavingGrassVert (inout appdata_full v)
 {

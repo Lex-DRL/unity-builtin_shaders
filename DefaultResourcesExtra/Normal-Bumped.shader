@@ -29,7 +29,7 @@ void surf (Input IN, inout SurfaceOutput o) {
 	o.Alpha = c.a;
 	o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
 }
-ENDCG
+ENDCG  
 }
 
 FallBack "Legacy Shaders/Diffuse"

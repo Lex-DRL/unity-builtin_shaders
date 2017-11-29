@@ -30,17 +30,17 @@
 #endif
 
 
-half4       _Color;
-half        _Cutoff;
+half4	   _Color;
+half		_Cutoff;
 sampler2D   _MainTex;
-float4      _MainTex_ST;
+float4	  _MainTex_ST;
 #ifdef UNITY_STANDARD_USE_DITHER_MASK
 sampler3D   _DitherMaskLOD;
 #endif
 
 // Handle PremultipliedAlpha from Fade or Transparent shading mode
-half4       _SpecColor;
-half        _Metallic;
+half4	   _SpecColor;
+half		_Metallic;
 #ifdef _SPECGLOSSMAP
 sampler2D   _SpecGlossMap;
 #endif
@@ -50,7 +50,7 @@ sampler2D   _MetallicGlossMap;
 
 #if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
 sampler2D   _ParallaxMap;
-half        _Parallax;
+half		_Parallax;
 #endif
 
 half MetallicSetup_ShadowGetOneMinusReflectivity(half2 uv)
@@ -80,7 +80,7 @@ struct VertexInput
 {
 	float4 vertex   : POSITION;
 	float3 normal   : NORMAL;
-	float2 uv0      : TEXCOORD0;
+	float2 uv0	  : TEXCOORD0;
 	#if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
 		half4 tangent   : TANGENT;
 	#endif
@@ -151,7 +151,7 @@ half4 fragShadowCaster (
 {
 	#if defined(UNITY_STANDARD_USE_SHADOW_UVS)
 		#if defined(_PARALLAXMAP) && (SHADER_TARGET >= 30)
-			//On d3d9 parallax can also be disabled on the fwd pass when too many    sampler are used. See EXCEEDS_D3D9_SM3_MAX_SAMPLER_COUNT. Ideally we should account for that here as well.
+			//On d3d9 parallax can also be disabled on the fwd pass when too many	sampler are used. See EXCEEDS_D3D9_SM3_MAX_SAMPLER_COUNT. Ideally we should account for that here as well.
 			half3 viewDirForParallax = normalize( half3(i.tangentToWorldAndParallax[0].w,i.tangentToWorldAndParallax[1].w,i.tangentToWorldAndParallax[2].w) );
 			fixed h = tex2D (_ParallaxMap, i.tex.xy).g;
 			half2 offset = ParallaxOffset1Step (h, _Parallax, viewDirForParallax);

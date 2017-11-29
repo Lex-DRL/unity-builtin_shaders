@@ -22,10 +22,10 @@ Shader "UI/DefaultETC1"
 	SubShader
 	{
 		Tags
-		{
-			"Queue"="Transparent"
-			"IgnoreProjector"="True"
-			"RenderType"="Transparent"
+		{ 
+			"Queue"="Transparent" 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
@@ -34,7 +34,7 @@ Shader "UI/DefaultETC1"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp]
+			Pass [_StencilOp] 
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -62,14 +62,14 @@ Shader "UI/DefaultETC1"
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
-				float4 color    : COLOR;
+				float4 color	: COLOR;
 				float2 texcoord : TEXCOORD0;
 			};
 
 			struct v2f
 			{
 				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
+				fixed4 color	: COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 			};

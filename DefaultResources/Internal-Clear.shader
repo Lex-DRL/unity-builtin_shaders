@@ -37,9 +37,9 @@ Shader "Hidden/InternalClear" {
 	{
 		return i.color;
 	}
-	ENDCG
+	ENDCG 
 
-	SubShader {
+	SubShader { 
 		ZTest Always Cull Off
 		Pass {
 			ColorMask 0 ZWrite Off
@@ -84,5 +84,5 @@ Shader "Hidden/InternalClear" {
 			ENDCG
 		}
 	}
-	Fallback Off
+	Fallback Off 
 }

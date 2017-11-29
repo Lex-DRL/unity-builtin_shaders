@@ -91,8 +91,8 @@ float3x3 RotationMatrix(float3 vAxis, float fAngle)
 	const float y = vAxis.y;
 	const float z = vAxis.z;
 
-	return float3x3(t * x * x + c,      t * x * y - s * z,  t * x * z + s * y,
-					t * x * y + s * z,  t * y * y + c,      t * y * z - s * x,
+	return float3x3(t * x * x + c,	  t * x * y - s * z,  t * x * z + s * y,
+					t * x * y + s * z,  t * y * y + c,	  t * y * z - s * x,
 					t * x * z - s * y,  t * y * z + s * x,  t * z * z + c);
 }
 

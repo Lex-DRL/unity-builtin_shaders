@@ -38,7 +38,7 @@ inline half OneMinusReflectivityFromMetallic(half metallic)
 	//   1-reflectivity = 1-lerp(dielectricSpec, 1, metallic) = lerp(1-dielectricSpec, 0, metallic)
 	// store (1-dielectricSpec) in unity_ColorSpaceDielectricSpec.a, then
 	//   1-reflectivity = lerp(alpha, 0, metallic) = alpha + metallic*(0 - alpha) =
-	//                  = alpha - metallic * alpha
+	//				  = alpha - metallic * alpha
 	half oneMinusDielectricSpec = unity_ColorSpaceDielectricSpec.a;
 	return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
 }
@@ -66,7 +66,7 @@ inline half3 PreMultiplyAlpha (half3 diffColor, half alpha, half oneMinusReflect
 		#else
 			// Reflectivity 'removes' from the rest of components, including Transparency
 			// outAlpha = 1-(1-alpha)*(1-reflectivity) = 1-(oneMinusReflectivity - alpha*oneMinusReflectivity) =
-			//          = 1-oneMinusReflectivity + alpha*oneMinusReflectivity
+			//		  = 1-oneMinusReflectivity + alpha*oneMinusReflectivity
 			outModifiedAlpha = 1-oneMinusReflectivity + alpha*oneMinusReflectivity;
 		#endif
 	#else
@@ -144,7 +144,7 @@ half3 ShadeSHPerVertex (half3 normal, half3 ambient)
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = GammaToLinearSpace (ambient);
 		#endif
-		ambient += SHEvalLinearL2 (half4(normal, 1.0));     // no max since this is only L2 contribution
+		ambient += SHEvalLinearL2 (half4(normal, 1.0));	 // no max since this is only L2 contribution
 	#endif
 
 	return ambient;
@@ -173,7 +173,7 @@ half3 ShadeSHPerPixel (half3 normal, half3 ambient, float3 worldPos)
 			ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0));
 		#endif
 
-		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);     // include L2 contribution in vertex shader before clamp.
+		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);	 // include L2 contribution in vertex shader before clamp.
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = LinearToGammaSpace (ambient);
 		#endif

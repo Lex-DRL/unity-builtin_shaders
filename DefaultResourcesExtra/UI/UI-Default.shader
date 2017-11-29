@@ -21,10 +21,10 @@ Shader "UI/Default"
 	SubShader
 	{
 		Tags
-		{
-			"Queue"="Transparent"
-			"IgnoreProjector"="True"
-			"RenderType"="Transparent"
+		{ 
+			"Queue"="Transparent" 
+			"IgnoreProjector"="True" 
+			"RenderType"="Transparent" 
 			"PreviewType"="Plane"
 			"CanUseSpriteAtlas"="True"
 		}
@@ -33,7 +33,7 @@ Shader "UI/Default"
 		{
 			Ref [_Stencil]
 			Comp [_StencilComp]
-			Pass [_StencilOp]
+			Pass [_StencilOp] 
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
@@ -61,7 +61,7 @@ Shader "UI/Default"
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
-				float4 color    : COLOR;
+				float4 color	: COLOR;
 				float2 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -69,7 +69,7 @@ Shader "UI/Default"
 			struct v2f
 			{
 				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
+				fixed4 color	: COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO

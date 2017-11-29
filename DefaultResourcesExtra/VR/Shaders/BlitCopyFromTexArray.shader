@@ -2,7 +2,7 @@
 
 Shader "Hidden/VR/BlitCopyFromTexArray" {
 	Properties { _MainTex ("Texture", any) = "" {} }
-	SubShader {
+	SubShader { 
 		Pass {
 			ZTest Always Cull Off ZWrite Off
 
@@ -35,7 +35,7 @@ Shader "Hidden/VR/BlitCopyFromTexArray" {
 				UNITY_SETUP_INSTANCE_ID(v);
 				UNITY_INITIALIZE_OUTPUT(v2f, o);
 				UNITY_TRANSFER_INSTANCE_ID(v, o);
-				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o);
+				UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(o); 
 				o.vertex = UnityObjectToClipPos(v.vertex);
 				o.texcoord = TRANSFORM_TEX(v.texcoord.xy, _MainTex);
 				return o;

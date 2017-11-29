@@ -38,7 +38,7 @@ SubShader {
 	// This pass it not used during regular rendering.
 	Pass
 	{
-		Name "META"
+		Name "META" 
 		Tags { "LightMode" = "Meta" }
 		CGPROGRAM
 		#pragma vertex vert

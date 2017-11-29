@@ -123,7 +123,7 @@
 				#pragma multi_compile_fog
 				#include "SpeedTreeBillboardCommon.cginc"
 
-				struct v2f
+				struct v2f 
 				{
 					float4 vertex	: SV_POSITION;
 					UNITY_FOG_COORDS(0)

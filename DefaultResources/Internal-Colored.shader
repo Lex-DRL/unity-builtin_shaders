@@ -5,7 +5,7 @@
 // controlled by material parameters.
 
 Shader "Hidden/Internal-Colored"
-{
+{ 
 	Properties
 	{
 		_Color ("Color", Color) = (1,1,1,1)
@@ -59,7 +59,7 @@ Shader "Hidden/Internal-Colored"
 			{
 				return i.color;
 			}
-			ENDCG
-		}
+			ENDCG  
+		}  
 	}
 }
