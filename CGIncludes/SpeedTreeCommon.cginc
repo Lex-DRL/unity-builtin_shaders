@@ -81,7 +81,7 @@ void SpeedTreeVert(inout SpeedTreeVB IN, out Input OUT)
 // Fragment processing
 
 #if defined(EFFECT_BUMP) && !defined(LIGHTMAP_ON)
-	#define SPEEDTREE_DATA_NORMAL           fixed3 Normal;
+	#define SPEEDTREE_DATA_NORMAL		   fixed3 Normal;
 	#define SPEEDTREE_COPY_NORMAL(to, from) to.Normal = from.Normal;
 #else
 	#define SPEEDTREE_DATA_NORMAL
@@ -89,8 +89,8 @@ void SpeedTreeVert(inout SpeedTreeVB IN, out Input OUT)
 #endif
 
 #define SPEEDTREE_COPY_FRAG(to, from)   \
-	to.Albedo = from.Albedo;            \
-	to.Alpha = from.Alpha;              \
+	to.Albedo = from.Albedo;			\
+	to.Alpha = from.Alpha;			  \
 	SPEEDTREE_COPY_NORMAL(to, from)
 
 struct SpeedTreeFragOut

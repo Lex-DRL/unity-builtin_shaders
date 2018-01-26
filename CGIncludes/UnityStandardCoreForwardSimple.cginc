@@ -14,24 +14,24 @@
 
 struct VertexOutputBaseSimple
 {
-	UNITY_POSITION(pos);
-	float4 tex                          : TEXCOORD0;
-	half4 eyeVec                        : TEXCOORD1; // w: grazingTerm
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	half4 eyeVec						: TEXCOORD1; // w: grazingTerm
 
-	half4 ambientOrLightmapUV           : TEXCOORD2; // SH or Lightmap UV
+	half4 ambientOrLightmapUV		   : TEXCOORD2; // SH or Lightmap UV
 	SHADOW_COORDS(3)
 	UNITY_FOG_COORDS_PACKED(4, half4) // x: fogCoord, yzw: reflectVec
 
-	half4 normalWorld                   : TEXCOORD5; // w: fresnelTerm
+	half4 normalWorld				   : TEXCOORD5; // w: fresnelTerm
 
 #ifdef _NORMALMAP
-	half3 tangentSpaceLightDir          : TEXCOORD6;
+	half3 tangentSpaceLightDir		  : TEXCOORD6;
 	#if SPECULAR_HIGHLIGHTS
-		half3 tangentSpaceEyeVec        : TEXCOORD7;
+		half3 tangentSpaceEyeVec		: TEXCOORD7;
 	#endif
 #endif
 #if UNITY_REQUIRE_FRAG_WORLDPOS
-	float3 posWorld                     : TEXCOORD8;
+	float3 posWorld					 : TEXCOORD8;
 #endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -192,8 +192,6 @@ half3 BRDF3DirectSimple(half3 diffColor, half3 specColor, half smoothness, half 
 
 half4 fragForwardBaseSimpleInternal (VertexOutputBaseSimple i)
 {
-	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
-
 	FragmentCommonData s = FragmentSetupSimple(i);
 
 	UnityLight mainLight = MainLightSimple(i, s);
@@ -231,9 +229,9 @@ half4 fragForwardBaseSimple (VertexOutputBaseSimple i) : SV_Target  // backward 
 
 struct VertexOutputForwardAddSimple
 {
-	UNITY_POSITION(pos);
-	float4 tex                          : TEXCOORD0;
-	float3 posWorld                     : TEXCOORD1;
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	float3 posWorld					 : TEXCOORD1;
 
 	UNITY_SHADOW_COORDS(2)
 
@@ -243,14 +241,14 @@ struct VertexOutputForwardAddSimple
 	UNITY_FOG_COORDS_PACKED(3, half1)
 #endif
 
-	half3 lightDir                      : TEXCOORD4;
+	half3 lightDir					  : TEXCOORD4;
 
 #if defined(_NORMALMAP)
 	#if SPECULAR_HIGHLIGHTS
-		half3 tangentSpaceEyeVec        : TEXCOORD5;
+		half3 tangentSpaceEyeVec		: TEXCOORD5;
 	#endif
 #else
-	half3 normalWorld                   : TEXCOORD5;
+	half3 normalWorld				   : TEXCOORD5;
 #endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -344,8 +342,6 @@ half3 LightSpaceNormal(VertexOutputForwardAddSimple i, FragmentCommonData s)
 
 half4 fragForwardAddSimpleInternal (VertexOutputForwardAddSimple i)
 {
-	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
-
 	FragmentCommonData s = FragmentSetupSimpleAdd(i);
 
 	half3 c = BRDF3DirectSimple(s.diffColor, s.specColor, s.smoothness, dot(REFLECTVEC_FOR_SPECULAR(i, s), i.lightDir));
@@ -354,7 +350,8 @@ half4 fragForwardAddSimpleInternal (VertexOutputForwardAddSimple i)
 		c *= _LightColor0.rgb;
 	#endif
 
-	c *= UNITY_SHADOW_ATTENUATION(i, s.posWorld) * saturate(dot(LightSpaceNormal(i, s), i.lightDir));
+	UNITY_LIGHT_ATTENUATION(atten, i, s.posWorld)
+	c *= atten * saturate(dot(LightSpaceNormal(i, s), i.lightDir));
 
 	UNITY_APPLY_FOG_COLOR(i.fogCoord, c.rgb, half4(0,0,0,0)); // fog towards black in additive pass
 	return OutputForward (half4(c, 1), s.alpha);

@@ -17,8 +17,8 @@
 
 struct v2f_meta
 {
-	float4 uv       : TEXCOORD0;
-	float4 pos      : SV_POSITION;
+	float4 uv	   : TEXCOORD0;
+	float4 pos	  : SV_POSITION;
 };
 
 v2f_meta vert_meta (VertexInput v)

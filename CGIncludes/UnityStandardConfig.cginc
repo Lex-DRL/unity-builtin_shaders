@@ -20,9 +20,9 @@
 #endif
 
 // "platform caps" defines: they are controlled from TierSettings (Editor will determine values and pass them to compiler)
-// UNITY_SPECCUBE_BOX_PROJECTION:                   TierSettings.reflectionProbeBoxProjection
-// UNITY_SPECCUBE_BLENDING:                         TierSettings.reflectionProbeBlending
-// UNITY_ENABLE_DETAIL_NORMALMAP:                   TierSettings.detailNormalMap
+// UNITY_SPECCUBE_BOX_PROJECTION:				   TierSettings.reflectionProbeBoxProjection
+// UNITY_SPECCUBE_BLENDING:						 TierSettings.reflectionProbeBlending
+// UNITY_ENABLE_DETAIL_NORMALMAP:				   TierSettings.detailNormalMap
 // UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS:  TierSettings.semitransparentShadows
 
 // disregarding what is set in TierSettings, some features have hardware restrictions
@@ -75,7 +75,8 @@
 #endif
 
 // Should we pack worldPos along tangent (saving an interpolator)
-#if UNITY_REQUIRE_FRAG_WORLDPOS && !defined(_PARALLAXMAP)
+// We want to skip this on mobile platforms, because worldpos gets packed into mediump
+#if UNITY_REQUIRE_FRAG_WORLDPOS && !defined(_PARALLAXMAP) && !(defined(SHADER_API_MOBILE) && !defined(SHADER_API_D3D11_9X))
 	#define UNITY_PACK_WORLDPOS_WITH_TANGENT 1
 #else
 	#define UNITY_PACK_WORLDPOS_WITH_TANGENT 0

@@ -4,8 +4,6 @@
 #define UNITY_STANDARD_CORE_INCLUDED
 
 #include "UnityCG.cginc"
-#include "UnityShaderVariables.cginc"
-#include "UnityInstancing.cginc"
 #include "UnityStandardConfig.cginc"
 #include "UnityStandardInput.cginc"
 #include "UnityPBSLighting.cginc"
@@ -173,8 +171,9 @@ struct FragmentCommonData
 	// Note: smoothness & oneMinusReflectivity for optimization purposes, mostly for DX9 SM2.0 level.
 	// Most of the math is being done on these (1-x) values, and that saves a few precious ALU slots.
 	half oneMinusReflectivity, smoothness;
-	half3 normalWorld, eyeVec, posWorld;
+	half3 normalWorld, eyeVec;
 	half alpha;
+	float3 posWorld;
 
 #if UNITY_STANDARD_SIMPLE
 	half3 reflUVW;
@@ -224,8 +223,7 @@ inline FragmentCommonData MetallicSetup (float4 i_tex)
 	return o;
 }
 
-// parallax transformed texcoord is used to sample occlusion
-inline FragmentCommonData FragmentSetup (inout float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], half3 i_posWorld)
+inline FragmentCommonData FragmentSetup (float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], float3 i_posWorld)
 {
 	i_tex = Parallax(i_tex, i_viewDirForParallax);
 
@@ -337,17 +335,17 @@ inline half4 VertexGIForward(VertexInput v, float3 posWorld, half3 normalWorld)
 
 struct VertexOutputForwardBase
 {
-	UNITY_POSITION(pos);
-	float4 tex                          : TEXCOORD0;
-	half3 eyeVec                        : TEXCOORD1;
-	half4 tangentToWorldAndPackedData[3]    : TEXCOORD2;    // [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
-	half4 ambientOrLightmapUV           : TEXCOORD5;    // SH or Lightmap UV
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	half3 eyeVec						: TEXCOORD1;
+	half4 tangentToWorldAndPackedData[3]	: TEXCOORD2;	// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
+	half4 ambientOrLightmapUV		   : TEXCOORD5;	// SH or Lightmap UV
 	UNITY_SHADOW_COORDS(6)
 	UNITY_FOG_COORDS(7)
 
 	// next ones would not fit into SM2.0 limits, but they are always for SM3.0+
 	#if UNITY_REQUIRE_FRAG_WORLDPOS && !UNITY_PACK_WORLDPOS_WITH_TANGENT
-		float3 posWorld                 : TEXCOORD8;
+		float3 posWorld				 : TEXCOORD8;
 	#endif
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -409,8 +407,6 @@ VertexOutputForwardBase vertForwardBase (VertexInput v)
 
 half4 fragForwardBaseInternal (VertexOutputForwardBase i)
 {
-	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
-
 	FRAGMENT_SETUP(s)
 
 	UNITY_SETUP_INSTANCE_ID(i);
@@ -439,17 +435,17 @@ half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target   // backward comp
 
 struct VertexOutputForwardAdd
 {
-	UNITY_POSITION(pos);
-	float4 tex                          : TEXCOORD0;
-	half3 eyeVec                        : TEXCOORD1;
-	half4 tangentToWorldAndLightDir[3]  : TEXCOORD2;    // [3x3:tangentToWorld | 1x3:lightDir]
-	float3 posWorld                     : TEXCOORD5;
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	half3 eyeVec						: TEXCOORD1;
+	half4 tangentToWorldAndLightDir[3]  : TEXCOORD2;	// [3x3:tangentToWorld | 1x3:lightDir]
+	float3 posWorld					 : TEXCOORD5;
 	UNITY_SHADOW_COORDS(6)
 	UNITY_FOG_COORDS(7)
 
 	// next ones would not fit into SM2.0 limits, but they are always for SM3.0+
 #if defined(_PARALLAXMAP)
-	half3 viewDirForParallax            : TEXCOORD8;
+	half3 viewDirForParallax			: TEXCOORD8;
 #endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -503,8 +499,6 @@ VertexOutputForwardAdd vertForwardAdd (VertexInput v)
 
 half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 {
-	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
-
 	FRAGMENT_SETUP_FWDADD(s)
 
 	UNITY_LIGHT_ATTENUATION(atten, i, s.posWorld)
@@ -517,7 +511,7 @@ half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 	return OutputForward (c, s.alpha);
 }
 
-half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target     // backward compatibility (this used to be the fragment entry function)
+half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target	 // backward compatibility (this used to be the fragment entry function)
 {
 	return fragForwardAddInternal(i);
 }
@@ -527,14 +521,14 @@ half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target     // backward comp
 
 struct VertexOutputDeferred
 {
-	UNITY_POSITION(pos);
-	float4 tex                          : TEXCOORD0;
-	half3 eyeVec                        : TEXCOORD1;
-	half4 tangentToWorldAndPackedData[3]: TEXCOORD2;    // [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
-	half4 ambientOrLightmapUV           : TEXCOORD5;    // SH or Lightmap UVs
+	float4 pos						  : SV_POSITION;
+	float4 tex						  : TEXCOORD0;
+	half3 eyeVec						: TEXCOORD1;
+	half4 tangentToWorldAndPackedData[3]: TEXCOORD2;	// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
+	half4 ambientOrLightmapUV		   : TEXCOORD5;	// SH or Lightmap UVs
 
 	#if UNITY_REQUIRE_FRAG_WORLDPOS && !UNITY_PACK_WORLDPOS_WITH_TANGENT
-		float3 posWorld                     : TEXCOORD6;
+		float3 posWorld					 : TEXCOORD6;
 	#endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -602,9 +596,9 @@ void fragDeferred (
 	out half4 outGBuffer0 : SV_Target0,
 	out half4 outGBuffer1 : SV_Target1,
 	out half4 outGBuffer2 : SV_Target2,
-	out half4 outEmission : SV_Target3          // RT3: emission (rgb), --unused-- (a)
+	out half4 outEmission : SV_Target3		  // RT3: emission (rgb), --unused-- (a)
 #if defined(SHADOWS_SHADOWMASK) && (UNITY_ALLOWED_MRT_COUNT > 4)
-	,out half4 outShadowMask : SV_Target4       // RT4: shadowmask (rgba)
+	,out half4 outShadowMask : SV_Target4	   // RT4: shadowmask (rgba)
 #endif
 )
 {
@@ -618,8 +612,6 @@ void fragDeferred (
 		#endif
 		return;
 	#endif
-
-	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
 
 	FRAGMENT_SETUP(s)
 
@@ -649,10 +641,10 @@ void fragDeferred (
 
 	UnityStandardData data;
 	data.diffuseColor   = s.diffColor;
-	data.occlusion      = occlusion;
+	data.occlusion	  = occlusion;
 	data.specularColor  = s.specColor;
-	data.smoothness     = s.smoothness;
-	data.normalWorld    = s.normalWorld;
+	data.smoothness	 = s.smoothness;
+	data.normalWorld	= s.normalWorld;
 
 	UnityStandardDataToGbuffer(data, outGBuffer0, outGBuffer1, outGBuffer2);
 

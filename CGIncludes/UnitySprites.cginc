@@ -33,7 +33,7 @@ fixed4 _Color;
 struct appdata_t
 {
 	float4 vertex   : POSITION;
-	float4 color    : COLOR;
+	float4 color	: COLOR;
 	float2 texcoord : TEXCOORD0;
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -41,7 +41,7 @@ struct appdata_t
 struct v2f
 {
 	float4 vertex   : SV_POSITION;
-	fixed4 color    : COLOR;
+	fixed4 color	: COLOR;
 	float2 texcoord : TEXCOORD0;
 	UNITY_VERTEX_OUTPUT_STEREO
 };

@@ -29,7 +29,7 @@ SubShader {
 		SetTexture [_RightTex] { combine texture }
 	}
 	Pass {
-		SetTexture [_UpTex]    { combine texture }
+		SetTexture [_UpTex]	{ combine texture }
 	}
 	Pass {
 		SetTexture [_DownTex]  { combine texture }

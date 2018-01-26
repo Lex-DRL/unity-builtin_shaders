@@ -8,12 +8,12 @@
 struct UnityStandardData
 {
 	half3   diffuseColor;
-	half    occlusion;
+	half	occlusion;
 
 	half3   specularColor;
-	half    smoothness;
+	half	smoothness;
 
-	half3   normalWorld;        // normal in world space
+	half3   normalWorld;		// normal in world space
 };
 
 //-----------------------------------------------------------------------------
@@ -36,12 +36,12 @@ UnityStandardData UnityStandardDataFromGbuffer(half4 inGBuffer0, half4 inGBuffer
 	UnityStandardData data;
 
 	data.diffuseColor   = inGBuffer0.rgb;
-	data.occlusion      = inGBuffer0.a;
+	data.occlusion	  = inGBuffer0.a;
 
 	data.specularColor  = inGBuffer1.rgb;
-	data.smoothness     = inGBuffer1.a;
+	data.smoothness	 = inGBuffer1.a;
 
-	data.normalWorld    = normalize(inGBuffer2.rgb * 2 - 1);
+	data.normalWorld	= normalize(inGBuffer2.rgb * 2 - 1);
 
 	return data;
 }
@@ -52,7 +52,7 @@ void UnityStandardDataApplyWeightToGbuffer(inout half4 inOutGBuffer0, inout half
 {
 	// With UnityStandardData current encoding, We can apply the weigth directly on the gbuffer
 	inOutGBuffer0.rgb   *= alpha; // diffuseColor
-	inOutGBuffer1       *= alpha; // SpecularColor and Smoothness
+	inOutGBuffer1	   *= alpha; // SpecularColor and Smoothness
 	inOutGBuffer2.rgb   *= alpha; // Normal
 }
 //-----------------------------------------------------------------------------

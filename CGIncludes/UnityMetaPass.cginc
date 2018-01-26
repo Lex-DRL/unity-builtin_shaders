@@ -44,12 +44,12 @@ uniform half _AlbedoSaturationTolerance = 0.1;
 // Define bounds value in linear RGB for fresnel0 values
 static const float dieletricMin = 0.02;
 static const float dieletricMax = 0.07;
-static const float gemsMin      = 0.07;
-static const float gemsMax      = 0.22;
+static const float gemsMin	  = 0.07;
+static const float gemsMax	  = 0.22;
 static const float conductorMin = 0.45;
 static const float conductorMax = 1.00;
-static const float albedoMin    = 0.012;
-static const float albedoMax    = 0.9;
+static const float albedoMin	= 0.012;
+static const float albedoMax	= 0.9;
 
 half3 UnityMeta_RGBToHSVHelper(float offset, half dominantColor, half colorone, half colortwo)
 {

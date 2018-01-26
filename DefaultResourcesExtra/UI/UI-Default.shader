@@ -61,7 +61,7 @@ Shader "UI/Default"
 			struct appdata_t
 			{
 				float4 vertex   : POSITION;
-				float4 color    : COLOR;
+				float4 color	: COLOR;
 				float2 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
 			};
@@ -69,7 +69,7 @@ Shader "UI/Default"
 			struct v2f
 			{
 				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
+				fixed4 color	: COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 				UNITY_VERTEX_OUTPUT_STEREO

@@ -57,15 +57,15 @@ inline half3 SubtractMainLightWithRealtimeAttenuationFromLightmap (half3 lightma
 
 	// Summary:
 	// 1) Calculate possible value in the shadow by subtracting estimated light contribution from the places occluded by realtime shadow:
-	//      a) preserves other baked lights and light bounces
-	//      b) eliminates shadows on the geometry facing away from the light
+	//	  a) preserves other baked lights and light bounces
+	//	  b) eliminates shadows on the geometry facing away from the light
 	// 2) Clamp against user defined ShadowColor.
 	// 3) Pick original lightmap value, if it is the darkest one.
 
 
 	// 1) Gives good estimate of illumination as if light would've been shadowed during the bake.
-	//    Preserves bounce and other baked lights
-	//    No shadows on the geometry facing away from the light
+	//	Preserves bounce and other baked lights
+	//	No shadows on the geometry facing away from the light
 	half ndotl = LambertTerm (normalWorld, _WorldSpaceLightPos0.xyz);
 	half3 estimatedLightContributionMaskedByInverseOfShadow = ndotl * (1- attenuation) * _LightColor0.rgb;
 	half3 subtractedLightmap = lightmap - estimatedLightContributionMaskedByInverseOfShadow;
