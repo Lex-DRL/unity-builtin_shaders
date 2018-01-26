@@ -27,12 +27,12 @@ CGPROGRAM
 
 struct v2f {
 	float4 pos : SV_POSITION;
-	float2  uv      : TEXCOORD0;
-	float2  uv2     : TEXCOORD1;
-	float3  I       : TEXCOORD2;
-	float3  TtoW0   : TEXCOORD3;
-	float3  TtoW1   : TEXCOORD4;
-	float3  TtoW2   : TEXCOORD5;
+	float2  uv	: TEXCOORD0;
+	float2  uv2	: TEXCOORD1;
+	float3  I		: TEXCOORD2;
+	float3  TtoW0	: TEXCOORD3;
+	float3  TtoW1	: TEXCOORD4;
+	float3  TtoW2	: TEXCOORD5;
 	UNITY_FOG_COORDS(6)
 	UNITY_VERTEX_OUTPUT_STEREO
 };

@@ -131,8 +131,8 @@ half UnityDeferredSampleRealtimeShadow(half fade, float3 vec, float2 uv)
 half UnityDeferredComputeShadow(float3 vec, float fadeDist, float2 uv)
 {
 
-	half fade					  = UnityComputeShadowFade(fadeDist);
-	half shadowMaskAttenuation	 = UnityDeferredSampleShadowMask(uv);
+	half fade					= UnityComputeShadowFade(fadeDist);
+	half shadowMaskAttenuation	= UnityDeferredSampleShadowMask(uv);
 	half realtimeShadowAttenuation = UnityDeferredSampleRealtimeShadow(fade, vec, uv);
 
 	return UnityMixRealtimeAndBakedShadows(realtimeShadowAttenuation, shadowMaskAttenuation, fade);

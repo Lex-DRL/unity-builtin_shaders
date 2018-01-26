@@ -19,52 +19,52 @@
 #endif
 
 //---------------------------------------
-half4	   _Color;
+half4		_Color;
 half		_Cutoff;
 
-sampler2D   _MainTex;
-float4	  _MainTex_ST;
+sampler2D	_MainTex;
+float4	_MainTex_ST;
 
-sampler2D   _DetailAlbedoMap;
-float4	  _DetailAlbedoMap_ST;
+sampler2D	_DetailAlbedoMap;
+float4	_DetailAlbedoMap_ST;
 
-sampler2D   _BumpMap;
+sampler2D	_BumpMap;
 half		_BumpScale;
 
-sampler2D   _DetailMask;
-sampler2D   _DetailNormalMap;
+sampler2D	_DetailMask;
+sampler2D	_DetailNormalMap;
 half		_DetailNormalMapScale;
 
-sampler2D   _SpecGlossMap;
-sampler2D   _MetallicGlossMap;
+sampler2D	_SpecGlossMap;
+sampler2D	_MetallicGlossMap;
 half		_Metallic;
 half		_Glossiness;
 half		_GlossMapScale;
 
-sampler2D   _OcclusionMap;
+sampler2D	_OcclusionMap;
 half		_OcclusionStrength;
 
-sampler2D   _ParallaxMap;
+sampler2D	_ParallaxMap;
 half		_Parallax;
 half		_UVSec;
 
-half4	   _EmissionColor;
-sampler2D   _EmissionMap;
+half4		_EmissionColor;
+sampler2D	_EmissionMap;
 
 //-------------------------------------------------------------------------------------
 // Input functions
 
 struct VertexInput
 {
-	float4 vertex   : POSITION;
+	float4 vertex	: POSITION;
 	half3 normal	: NORMAL;
-	float2 uv0	  : TEXCOORD0;
-	float2 uv1	  : TEXCOORD1;
+	float2 uv0	: TEXCOORD0;
+	float2 uv1	: TEXCOORD1;
 #if defined(DYNAMICLIGHTMAP_ON) || defined(UNITY_PASS_META)
-	float2 uv2	  : TEXCOORD2;
+	float2 uv2	: TEXCOORD2;
 #endif
 #ifdef _TANGENT_TO_WORLD
-	half4 tangent   : TANGENT;
+	half4 tangent	: TANGENT;
 #endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -173,6 +173,23 @@ half2 MetallicGloss(float2 uv)
 	return mg;
 }
 
+half2 MetallicRough(float2 uv)
+{
+	half2 mg;
+#ifdef _METALLICGLOSSMAP
+	mg.r = tex2D(_MetallicGlossMap, uv).r;
+#else
+	mg.r = _Metallic;
+#endif
+
+#ifdef _SPECGLOSSMAP
+	mg.g = 1.0f - tex2D(_SpecGlossMap, uv).r;
+#else
+	mg.g = 1.0f - _Glossiness;
+#endif
+	return mg;
+}
+
 half3 Emission(float2 uv)
 {
 #ifndef _EMISSION
@@ -211,7 +228,7 @@ float4 Parallax (float4 texcoords, half3 viewDir)
 {
 // D3D9/SM30 supports up to 16 samplers, skip the parallax map in case we exceed the limit
 #define EXCEEDS_D3D9_SM3_MAX_SAMPLER_COUNT  (defined(LIGHTMAP_ON) && defined(SHADOWS_SHADOWMASK) && defined(SHADOWS_SCREEN) && defined(_NORMALMAP) && \
-											 defined(_EMISSION) && defined(_DETAIL) && (defined(_METALLICGLOSSMAP) || defined(_SPECGLOSSMAP)))
+											defined(_EMISSION) && defined(_DETAIL) && (defined(_METALLICGLOSSMAP) || defined(_SPECGLOSSMAP)))
 
 #if !defined(_PARALLAXMAP) || (SHADER_TARGET < 30) || (defined(SHADER_API_D3D9) && EXCEEDS_D3D9_SM3_MAX_SAMPLER_COUNT)
 	// SM20: instruction count limitation

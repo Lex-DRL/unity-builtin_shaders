@@ -72,7 +72,7 @@ float2 InitRandom(float2 input)
 // generate an orthonormalBasis from 3d unit vector.
 void GetLocalFrame(float3 N, out float3 tangentX, out float3 tangentY)
 {
-	float3 upVector	 = abs(N.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f);
+	float3 upVector	= abs(N.z) < 0.999f ? float3(0.0f, 0.0f, 1.0f) : float3(1.0f, 0.0f, 0.0f);
 	tangentX			= normalize(cross(upVector, N));
 	tangentY			= cross(N, tangentX);
 }
@@ -88,8 +88,8 @@ void GetLocalFrame(float3 N, out float3 tangentX, out float3 tangentY)
 		return ;
 	}
 
-	float a	 = 1.0f / (1.0f + N.z);
-	float b	 = -N.x * N.y * a ;
+	float a	= 1.0f / (1.0f + N.z);
+	float b	= -N.x * N.y * a ;
 	tangentX	= float3(1.0f - N.x * N.x * a , b, -N.x);
 	tangentY	= float3(b, 1.0f - N.y * N.y * a, -N.y);
 }
@@ -129,7 +129,7 @@ void ImportanceSampleGGXDir(float2 u,
 	// GGX NDF sampling
 	float cosThetaH = sqrt((1.0f - u.x) / (1.0f + (roughness * roughness - 1.0f) * u.x));
 	float sinThetaH = sqrt(max(0.0f, 1.0f - cosThetaH * cosThetaH));
-	float phiH	  = UNITY_TWO_PI * u.y;
+	float phiH	= UNITY_TWO_PI * u.y;
 
 	// Transform from spherical into cartesian
 	H = float3(sinThetaH * cos(phiH), sinThetaH * sin(phiH), cosThetaH);
@@ -213,7 +213,7 @@ void IntegrateLambertDiffuseIBLRef( out float3 diffuseLighting,
 									float3 diffuseAlbedo,
 									uint sampleCount = 2048)
 {
-	float3 acc	  = float3(0.0f, 0.0f, 0.0f);
+	float3 acc	= float3(0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
 	float2 randNum  = InitRandom(N.xy * 0.5f + 0.5f);
 
@@ -223,7 +223,7 @@ void IntegrateLambertDiffuseIBLRef( out float3 diffuseLighting,
 	for (uint i = 0; i < sampleCount; ++i)
 	{
 		float2 u	= Hammersley2d(i, sampleCount);
-		u		   = frac(u + randNum + 0.5f);
+		u			= frac(u + randNum + 0.5f);
 
 		float3 L;
 		float NdotL;
@@ -265,7 +265,7 @@ void IntegrateDisneyDiffuseIBLRef(  out float3 diffuseLighting,
 	for (uint i = 0; i < sampleCount; ++i)
 	{
 		float2 u	= Hammersley2d(i, sampleCount);
-		u		   = frac(u + randNum + 0.5f);
+		u			= frac(u + randNum + 0.5f);
 
 		float3 L;
 		float NdotL;
@@ -304,8 +304,8 @@ void IntegrateSpecularGGXIBLRef(out float3 specularLighting,
 								float f90,
 								uint sampleCount = 2048)
 {
-	float NdotV	 = saturate(dot(N, V));
-	float3 acc	  = float3(0.0f, 0.0f, 0.0f);
+	float NdotV	= saturate(dot(N, V));
+	float3 acc	= float3(0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
 	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
 
@@ -315,7 +315,7 @@ void IntegrateSpecularGGXIBLRef(out float3 specularLighting,
 	for (uint i = 0; i < sampleCount; ++i)
 	{
 		float2 u	= Hammersley2d(i, sampleCount);
-		u		   = frac(u + randNum + 0.5f);
+		u			= frac(u + randNum + 0.5f);
 
 		float VdotH;
 		float NdotL;
@@ -348,8 +348,8 @@ void IntegrateSpecularGGXIBLRef(out float3 specularLighting,
 // Ref: Listing 18 in "Moving Frostbite to PBR" + https://knarkowicz.wordpress.com/2014/12/27/analytical-dfg-term-for-ibl/
 float4 IntegrateDFG(float3 V, float3 N, float roughness, uint sampleCount)
 {
-	float NdotV	 = saturate(dot(N, V));
-	float4 acc	  = float4(0.0f, 0.0f, 0.0f, 0.0f);
+	float NdotV	= saturate(dot(N, V));
+	float4 acc	= float4(0.0f, 0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
 	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
 
@@ -359,7 +359,7 @@ float4 IntegrateDFG(float3 V, float3 N, float roughness, uint sampleCount)
 	for (uint i = 0; i < sampleCount; ++i)
 	{
 		float2 u	= Hammersley2d(i, sampleCount);
-		u		   = frac(u + randNum + 0.5f);
+		u			= frac(u + randNum + 0.5f);
 
 		float VdotH;
 		float NdotL;
@@ -372,16 +372,16 @@ float4 IntegrateDFG(float3 V, float3 N, float roughness, uint sampleCount)
 		if (NdotL > 0.0f)
 		{
 			// Integral is
-			//   1 / NumSample * \int[  L * fr * (N.L) / pdf ]  with pdf =  D(H) * (N.H) / (4 * (L.H)) and fr = F(H) * G(V, L) * D(H) / (4 * (N.L) * (N.V))
+			//	1 / NumSample * \int[  L * fr * (N.L) / pdf ]  with pdf =  D(H) * (N.H) / (4 * (L.H)) and fr = F(H) * G(V, L) * D(H) / (4 * (N.L) * (N.V))
 			// This is split  in two part:
-			//   A) \int[ L * (N.L) ]
-			//   B) \int[ F(H) * 4 * (N.L) * V(V, L) * (L.H) / (N.H) ] with V(V, L) = G(V, L) / (4 * (N.L) * (N.V))
-			//	  = \int[ F(H) * weightOverPdf ]
+			//	A) \int[ L * (N.L) ]
+			//	B) \int[ F(H) * 4 * (N.L) * V(V, L) * (L.H) / (N.H) ] with V(V, L) = G(V, L) / (4 * (N.L) * (N.V))
+			//	= \int[ F(H) * weightOverPdf ]
 
 			// Recombine at runtime with: ( f0 * weightOverPdf * (1 - Fc) + f90 * weightOverPdf * Fc ) with Fc =(1 - V.H)^5
 			float Fc			= pow(1.0f - VdotH, 5.0f);
-			acc.x			   += (1.0f - Fc) * weightOverPdf;
-			acc.y			   += Fc * weightOverPdf;
+			acc.x				+= (1.0f - Fc) * weightOverPdf;
+			acc.y				+= Fc * weightOverPdf;
 		}
 
 		// for Disney we still use a Cosine importance sampling, true Disney importance sampling imply a look up table
@@ -412,7 +412,7 @@ float4 IntegrateLD( UNITY_ARGS_TEXCUBE(tex),
 					uint sampleCount,
 					bool prefilter = true) // static bool
 {
-	float3 acc		  = float3(0.0f, 0.0f, 0.0f);
+	float3 acc		= float3(0.0f, 0.0f, 0.0f);
 	float  accWeight	= 0;
 
 	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
@@ -423,7 +423,7 @@ float4 IntegrateLD( UNITY_ARGS_TEXCUBE(tex),
 	for (uint i = 0; i < sampleCount; ++i)
 	{
 		float2 u	= Hammersley2d(i, sampleCount);
-		u		   = frac(u + randNum + 0.5f);
+		u			= frac(u + randNum + 0.5f);
 
 		float3 H;
 		float3 L;
@@ -456,12 +456,12 @@ float4 IntegrateLD( UNITY_ARGS_TEXCUBE(tex),
 			// - OmegaS : Solid angle associated to a sample
 			// - OmegaP : Solid angle associated to a pixel of the cubemap
 
-			float pdf	   = GGXTerm(NdotH, roughness) * NdotH / (4 * LdotH);
-			float omegaS	= 1.0f / (sampleCount * pdf);						   // Solid angle associated to a sample
+			float pdf		= GGXTerm(NdotH, roughness) * NdotH / (4 * LdotH);
+			float omegaS	= 1.0f / (sampleCount * pdf);							// Solid angle associated to a sample
 			// invOmegaP is precomputed on CPU and provide as a parameter of the function
 			// float omegaP = UNITY_FOUR_PI / (6.0f * cubemapWidth * cubemapWidth); // Solid angle associated to a pixel of the cubemap
 			// Clamp is not necessary as the hardware will do it.
-			// mipLevel	 = clamp(0.5f * log2(omegaS * invOmegaP), 0, mipmapcount);
+			// mipLevel	= clamp(0.5f * log2(omegaS * invOmegaP), 0, mipmapcount);
 			mipLevel		= 0.5f * log2(omegaS * invOmegaP); // Clamp is not necessary as the hardware will do it.
 		}
 
@@ -471,8 +471,8 @@ float4 IntegrateLD( UNITY_ARGS_TEXCUBE(tex),
 			float3 val = UNITY_SAMPLE_TEXCUBE_LOD(tex, L, mipLevel).rgba;
 
 			// See p63 equation (53) of moving Frostbite to PBR v2 for the extra NdotL here (both in weight and value)
-			acc			 += val * NdotL;
-			accWeight	   += NdotL;
+			acc			+= val * NdotL;
+			accWeight		+= NdotL;
 		}
 	}
 
@@ -491,7 +491,7 @@ struct Unity_GlossyEnvironmentData
 
 	// Surface properties use for cubemap integration
 	half	roughness; // CAUTION: This is perceptualRoughness but because of compatibility this name can't be change :(
-	half3   reflUVW;
+	half3	reflUVW;
 };
 
 // ----------------------------------------------------------------------------
@@ -500,8 +500,8 @@ Unity_GlossyEnvironmentData UnityGlossyEnvironmentSetup(half Smoothness, half3 w
 {
 	Unity_GlossyEnvironmentData g;
 
-	g.roughness /* perceptualRoughness */   = SmoothnessToPerceptualRoughness(Smoothness);
-	g.reflUVW   = reflect(-worldViewDir, Normal);
+	g.roughness /* perceptualRoughness */	= SmoothnessToPerceptualRoughness(Smoothness);
+	g.reflUVW	= reflect(-worldViewDir, Normal);
 
 	return g;
 }
@@ -530,9 +530,9 @@ half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyE
 	const float fEps = 1.192092896e-07F;		// smallest such that 1.0+FLT_EPSILON != 1.0  (+1e-4h is NOT good here. is visibly very wrong)
 	float n =  (2.0/max(fEps, m*m))-2.0;		// remap to spec power. See eq. 21 in --> https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
 
-	n /= 4;									 // remap from n_dot_h formulatino to n_dot_r. See section "Pre-convolved Cube Maps vs Path Tracers" --> https://s3.amazonaws.com/docs.knaldtech.com/knald/1.0.0/lys_power_drops.html
+	n /= 4;									// remap from n_dot_h formulatino to n_dot_r. See section "Pre-convolved Cube Maps vs Path Tracers" --> https://s3.amazonaws.com/docs.knaldtech.com/knald/1.0.0/lys_power_drops.html
 
-	perceptualRoughness = pow( 2/(n+2), 0.25);	  // remap back to square root of real roughness (0.25 include both the sqrt root of the conversion and sqrt for going from roughness to perceptualRoughness)
+	perceptualRoughness = pow( 2/(n+2), 0.25);	// remap back to square root of real roughness (0.25 include both the sqrt root of the conversion and sqrt for going from roughness to perceptualRoughness)
 #else
 	// MM: came up with a surprisingly close approximation to what the #if 0'ed out code above does.
 	perceptualRoughness = perceptualRoughness*(1.7 - 0.7*perceptualRoughness);

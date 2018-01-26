@@ -30,9 +30,9 @@ Shader "Hidden/CubeBlurOdd" {
 	half _Texel;
 	half _Level;
 
-	#define zero    half3(0., 0., 0.)
-	#define one     half3(1., 1., 1.)
-	#define two     half3(2., 2., 2.)
+	#define zero	half3(0., 0., 0.)
+	#define one	half3(1., 1., 1.)
+	#define two	half3(2., 2., 2.)
 
 	half3 fold(half3 st, half3 face)
 	{

@@ -57,18 +57,19 @@ Shader "UI/DefaultETC1"
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
+			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			struct appdata_t
 			{
-				float4 vertex   : POSITION;
+				float4 vertex	: POSITION;
 				float4 color	: COLOR;
 				float2 texcoord : TEXCOORD0;
 			};
 
 			struct v2f
 			{
-				float4 vertex   : SV_POSITION;
+				float4 vertex	: SV_POSITION;
 				fixed4 color	: COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
@@ -101,7 +102,9 @@ Shader "UI/DefaultETC1"
 			{
 				fixed4 color = UnityGetUIDiffuseColor(IN.texcoord, _MainTex, _AlphaTex, _TextureSampleAdd) * IN.color;
 
+				#ifdef UNITY_UI_CLIP_RECT
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				#endif
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);

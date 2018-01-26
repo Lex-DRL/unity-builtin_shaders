@@ -91,8 +91,8 @@ float3x3 RotationMatrix(float3 vAxis, float fAngle)
 	const float y = vAxis.y;
 	const float z = vAxis.z;
 
-	return float3x3(t * x * x + c,	  t * x * y - s * z,  t * x * z + s * y,
-					t * x * y + s * z,  t * y * y + c,	  t * y * z - s * x,
+	return float3x3(t * x * x + c,	t * x * y - s * z,  t * x * z + s * y,
+					t * x * y + s * z,  t * y * y + c,	t * y * z - s * x,
 					t * x * z - s * y,  t * y * z + s * x,  t * z * z + c);
 }
 
@@ -125,13 +125,13 @@ float3 mul_float3x3_float3(float3x3 mMatrix, float3 vVector)
 //  Roll
 
 float Roll(float fCurrent,
-		   float fMaxScale,
-		   float fMinScale,
-		   float fSpeed,
-		   float fRipple,
-		   float3 vPos,
-		   float fTime,
-		   float3 vRotatedWindVector)
+			float fMaxScale,
+			float fMinScale,
+			float fSpeed,
+			float fRipple,
+			float3 vPos,
+			float fTime,
+			float3 vRotatedWindVector)
 {
 	float fWindAngle = dot(vPos, -vRotatedWindVector) * fRipple;
 	float fAdjust = TrigApproximate(float4(fWindAngle + fTime * fSpeed, 0.0, 0.0, 0.0)).x;
@@ -326,21 +326,21 @@ float3 SimpleBranchWind(float3 vPos,
 //  DirectionalBranchWind
 
 float3 DirectionalBranchWind(float3 vPos,
-							 float3 vInstancePos,
-							 float fWeight,
-							 float fOffset,
-							 float fTime,
-							 float fDistance,
-							 float fTurbulence,
-							 float fAdherence,
-							 float fTwitch,
-							 float fTwitchScale,
-							 float fWhip,
-							 bool bWhip,
-							 bool bRoll,
-							 bool bComplex,
-							 bool bTurbulence,
-							 float3 vRotatedWindVector)
+							float3 vInstancePos,
+							float fWeight,
+							float fOffset,
+							float fTime,
+							float fDistance,
+							float fTurbulence,
+							float fAdherence,
+							float fTwitch,
+							float fTwitchScale,
+							float fWhip,
+							bool bWhip,
+							bool bRoll,
+							bool bComplex,
+							bool bTurbulence,
+							float3 vRotatedWindVector)
 {
 	// turn the offset back into a nearly normalized vector
 	float3 vWindVector = UnpackNormalFromFloat(fOffset);
@@ -376,22 +376,22 @@ float3 DirectionalBranchWind(float3 vPos,
 //  DirectionalBranchWindFrondStyle
 
 float3 DirectionalBranchWindFrondStyle(float3 vPos,
-									   float3 vInstancePos,
-									   float fWeight,
-									   float fOffset,
-									   float fTime,
-									   float fDistance,
-									   float fTurbulence,
-									   float fAdherence,
-									   float fTwitch,
-									   float fTwitchScale,
-									   float fWhip,
-									   bool bWhip,
-									   bool bRoll,
-									   bool bComplex,
-									   bool bTurbulence,
-									   float3 vRotatedWindVector,
-									   float3 vRotatedBranchAnchor)
+										float3 vInstancePos,
+										float fWeight,
+										float fOffset,
+										float fTime,
+										float fDistance,
+										float fTurbulence,
+										float fAdherence,
+										float fTwitch,
+										float fTwitchScale,
+										float fWhip,
+										bool bWhip,
+										bool bRoll,
+										bool bComplex,
+										bool bTurbulence,
+										float3 vRotatedWindVector,
+										float3 vRotatedBranchAnchor)
 {
 	// turn the offset back into a nearly normalized vector
 	float3 vWindVector = UnpackNormalFromFloat(fOffset);
@@ -447,13 +447,13 @@ float3 BranchWind(bool isPalmWind, float3 vPos, float3 vInstancePos, float4 vWin
 //  LeafRipple
 
 float3 LeafRipple(float3 vPos,
-				  inout float3 vDirection,
-				  float fScale,
-				  float fPackedRippleDir,
-				  float fTime,
-				  float fAmount,
-				  bool bDirectional,
-				  float fTrigOffset)
+				inout float3 vDirection,
+				float fScale,
+				float fPackedRippleDir,
+				float fTime,
+				float fAmount,
+				bool bDirectional,
+				float fTrigOffset)
 {
 	// compute how much to move
 	float4 vInput = float4(fTime + fTrigOffset, 0.0, 0.0, 0.0);
@@ -477,20 +477,20 @@ float3 LeafRipple(float3 vPos,
 //  LeafTumble
 
 float3 LeafTumble(float3 vPos,
-				  inout float3 vDirection,
-				  float fScale,
-				  float3 vAnchor,
-				  float3 vGrowthDir,
-				  float fTrigOffset,
-				  float fTime,
-				  float fFlip,
-				  float fTwist,
-				  float fAdherence,
-				  float3 vTwitch,
-				  float4 vRoll,
-				  bool bTwitch,
-				  bool bRoll,
-				  float3 vRotatedWindVector)
+				inout float3 vDirection,
+				float fScale,
+				float3 vAnchor,
+				float3 vGrowthDir,
+				float fTrigOffset,
+				float fTime,
+				float fFlip,
+				float fTwist,
+				float fAdherence,
+				float3 vTwitch,
+				float4 vRoll,
+				bool bTwitch,
+				bool bRoll,
+				float3 vRotatedWindVector)
 {
 	// compute all oscillations up front
 	float3 vFracs = frac((vAnchor + fTrigOffset) * 30.3);
@@ -565,15 +565,15 @@ float3 LeafWind(bool isBestWind,
 	{
 		float3 vGrowthDir = UnpackNormalFromFloat(fPackedGrowthDir);
 		vPos = LeafTumble(vPos, vDirection, fScale, vAnchor, vGrowthDir, fPackedGrowthDir,
-						  (bLeaf2 ? _ST_WindLeaf2Tumble.x : _ST_WindLeaf1Tumble.x),
-						  (bLeaf2 ? _ST_WindLeaf2Tumble.y : _ST_WindLeaf1Tumble.y),
-						  (bLeaf2 ? _ST_WindLeaf2Tumble.z : _ST_WindLeaf1Tumble.z),
-						  (bLeaf2 ? _ST_WindLeaf2Tumble.w : _ST_WindLeaf1Tumble.w),
-						  (bLeaf2 ? _ST_WindLeaf2Twitch.xyz : _ST_WindLeaf1Twitch.xyz),
-						  0.0f,
-						  (bLeaf2 ? true : true),
-						  (bLeaf2 ? true : true),
-						  vRotatedWindVector);
+						(bLeaf2 ? _ST_WindLeaf2Tumble.x : _ST_WindLeaf1Tumble.x),
+						(bLeaf2 ? _ST_WindLeaf2Tumble.y : _ST_WindLeaf1Tumble.y),
+						(bLeaf2 ? _ST_WindLeaf2Tumble.z : _ST_WindLeaf1Tumble.z),
+						(bLeaf2 ? _ST_WindLeaf2Tumble.w : _ST_WindLeaf1Tumble.w),
+						(bLeaf2 ? _ST_WindLeaf2Twitch.xyz : _ST_WindLeaf1Twitch.xyz),
+						0.0f,
+						(bLeaf2 ? true : true),
+						(bLeaf2 ? true : true),
+						vRotatedWindVector);
 	}
 
 	return vPos;
@@ -584,15 +584,15 @@ float3 LeafWind(bool isBestWind,
 //  RippleFrondOneSided
 
 float3 RippleFrondOneSided(float3 vPos,
-						   inout float3 vDirection,
-						   float fU,
-						   float fV,
-						   float fRippleScale
+							inout float3 vDirection,
+							float fU,
+							float fV,
+							float fRippleScale
 #ifdef WIND_EFFECT_FROND_RIPPLE_ADJUST_LIGHTING
-						   , float3 vBinormal
-						   , float3 vTangent
+							, float3 vBinormal
+							, float3 vTangent
 #endif
-						   )
+							)
 {
 	float fOffset = 0.0;
 	if (fU < 0.5)
@@ -619,16 +619,16 @@ float3 RippleFrondOneSided(float3 vPos,
 //  RippleFrondTwoSided
 
 float3 RippleFrondTwoSided(float3 vPos,
-						   inout float3 vDirection,
-						   float fU,
-						   float fLengthPercent,
-						   float fPackedRippleDir,
-						   float fRippleScale
+							inout float3 vDirection,
+							float fU,
+							float fLengthPercent,
+							float fPackedRippleDir,
+							float fRippleScale
 #ifdef WIND_EFFECT_FROND_RIPPLE_ADJUST_LIGHTING
-						   , float3 vBinormal
-						   , float3 vTangent
+							, float3 vBinormal
+							, float3 vTangent
 #endif
-						   )
+							)
 {
 	float4 vOscillations = TrigApproximate(float4(_ST_WindFrondRipple.x * fLengthPercent * _ST_WindFrondRipple.z, 0.0, 0.0, 0.0));
 
@@ -655,17 +655,17 @@ float3 RippleFrondTwoSided(float3 vPos,
 //  RippleFrond
 
 float3 RippleFrond(float3 vPos,
-				   inout float3 vDirection,
-				   float fU,
-				   float fV,
-				   float fPackedRippleDir,
-				   float fRippleScale,
-				   float fLenghtPercent
+					inout float3 vDirection,
+					float fU,
+					float fV,
+					float fPackedRippleDir,
+					float fRippleScale,
+					float fLenghtPercent
 				#ifdef WIND_EFFECT_FROND_RIPPLE_ADJUST_LIGHTING
-				   , float3 vBinormal
-				   , float3 vTangent
+					, float3 vBinormal
+					, float3 vTangent
 				#endif
-				   )
+					)
 {
 	return RippleFrondOneSided(vPos,
 								vDirection,

@@ -26,7 +26,7 @@ SubShader {
 	Cull Off
 
 	// first pass:
-	//   render any pixels that are more than [_Cutoff] opaque
+	//	render any pixels that are more than [_Cutoff] opaque
 	Pass {
 		CGPROGRAM
 			#pragma vertex vert
@@ -78,7 +78,7 @@ SubShader {
 	}
 
 	// Second pass:
-	//   render the semitransparent details.
+	//	render the semitransparent details.
 	Pass {
 		Tags { "RequireOption" = "SoftVegetation" }
 

@@ -4,6 +4,8 @@
 #define UNITY_STANDARD_CORE_INCLUDED
 
 #include "UnityCG.cginc"
+#include "UnityShaderVariables.cginc"
+#include "UnityInstancing.cginc"
 #include "UnityStandardConfig.cginc"
 #include "UnityStandardInput.cginc"
 #include "UnityPBSLighting.cginc"
@@ -205,6 +207,24 @@ inline FragmentCommonData SpecularSetup (float4 i_tex)
 	return o;
 }
 
+inline FragmentCommonData RoughnessSetup(float4 i_tex)
+{
+	half2 metallicGloss = MetallicRough(i_tex.xy);
+	half metallic = metallicGloss.x;
+	half smoothness = metallicGloss.y; // this is 1 minus the square root of real roughness m.
+
+	half oneMinusReflectivity;
+	half3 specColor;
+	half3 diffColor = DiffuseAndSpecularFromMetallic(Albedo(i_tex), metallic, /*out*/ specColor, /*out*/ oneMinusReflectivity);
+
+	FragmentCommonData o = (FragmentCommonData)0;
+	o.diffColor = diffColor;
+	o.specColor = specColor;
+	o.oneMinusReflectivity = oneMinusReflectivity;
+	o.smoothness = smoothness;
+	return o;
+}
+
 inline FragmentCommonData MetallicSetup (float4 i_tex)
 {
 	half2 metallicGloss = MetallicGloss(i_tex.xy);
@@ -223,7 +243,8 @@ inline FragmentCommonData MetallicSetup (float4 i_tex)
 	return o;
 }
 
-inline FragmentCommonData FragmentSetup (float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], float3 i_posWorld)
+// parallax transformed texcoord is used to sample occlusion
+inline FragmentCommonData FragmentSetup (inout float4 i_tex, half3 i_eyeVec, half3 i_viewDirForParallax, half4 tangentToWorld[3], float3 i_posWorld)
 {
 	i_tex = Parallax(i_tex, i_viewDirForParallax);
 
@@ -260,14 +281,14 @@ inline UnityGI FragmentGI (FragmentCommonData s, half occlusion, half4 i_ambient
 	d.probeHDR[0] = unity_SpecCube0_HDR;
 	d.probeHDR[1] = unity_SpecCube1_HDR;
 	#if defined(UNITY_SPECCUBE_BLENDING) || defined(UNITY_SPECCUBE_BOX_PROJECTION)
-	  d.boxMin[0] = unity_SpecCube0_BoxMin; // .w holds lerp value for blending
+	d.boxMin[0] = unity_SpecCube0_BoxMin; // .w holds lerp value for blending
 	#endif
 	#ifdef UNITY_SPECCUBE_BOX_PROJECTION
-	  d.boxMax[0] = unity_SpecCube0_BoxMax;
-	  d.probePosition[0] = unity_SpecCube0_ProbePosition;
-	  d.boxMax[1] = unity_SpecCube1_BoxMax;
-	  d.boxMin[1] = unity_SpecCube1_BoxMin;
-	  d.probePosition[1] = unity_SpecCube1_ProbePosition;
+	d.boxMax[0] = unity_SpecCube0_BoxMax;
+	d.probePosition[0] = unity_SpecCube0_ProbePosition;
+	d.boxMax[1] = unity_SpecCube1_BoxMax;
+	d.boxMin[1] = unity_SpecCube1_BoxMin;
+	d.probePosition[1] = unity_SpecCube1_ProbePosition;
 	#endif
 
 	if(reflections)
@@ -335,17 +356,17 @@ inline half4 VertexGIForward(VertexInput v, float3 posWorld, half3 normalWorld)
 
 struct VertexOutputForwardBase
 {
-	float4 pos						  : SV_POSITION;
-	float4 tex						  : TEXCOORD0;
+	UNITY_POSITION(pos);
+	float4 tex						: TEXCOORD0;
 	half3 eyeVec						: TEXCOORD1;
 	half4 tangentToWorldAndPackedData[3]	: TEXCOORD2;	// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
-	half4 ambientOrLightmapUV		   : TEXCOORD5;	// SH or Lightmap UV
+	half4 ambientOrLightmapUV			: TEXCOORD5;	// SH or Lightmap UV
 	UNITY_SHADOW_COORDS(6)
 	UNITY_FOG_COORDS(7)
 
 	// next ones would not fit into SM2.0 limits, but they are always for SM3.0+
 	#if UNITY_REQUIRE_FRAG_WORLDPOS && !UNITY_PACK_WORLDPOS_WITH_TANGENT
-		float3 posWorld				 : TEXCOORD8;
+		float3 posWorld				: TEXCOORD8;
 	#endif
 
 	UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -407,6 +428,8 @@ VertexOutputForwardBase vertForwardBase (VertexInput v)
 
 half4 fragForwardBaseInternal (VertexOutputForwardBase i)
 {
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
+
 	FRAGMENT_SETUP(s)
 
 	UNITY_SETUP_INSTANCE_ID(i);
@@ -425,7 +448,7 @@ half4 fragForwardBaseInternal (VertexOutputForwardBase i)
 	return OutputForward (c, s.alpha);
 }
 
-half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target   // backward compatibility (this used to be the fragment entry function)
+half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target	// backward compatibility (this used to be the fragment entry function)
 {
 	return fragForwardBaseInternal(i);
 }
@@ -435,11 +458,11 @@ half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target   // backward comp
 
 struct VertexOutputForwardAdd
 {
-	float4 pos						  : SV_POSITION;
-	float4 tex						  : TEXCOORD0;
+	UNITY_POSITION(pos);
+	float4 tex						: TEXCOORD0;
 	half3 eyeVec						: TEXCOORD1;
 	half4 tangentToWorldAndLightDir[3]  : TEXCOORD2;	// [3x3:tangentToWorld | 1x3:lightDir]
-	float3 posWorld					 : TEXCOORD5;
+	float3 posWorld					: TEXCOORD5;
 	UNITY_SHADOW_COORDS(6)
 	UNITY_FOG_COORDS(7)
 
@@ -499,6 +522,8 @@ VertexOutputForwardAdd vertForwardAdd (VertexInput v)
 
 half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 {
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
+
 	FRAGMENT_SETUP_FWDADD(s)
 
 	UNITY_LIGHT_ATTENUATION(atten, i, s.posWorld)
@@ -511,7 +536,7 @@ half4 fragForwardAddInternal (VertexOutputForwardAdd i)
 	return OutputForward (c, s.alpha);
 }
 
-half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target	 // backward compatibility (this used to be the fragment entry function)
+half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target	// backward compatibility (this used to be the fragment entry function)
 {
 	return fragForwardAddInternal(i);
 }
@@ -521,14 +546,14 @@ half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target	 // backward compati
 
 struct VertexOutputDeferred
 {
-	float4 pos						  : SV_POSITION;
-	float4 tex						  : TEXCOORD0;
+	UNITY_POSITION(pos);
+	float4 tex						: TEXCOORD0;
 	half3 eyeVec						: TEXCOORD1;
 	half4 tangentToWorldAndPackedData[3]: TEXCOORD2;	// [3x3:tangentToWorld | 1x3:viewDirForParallax or worldPos]
-	half4 ambientOrLightmapUV		   : TEXCOORD5;	// SH or Lightmap UVs
+	half4 ambientOrLightmapUV			: TEXCOORD5;	// SH or Lightmap UVs
 
 	#if UNITY_REQUIRE_FRAG_WORLDPOS && !UNITY_PACK_WORLDPOS_WITH_TANGENT
-		float3 posWorld					 : TEXCOORD6;
+		float3 posWorld					: TEXCOORD6;
 	#endif
 
 	UNITY_VERTEX_OUTPUT_STEREO
@@ -596,9 +621,9 @@ void fragDeferred (
 	out half4 outGBuffer0 : SV_Target0,
 	out half4 outGBuffer1 : SV_Target1,
 	out half4 outGBuffer2 : SV_Target2,
-	out half4 outEmission : SV_Target3		  // RT3: emission (rgb), --unused-- (a)
+	out half4 outEmission : SV_Target3		// RT3: emission (rgb), --unused-- (a)
 #if defined(SHADOWS_SHADOWMASK) && (UNITY_ALLOWED_MRT_COUNT > 4)
-	,out half4 outShadowMask : SV_Target4	   // RT4: shadowmask (rgba)
+	,out half4 outShadowMask : SV_Target4		// RT4: shadowmask (rgba)
 #endif
 )
 {
@@ -612,6 +637,8 @@ void fragDeferred (
 		#endif
 		return;
 	#endif
+
+	UNITY_APPLY_DITHER_CROSSFADE(i.pos.xy);
 
 	FRAGMENT_SETUP(s)
 
@@ -640,10 +667,10 @@ void fragDeferred (
 	#endif
 
 	UnityStandardData data;
-	data.diffuseColor   = s.diffColor;
-	data.occlusion	  = occlusion;
+	data.diffuseColor	= s.diffColor;
+	data.occlusion	= occlusion;
 	data.specularColor  = s.specColor;
-	data.smoothness	 = s.smoothness;
+	data.smoothness	= s.smoothness;
 	data.normalWorld	= s.normalWorld;
 
 	UnityStandardDataToGbuffer(data, outGBuffer0, outGBuffer1, outGBuffer2);

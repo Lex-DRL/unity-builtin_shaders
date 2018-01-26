@@ -35,10 +35,10 @@ inline half3 EnergyConservationBetweenDiffuseAndSpecular (half3 albedo, half3 sp
 inline half OneMinusReflectivityFromMetallic(half metallic)
 {
 	// We'll need oneMinusReflectivity, so
-	//   1-reflectivity = 1-lerp(dielectricSpec, 1, metallic) = lerp(1-dielectricSpec, 0, metallic)
+	//	1-reflectivity = 1-lerp(dielectricSpec, 1, metallic) = lerp(1-dielectricSpec, 0, metallic)
 	// store (1-dielectricSpec) in unity_ColorSpaceDielectricSpec.a, then
-	//   1-reflectivity = lerp(alpha, 0, metallic) = alpha + metallic*(0 - alpha) =
-	//				  = alpha - metallic * alpha
+	//	1-reflectivity = lerp(alpha, 0, metallic) = alpha + metallic*(0 - alpha) =
+	//				= alpha - metallic * alpha
 	half oneMinusDielectricSpec = unity_ColorSpaceDielectricSpec.a;
 	return oneMinusDielectricSpec - metallic * oneMinusDielectricSpec;
 }
@@ -66,7 +66,7 @@ inline half3 PreMultiplyAlpha (half3 diffColor, half alpha, half oneMinusReflect
 		#else
 			// Reflectivity 'removes' from the rest of components, including Transparency
 			// outAlpha = 1-(1-alpha)*(1-reflectivity) = 1-(oneMinusReflectivity - alpha*oneMinusReflectivity) =
-			//		  = 1-oneMinusReflectivity + alpha*oneMinusReflectivity
+			//		= 1-oneMinusReflectivity + alpha*oneMinusReflectivity
 			outModifiedAlpha = 1-oneMinusReflectivity + alpha*oneMinusReflectivity;
 		#endif
 	#else
@@ -97,33 +97,29 @@ half3 LerpWhiteTo(half3 b, half t)
 	return half3(oneMinusT, oneMinusT, oneMinusT) + b * t;
 }
 
-half3 UnpackScaleNormal(half4 packednormal, half bumpScale)
+half3 UnpackScaleNormalDXT5nm(half4 packednormal, half bumpScale)
 {
 	half3 normal;
-	#if defined(UNITY_NO_DXT5nm)
-		normal = packednormal.xyz * 2 - 1;
-		#if (SHADER_TARGET >= 30)
-			// SM2.0: instruction count limitation
-			// SM2.0: normal scaler is not supported
-			normal.xy *= bumpScale;
-		#endif
-		return normal;
-	#else
-		normal.xy = (packednormal.wy * 2 - 1);
-		#if (SHADER_TARGET >= 30)
-			// SM2.0: instruction count limitation
-			// SM2.0: normal scaler is not supported
-			normal.xy *= bumpScale;
-		#endif
-		normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
-		return normal;
+	normal.xy = (packednormal.wy * 2 - 1);
+	#if (SHADER_TARGET >= 30)
+		// SM2.0: instruction count limitation
+		// SM2.0: normal scaler is not supported
+		normal.xy *= bumpScale;
 	#endif
+	normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
+	return normal;
 }
 
 half3 UnpackScaleNormalRGorAG(half4 packednormal, half bumpScale)
 {
 	#if defined(UNITY_NO_DXT5nm)
-		return packednormal.xyz * 2 - 1;
+		half3 normal = packednormal.xyz * 2 - 1;
+		#if (SHADER_TARGET >= 30)
+			// SM2.0: instruction count limitation
+			// SM2.0: normal scaler is not supported
+			normal.xy *= bumpScale;
+		#endif
+		return normal;
 	#else
 		// This do the trick
 		packednormal.x *= packednormal.w;
@@ -138,6 +134,11 @@ half3 UnpackScaleNormalRGorAG(half4 packednormal, half bumpScale)
 		normal.z = sqrt(1.0 - saturate(dot(normal.xy, normal.xy)));
 		return normal;
 	#endif
+}
+
+half3 UnpackScaleNormal(half4 packednormal, half bumpScale)
+{
+	return UnpackScaleNormalRGorAG(packednormal, bumpScale);
 }
 
 half3 BlendNormals(half3 n1, half3 n2)
@@ -170,7 +171,7 @@ half3 ShadeSHPerVertex (half3 normal, half3 ambient)
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = GammaToLinearSpace (ambient);
 		#endif
-		ambient += SHEvalLinearL2 (half4(normal, 1.0));	 // no max since this is only L2 contribution
+		ambient += SHEvalLinearL2 (half4(normal, 1.0));	// no max since this is only L2 contribution
 	#endif
 
 	return ambient;
@@ -199,7 +200,7 @@ half3 ShadeSHPerPixel (half3 normal, half3 ambient, float3 worldPos)
 			ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0));
 		#endif
 
-		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);	 // include L2 contribution in vertex shader before clamp.
+		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);	// include L2 contribution in vertex shader before clamp.
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = LinearToGammaSpace (ambient);
 		#endif

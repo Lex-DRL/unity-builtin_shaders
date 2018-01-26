@@ -20,9 +20,9 @@
 #endif
 
 // "platform caps" defines: they are controlled from TierSettings (Editor will determine values and pass them to compiler)
-// UNITY_SPECCUBE_BOX_PROJECTION:				   TierSettings.reflectionProbeBoxProjection
-// UNITY_SPECCUBE_BLENDING:						 TierSettings.reflectionProbeBlending
-// UNITY_ENABLE_DETAIL_NORMALMAP:				   TierSettings.detailNormalMap
+// UNITY_SPECCUBE_BOX_PROJECTION:					TierSettings.reflectionProbeBoxProjection
+// UNITY_SPECCUBE_BLENDING:						TierSettings.reflectionProbeBlending
+// UNITY_ENABLE_DETAIL_NORMALMAP:					TierSettings.detailNormalMap
 // UNITY_USE_DITHER_MASK_FOR_ALPHABLENDED_SHADOWS:  TierSettings.semitransparentShadows
 
 // disregarding what is set in TierSettings, some features have hardware restrictions

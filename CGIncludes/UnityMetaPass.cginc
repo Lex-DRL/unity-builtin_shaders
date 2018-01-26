@@ -44,8 +44,8 @@ uniform half _AlbedoSaturationTolerance = 0.1;
 // Define bounds value in linear RGB for fresnel0 values
 static const float dieletricMin = 0.02;
 static const float dieletricMax = 0.07;
-static const float gemsMin	  = 0.07;
-static const float gemsMax	  = 0.22;
+static const float gemsMin	= 0.07;
+static const float gemsMax	= 0.22;
 static const float conductorMin = 0.45;
 static const float conductorMax = 1.00;
 static const float albedoMin	= 0.012;
@@ -125,7 +125,7 @@ half4 UnityMeta_pbrAlbedo(UnityMetaInput IN)
 	// When checking full range we do not take the luminance but the mean because often in game blue color are highlight as too low whereas this is what we are looking for.
 	half value = _CheckAlbedo ? LinearRgbToLuminance(baseColor) : dot(baseColor, half3(0.3333, 0.3333, 0.3333));
 
-	 // Check if we are pure metal with black albedo
+	// Check if we are pure metal with black albedo
 	if (_CheckPureMetal && isMetal && value != 0.0)
 		return half4(1.0, 1.0, 0, 1);
 
@@ -248,9 +248,9 @@ half4 UnityMetaFragment (UnityMetaInput IN)
 		if (unity_UseLinearSpace)
 			emission = IN.Emission;
 		else
-			emission = GammaToLinearSpace (IN.Emission);
+			emission = GammaToLinearSpace(IN.Emission);
 
-		res = UnityEncodeRGBM(emission, EMISSIVE_RGBM_SCALE);
+		res = half4(emission, 1.0);
 	}
 	#else
 	if ( unity_VisualizationMode == PBR_VALIDATION_ALBEDO )

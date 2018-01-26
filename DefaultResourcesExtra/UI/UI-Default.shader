@@ -56,11 +56,12 @@ Shader "UI/Default"
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
+			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			struct appdata_t
 			{
-				float4 vertex   : POSITION;
+				float4 vertex	: POSITION;
 				float4 color	: COLOR;
 				float2 texcoord : TEXCOORD0;
 				UNITY_VERTEX_INPUT_INSTANCE_ID
@@ -68,7 +69,7 @@ Shader "UI/Default"
 
 			struct v2f
 			{
-				float4 vertex   : SV_POSITION;
+				float4 vertex	: SV_POSITION;
 				fixed4 color	: COLOR;
 				float2 texcoord  : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
@@ -99,7 +100,9 @@ Shader "UI/Default"
 			{
 				half4 color = (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd) * IN.color;
 
+				#ifdef UNITY_UI_CLIP_RECT
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				#endif
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);

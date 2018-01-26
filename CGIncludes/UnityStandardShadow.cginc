@@ -32,26 +32,26 @@
 #endif
 
 
-half4	   _Color;
+half4		_Color;
 half		_Cutoff;
-sampler2D   _MainTex;
-float4	  _MainTex_ST;
+sampler2D	_MainTex;
+float4	_MainTex_ST;
 #ifdef UNITY_STANDARD_USE_DITHER_MASK
-sampler3D   _DitherMaskLOD;
+sampler3D	_DitherMaskLOD;
 #endif
 
 // Handle PremultipliedAlpha from Fade or Transparent shading mode
-half4	   _SpecColor;
+half4		_SpecColor;
 half		_Metallic;
 #ifdef _SPECGLOSSMAP
-sampler2D   _SpecGlossMap;
+sampler2D	_SpecGlossMap;
 #endif
 #ifdef _METALLICGLOSSMAP
-sampler2D   _MetallicGlossMap;
+sampler2D	_MetallicGlossMap;
 #endif
 
 #if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
-sampler2D   _ParallaxMap;
+sampler2D	_ParallaxMap;
 half		_Parallax;
 #endif
 
@@ -61,6 +61,15 @@ half MetallicSetup_ShadowGetOneMinusReflectivity(half2 uv)
 	#ifdef _METALLICGLOSSMAP
 		metallicity = tex2D(_MetallicGlossMap, uv).r;
 	#endif
+	return OneMinusReflectivityFromMetallic(metallicity);
+}
+
+half RoughnessSetup_ShadowGetOneMinusReflectivity(half2 uv)
+{
+	half metallicity = _Metallic;
+#ifdef _METALLICGLOSSMAP
+	metallicity = tex2D(_MetallicGlossMap, uv).r;
+#endif
 	return OneMinusReflectivityFromMetallic(metallicity);
 }
 
@@ -80,11 +89,11 @@ half SpecularSetup_ShadowGetOneMinusReflectivity(half2 uv)
 
 struct VertexInput
 {
-	float4 vertex   : POSITION;
-	float3 normal   : NORMAL;
-	float2 uv0	  : TEXCOORD0;
+	float4 vertex	: POSITION;
+	float3 normal	: NORMAL;
+	float2 uv0	: TEXCOORD0;
 	#if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
-		half4 tangent   : TANGENT;
+		half4 tangent	: TANGENT;
 	#endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
@@ -115,14 +124,15 @@ struct VertexOutputStereoShadowCaster
 // some platforms, and then things don't go well.
 
 
-void vertShadowCaster (VertexInput v,
+void vertShadowCaster (VertexInput v
+	, out float4 opos : SV_POSITION
 	#ifdef UNITY_STANDARD_USE_SHADOW_OUTPUT_STRUCT
-	out VertexOutputShadowCaster o,
+	, out VertexOutputShadowCaster o
 	#endif
 	#ifdef UNITY_STANDARD_USE_STEREO_SHADOW_OUTPUT_STRUCT
-	out VertexOutputStereoShadowCaster os,
+	, out VertexOutputStereoShadowCaster os
 	#endif
-	out float4 opos : SV_POSITION)
+)
 {
 	UNITY_SETUP_INSTANCE_ID(v);
 	#ifdef UNITY_STANDARD_USE_STEREO_SHADOW_OUTPUT_STRUCT
@@ -142,12 +152,11 @@ void vertShadowCaster (VertexInput v,
 	#endif
 }
 
-half4 fragShadowCaster (
+half4 fragShadowCaster (UNITY_POSITION(vpos)
 #ifdef UNITY_STANDARD_USE_SHADOW_OUTPUT_STRUCT
-	VertexOutputShadowCaster i,
+	, VertexOutputShadowCaster i
 #endif
-	UNITY_POSITION(vpos)
-	) : SV_Target
+) : SV_Target
 {
 	#if defined(UNITY_STANDARD_USE_SHADOW_UVS)
 		#if defined(_PARALLAXMAP) && (SHADER_TARGET >= 30)

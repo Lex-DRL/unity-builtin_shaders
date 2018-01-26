@@ -56,18 +56,19 @@ Shader "Hidden/UI/Overdraw"
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
+			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			struct appdata_t
 			{
-				float4 vertex   : POSITION;
-				float4 color    : COLOR;
+				float4 vertex	: POSITION;
+				float4 color	: COLOR;
 			};
 
 			struct v2f
 			{
-				float4 vertex   : SV_POSITION;
-				fixed4 color    : COLOR;
+				float4 vertex	: SV_POSITION;
+				fixed4 color	: COLOR;
 				float4 worldPosition : TEXCOORD1;
 			};
 
@@ -90,7 +91,9 @@ Shader "Hidden/UI/Overdraw"
 			{
 				half4 color = IN.color;
 
+				#ifdef UNITY_UI_CLIP_RECT
 				color.a *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				#endif
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);

@@ -68,6 +68,7 @@ Shader "UI/Lit/Refraction Detail"
 			#include "UnityCG.cginc"
 			#include "UnityUI.cginc"
 
+			#pragma multi_compile __ UNITY_UI_CLIP_RECT
 			#pragma multi_compile __ UNITY_UI_ALPHACLIP
 
 			struct appdata_t
@@ -129,7 +130,7 @@ Shader "UI/Lit/Refraction Detail"
 				o.texcoord1.zw  = TRANSFORM_TEX(v.texcoord1, _MainBump);
 				o.texcoord2.xy  = TRANSFORM_TEX(v.texcoord2 * _DetailTex_TexelSize.xy, _DetailTex);
 				o.texcoord2.zw  = TRANSFORM_TEX(v.texcoord2 * _DetailBump_TexelSize.xy, _DetailBump);
-				o.texcoord3     = TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
+				o.texcoord3	= TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
 
 			#if UNITY_UV_STARTS_AT_TOP
 				o.proj.xy = (float2(v.vertex.x, -v.vertex.y) + v.vertex.w) * 0.5;
@@ -145,10 +146,10 @@ Shader "UI/Lit/Refraction Detail"
 				fixed4 detail = tex2D(_DetailTex, IN.texcoord2.xy);
 
 				half3 normal = UnpackNormal(tex2D(_MainBump, IN.texcoord1.zw)) +
-							   UnpackNormal(tex2D(_DetailBump, IN.texcoord2.zw));
+								UnpackNormal(tex2D(_DetailBump, IN.texcoord2.zw));
 
 				half3 mask = tex2D(_Mask, IN.texcoord1.xy) *
-							 tex2D(_DetailMask, IN.texcoord3);
+							tex2D(_DetailMask, IN.texcoord3);
 
 				float2 offset = normal.xy * _GrabTexture_TexelSize.xy * _Focus;
 				IN.proj.xy = offset * IN.proj.z + IN.proj.xy;
@@ -164,7 +165,9 @@ Shader "UI/Lit/Refraction Detail"
 				o.Gloss = _Shininess * mask.g;
 				o.Alpha = col.a;
 
+				#ifdef UNITY_UI_CLIP_RECT
 				o.Alpha *= UnityGet2DClipping(IN.worldPosition.xy, _ClipRect);
+				#endif
 
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (o.Alpha - 0.001);

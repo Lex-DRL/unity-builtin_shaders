@@ -4,7 +4,7 @@
 #define UNITY_STANDARD_CORE_FORWARD_INCLUDED
 
 #if defined(UNITY_NO_FULL_STANDARD_SHADER)
-#   define UNITY_STANDARD_SIMPLE 1
+#	define UNITY_STANDARD_SIMPLE 1
 #endif
 
 #include "UnityStandardConfig.cginc"
