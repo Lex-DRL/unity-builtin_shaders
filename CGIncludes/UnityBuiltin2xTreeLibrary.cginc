@@ -63,7 +63,7 @@ v2f leaves(appdata_tree v)
 		#endif
 
 		lightDir.xyz *= _Occlusion;
-		float occ =  dot (v.tangent, lightDir);
+		float occ = dot (v.tangent, lightDir);
 		occ = max(0, occ);
 		occ += _BaseLight;
 		light += lightColor * (occ * atten);

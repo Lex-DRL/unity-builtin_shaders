@@ -28,7 +28,7 @@ Shader "Hidden/CubeCopy" {
 
 	UNITY_DECLARE_TEXCUBE(_MainTex);
 
-	float4 frag(v2f  i) : SV_Target
+	float4 frag(v2f i) : SV_Target
 	{
 		return UNITY_SAMPLE_TEXCUBE_LOD(_MainTex, i.uvw.xyz, _Level);
 	}

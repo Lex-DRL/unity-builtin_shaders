@@ -7,7 +7,7 @@
 #include "UnityShadowLibrary.cginc"
 
 // ----------------
-//  Shadow helpers
+// Shadow helpers
 // ----------------
 
 // If none of the keywords are defined, assume directional?
@@ -53,7 +53,7 @@
 #endif
 
 // -----------------------------
-//  Shadow helpers (5.6+ version)
+// Shadow helpers (5.6+ version)
 // -----------------------------
 // This version depends on having worldPos available in the fragment shader and using that to compute light coordinates.
 // if also supports ShadowMask (separately baked shadows for lightmapped objects)
@@ -63,7 +63,7 @@ half UnityComputeForwardShadows(float2 lightmapUV, float3 worldPos, float4 scree
 	//fade value
 	float zDist = dot(_WorldSpaceCameraPos - worldPos, UNITY_MATRIX_V[2].xyz);
 	float fadeDist = UnityComputeShadowFadeDistance(worldPos, zDist);
-	half  realtimeToBakedShadowFade = UnityComputeShadowFade(fadeDist);
+	half realtimeToBakedShadowFade = UnityComputeShadowFade(fadeDist);
 
 	//baked occlusion if any
 	half shadowMaskAttenuation = UnitySampleBakedOcclusion(lightmapUV, worldPos);
@@ -203,7 +203,7 @@ unityShadowCoord4x4 unity_WorldToLight;
 
 
 // -----------------------------
-//  Light/Shadow helpers (4.x version)
+// Light/Shadow helpers (4.x version)
 // -----------------------------
 // This version computes light coordinates in the vertex shader and passes them to the fragment shader.
 

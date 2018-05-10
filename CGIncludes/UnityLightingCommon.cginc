@@ -10,7 +10,7 @@ struct UnityLight
 {
 	half3 color;
 	half3 dir;
-	half  ndotl; // Deprecated: Ndotl is now calculated on the fly and is no longer stored. Do not used it.
+	half ndotl; // Deprecated: Ndotl is now calculated on the fly and is no longer stored. Do not used it.
 };
 
 struct UnityIndirect

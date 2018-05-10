@@ -68,10 +68,10 @@ void FastSinCos (float4 val, out float4 s, out float4 c) {
 
 	//Vectors for taylor's series expansion of sin and cos
 	float4 sin7 = {1, -0.16161616, 0.0083333, -0.00019841};
-	float4 cos8  = {-0.5, 0.041666666, -0.0013888889, 0.000024801587};
+	float4 cos8 = {-0.5, 0.041666666, -0.0013888889, 0.000024801587};
 
 	// sin
-	s =  val + r1 * sin7.y + r2 * sin7.z + r3 * sin7.w;
+	s = val + r1 * sin7.y + r2 * sin7.z + r3 * sin7.w;
 
 	// cos
 	c = 1 + r5 * cos8.x + r6 * cos8.y + r7 * cos8.z + r8 * cos8.w;

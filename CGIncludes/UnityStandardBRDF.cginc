@@ -131,9 +131,9 @@ inline half SmithJointGGXVisibilityTerm (half NdotL, half NdotV, half roughness)
 {
 #if 0
 	// Original formulation:
-	//  lambda_v	= (-1 + sqrt(a2 * (1 - NdotL2) / NdotL2 + 1)) * 0.5f;
-	//  lambda_l	= (-1 + sqrt(a2 * (1 - NdotV2) / NdotV2 + 1)) * 0.5f;
-	//  G			= 1 / (1 + lambda_v + lambda_l);
+	// lambda_v	= (-1 + sqrt(a2 * (1 - NdotL2) / NdotL2 + 1)) * 0.5f;
+	// lambda_l	= (-1 + sqrt(a2 * (1 - NdotV2) / NdotV2 + 1)) * 0.5f;
+	// G			= 1 / (1 + lambda_v + lambda_l);
 
 	// Reorder code to be more optimal
 	half a		= roughness;
@@ -142,8 +142,8 @@ inline half SmithJointGGXVisibilityTerm (half NdotL, half NdotV, half roughness)
 	half lambdaV	= NdotL * sqrt((-NdotV * a2 + NdotV) * NdotV + a2);
 	half lambdaL	= NdotV * sqrt((-NdotL * a2 + NdotL) * NdotL + a2);
 
-	// Simplify visibility term: (2.0f * NdotL * NdotV) /  ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
-	return 0.5f / (lambdaV + lambdaL + 1e-5f);  // This function is not intended to be running on Mobile,
+	// Simplify visibility term: (2.0f * NdotL * NdotV) / ((4.0f * NdotL * NdotV) * (lambda_v + lambda_l + 1e-5f));
+	return 0.5f / (lambdaV + lambdaL + 1e-5f); // This function is not intended to be running on Mobile,
 												// therefore epsilon is smaller than can be represented by half
 #else
 	// Approximation of the above formulation (simplify the sqrt, not mathematically correct but close enough)
@@ -223,8 +223,8 @@ inline half3 Unity_SafeNormalize(half3 inVec)
 //	I = BRDF * NdotL
 //
 // * NDF (depending on UNITY_BRDF_GGX):
-//  a) Normalized BlinnPhong
-//  b) GGX
+// a) Normalized BlinnPhong
+// b) GGX
 // * Smith for Visiblity term
 // * Schlick approximation for Fresnel
 half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivity, half smoothness,
@@ -314,8 +314,8 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 // Implementation is slightly different from original derivation: http://www.thetenthplanet.de/archives/255
 //
 // * NDF (depending on UNITY_BRDF_GGX):
-//  a) BlinnPhong
-//  b) [Modified] GGX
+// a) BlinnPhong
+// b) [Modified] GGX
 // * Modified Kelemen and Szirmay-​Kalos for Visibility term
 // * Fresnel approximated with 1/LdotH
 half4 BRDF2_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivity, half smoothness,
@@ -442,7 +442,7 @@ half4 BRDF3_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 	half nv = saturate(dot(normal, viewDir));
 
 	// Vectorize Pow4 to save instructions
-	half2 rlPow4AndFresnelTerm = Pow4 (half2(dot(reflDir, light.dir), 1-nv));  // use R.L instead of N.H to save couple of instructions
+	half2 rlPow4AndFresnelTerm = Pow4 (half2(dot(reflDir, light.dir), 1-nv)); // use R.L instead of N.H to save couple of instructions
 	half rlPow4 = rlPow4AndFresnelTerm.x; // power exponent must match kHorizontalWarpExp in NHxRoughness() function in GeneratedTextures.cpp
 	half fresnelTerm = rlPow4AndFresnelTerm.y;
 

@@ -4,17 +4,17 @@
 #define SPEEDTREE_VERTEX_INCLUDED
 
 ///////////////////////////////////////////////////////////////////////
-//  SpeedTree v6 Vertex Processing
+// SpeedTree v6 Vertex Processing
 
 ///////////////////////////////////////////////////////////////////////
-//  struct SpeedTreeVB
+// struct SpeedTreeVB
 
 // texcoord setup
 //
 //	BRANCHES						FRONDS					LEAVES
 // 0	diffuse uv, branch wind xy	"							"
 // 1	lod xyz, 0					lod xyz, 0				anchor xyz, lod scalar
-// 2	detail/seam uv, seam amount, 0  frond wind xyz, 0			leaf wind xyz, leaf group
+// 2	detail/seam uv, seam amount, 0 frond wind xyz, 0			leaf wind xyz, leaf group
 
 struct SpeedTreeVB
 {
@@ -31,7 +31,7 @@ struct SpeedTreeVB
 
 
 ///////////////////////////////////////////////////////////////////////
-//  SpeedTree winds
+// SpeedTree winds
 
 #ifdef ENABLE_WIND
 
@@ -50,7 +50,7 @@ uniform half _WindEnabled;
 #endif
 
 ///////////////////////////////////////////////////////////////////////
-//  OffsetSpeedTreeVertex
+// OffsetSpeedTreeVertex
 
 void OffsetSpeedTreeVertex(inout SpeedTreeVB data, float lodValue)
 {

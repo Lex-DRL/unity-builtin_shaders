@@ -2,7 +2,7 @@
 
 Shader "Hidden/ConvertTexture" {
 	SubShader {
-		// Cubemap blit.  Takes a face index.
+		// Cubemap blit. Takes a face index.
 		Pass {
 			ZTest Always Cull Off ZWrite Off
 

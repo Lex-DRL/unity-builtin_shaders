@@ -57,7 +57,7 @@ Shader "Standard (Specular setup)"
 
 
 		// ------------------------------------------------------------------
-		//  Base forward pass (directional light, emission, lightmaps, ...)
+		// Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
 			Name "FORWARD"
@@ -94,7 +94,7 @@ Shader "Standard (Specular setup)"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Additive forward pass (one light per pass)
+		// Additive forward pass (one light per pass)
 		Pass
 		{
 			Name "FORWARD_DELTA"
@@ -129,7 +129,7 @@ Shader "Standard (Specular setup)"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Shadow rendering pass
+		// Shadow rendering pass
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }
@@ -158,7 +158,7 @@ Shader "Standard (Specular setup)"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Deferred pass
+		// Deferred pass
 		Pass
 		{
 			Name "DEFERRED"
@@ -224,7 +224,7 @@ Shader "Standard (Specular setup)"
 		LOD 150
 
 		// ------------------------------------------------------------------
-		//  Base forward pass (directional light, emission, lightmaps, ...)
+		// Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
 			Name "FORWARD"
@@ -258,7 +258,7 @@ Shader "Standard (Specular setup)"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Additive forward pass (one light per pass)
+		// Additive forward pass (one light per pass)
 		Pass
 		{
 			Name "FORWARD_DELTA"
@@ -290,7 +290,7 @@ Shader "Standard (Specular setup)"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Shadow rendering pass
+		// Shadow rendering pass
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }

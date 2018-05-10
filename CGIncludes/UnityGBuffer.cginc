@@ -38,7 +38,7 @@ UnityStandardData UnityStandardDataFromGbuffer(half4 inGBuffer0, half4 inGBuffer
 	data.diffuseColor	= inGBuffer0.rgb;
 	data.occlusion	= inGBuffer0.a;
 
-	data.specularColor  = inGBuffer1.rgb;
+	data.specularColor = inGBuffer1.rgb;
 	data.smoothness	= inGBuffer1.a;
 
 	data.normalWorld	= normalize(inGBuffer2.rgb * 2 - 1);

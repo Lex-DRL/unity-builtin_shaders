@@ -107,6 +107,7 @@ CBUFFER_START(UnityLighting)
 	#endif
 
 	float4 _LightPositionRange; // xyz = pos, w = 1/range
+	float4 _LightProjectionParams; // for point light projection: x = zfar / (znear - zfar), y = (znear * zfar) / (znear - zfar), z=shadow bias, w=shadow scale bias
 
 	float4 unity_4LightPosX0;
 	float4 unity_4LightPosY0;
@@ -276,12 +277,12 @@ CBUFFER_START(UnityReflectionProbes)
 	float4 unity_SpecCube0_BoxMax;
 	float4 unity_SpecCube0_BoxMin;
 	float4 unity_SpecCube0_ProbePosition;
-	half4  unity_SpecCube0_HDR;
+	half4 unity_SpecCube0_HDR;
 
 	float4 unity_SpecCube1_BoxMax;
 	float4 unity_SpecCube1_BoxMin;
 	float4 unity_SpecCube1_ProbePosition;
-	half4  unity_SpecCube1_HDR;
+	half4 unity_SpecCube1_HDR;
 CBUFFER_END
 
 
@@ -326,10 +327,10 @@ static float4x4 unity_MatrixITMV = transpose(mul(unity_WorldToObject, unity_Matr
 #define UNITY_MATRIX_MVP	unity_MatrixMVP
 #define UNITY_MATRIX_MV	unity_MatrixMV
 #define UNITY_MATRIX_T_MV	unity_MatrixTMV
-#define UNITY_MATRIX_IT_MV  unity_MatrixITMV
+#define UNITY_MATRIX_IT_MV unity_MatrixITMV
 
 // ----------------------------------------------------------------------------
-//  Deprecated
+// Deprecated
 
 // There used to be fixed function-like texture matrices, defined as UNITY_MATRIX_TEXTUREn. These are gone now; and are just defined to identity.
 #define UNITY_MATRIX_TEXTURE0 float4x4(1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1)

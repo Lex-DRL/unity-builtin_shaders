@@ -73,7 +73,7 @@ Shader "VR/SpatialMapping/Wireframe"
 				// formula for finding the area of a triangle Area = Base/2 * Height,
 				// and solve for the Height = (Area * 2)/Base.
 				// We can get the area of a triangle by taking its cross product
-				// divided by 2.  However we can avoid dividing our area/base by 2
+				// divided by 2. However we can avoid dividing our area/base by 2
 				// since our cross product will already be double our area.
 				float area = abs(edge1.x * edge2.y - edge1.y * edge2.x);
 				float wireThickness = 800 - _WireThickness;
@@ -116,15 +116,15 @@ Shader "VR/SpatialMapping/Wireframe"
 				float t = exp2(-2 * minDistanceToEdge * minDistanceToEdge);
 
 				const fixed4 colors[11] = {
-						fixed4(1.0, 1.0, 1.0, 1.0),  // White
-						fixed4(1.0, 0.0, 0.0, 1.0),  // Red
-						fixed4(0.0, 1.0, 0.0, 1.0),  // Green
-						fixed4(0.0, 0.0, 1.0, 1.0),  // Blue
-						fixed4(1.0, 1.0, 0.0, 1.0),  // Yellow
-						fixed4(0.0, 1.0, 1.0, 1.0),  // Cyan/Aqua
-						fixed4(1.0, 0.0, 1.0, 1.0),  // Magenta
-						fixed4(0.5, 0.0, 0.0, 1.0),  // Maroon
-						fixed4(0.0, 0.5, 0.5, 1.0),  // Teal
+						fixed4(1.0, 1.0, 1.0, 1.0), // White
+						fixed4(1.0, 0.0, 0.0, 1.0), // Red
+						fixed4(0.0, 1.0, 0.0, 1.0), // Green
+						fixed4(0.0, 0.0, 1.0, 1.0), // Blue
+						fixed4(1.0, 1.0, 0.0, 1.0), // Yellow
+						fixed4(0.0, 1.0, 1.0, 1.0), // Cyan/Aqua
+						fixed4(1.0, 0.0, 1.0, 1.0), // Magenta
+						fixed4(0.5, 0.0, 0.0, 1.0), // Maroon
+						fixed4(0.0, 0.5, 0.5, 1.0), // Teal
 						fixed4(1.0, 0.65, 0.0, 1.0), // Orange
 						fixed4(1.0, 1.0, 1.0, 1.0)	// White
 					};

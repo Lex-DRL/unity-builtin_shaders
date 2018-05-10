@@ -35,7 +35,8 @@ struct appdata {
 	float4 vertex : POSITION;
 	float2 texcoord : TEXCOORD0;
 #ifdef UNITY_STEREO_INSTANCING_ENABLED
-	float3 ray[2] : TEXCOORD1;
+	float3 ray0 : TEXCOORD1;
+	float3 ray1 : TEXCOORD2;
 #else
 	float3 ray : TEXCOORD1;
 #endif
@@ -52,7 +53,7 @@ struct v2f {
 	float3 ray : TEXCOORD1;
 	// Orthographic view space positions (need xy as well for oblique matrices)
 	float3 orthoPosNear : TEXCOORD2;
-	float3 orthoPosFar  : TEXCOORD3;
+	float3 orthoPosFar : TEXCOORD3;
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 	UNITY_VERTEX_OUTPUT_STEREO
 };
@@ -72,7 +73,7 @@ v2f vert (appdata v)
 
 	// Perspective case
 #ifdef UNITY_STEREO_INSTANCING_ENABLED
-	o.ray = v.ray[unity_StereoEyeIndex];
+	o.ray = unity_StereoEyeIndex == 0 ? v.ray0 : v.ray1;
 #else
 	o.ray = v.ray;
 #endif
@@ -85,7 +86,7 @@ v2f vert (appdata v)
 	// limits.
 	clipPos.y *= _ProjectionParams.x;
 	float3 orthoPosNear = mul(unity_CameraInvProjection, float4(clipPos.x,clipPos.y,-1,1)).xyz;
-	float3 orthoPosFar  = mul(unity_CameraInvProjection, float4(clipPos.x,clipPos.y, 1,1)).xyz;
+	float3 orthoPosFar = mul(unity_CameraInvProjection, float4(clipPos.x,clipPos.y, 1,1)).xyz;
 	orthoPosNear.z *= -1;
 	orthoPosFar.z *= -1;
 	o.orthoPosNear = orthoPosNear;
@@ -95,7 +96,7 @@ v2f vert (appdata v)
 }
 
 // ------------------------------------------------------------------
-//  Helpers
+// Helpers
 // ------------------------------------------------------------------
 UNITY_DECLARE_DEPTH_TEXTURE(_CameraDepthTexture);
 // sizes of cascade projections, relative to first one
@@ -156,7 +157,7 @@ inline float4 getShadowCoord( float4 wpos, fixed4 cascadeWeights )
 	float3 sc3 = mul (unity_WorldToShadow[3], wpos).xyz;
 	float4 shadowMapCoordinate = float4(sc0 * cascadeWeights[0] + sc1 * cascadeWeights[1] + sc2 * cascadeWeights[2] + sc3 * cascadeWeights[3], 1);
 #if defined(UNITY_REVERSED_Z)
-	float  noCascadeWeights = 1 - dot(cascadeWeights, float4(1, 1, 1, 1));
+	float noCascadeWeights = 1 - dot(cascadeWeights, float4(1, 1, 1, 1));
 	shadowMapCoordinate.z += noCascadeWeights;
 #endif
 	return shadowMapCoordinate;
@@ -217,7 +218,7 @@ inline float3 computeCameraSpacePosFromDepthAndVSInfo(v2f i)
 inline float3 computeCameraSpacePosFromDepth(v2f i);
 
 /**
- *  Hard shadow
+ * Hard shadow
  */
 fixed4 frag_hard (v2f i) : SV_Target
 {
@@ -240,7 +241,7 @@ fixed4 frag_hard (v2f i) : SV_Target
 }
 
 /**
- *  Soft Shadow (SM 3.0)
+ * Soft Shadow (SM 3.0)
  */
 fixed4 frag_pcfSoft(v2f i) : SV_Target
 {

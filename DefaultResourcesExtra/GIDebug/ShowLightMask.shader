@@ -73,7 +73,7 @@ Shader "Hidden/GIDebug/ShowLightMask" {
 
 				if (_LightType == 0)
 				{
-					// directional:  no attenuation
+					// directional: no attenuation
 				}
 				else if (_LightType == 1)
 				{

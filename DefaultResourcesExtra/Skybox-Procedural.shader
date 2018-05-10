@@ -139,7 +139,7 @@ SubShader {
 
 		struct v2f
 		{
-			float4  pos			: SV_POSITION;
+			float4 pos			: SV_POSITION;
 
 		#if SKYBOX_SUNDISK == SKYBOX_SUNDISK_HQ
 			// for HQ sun disk, we need vertex itself to calculate ray-dir per-pixel

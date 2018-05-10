@@ -99,7 +99,7 @@ fixed4 frag (v2f i) : SV_Target {
 
 	half3 backContribs = i.backContrib * trngls.b;
 
-/*  This is unrolled below, indexing into a vec3 components is a terrible idea
+/* This is unrolled below, indexing into a vec3 components is a terrible idea
 	for (int j = 0; j < 3; j++)
 	{
 		half3 lightColor = _TerrainTreeLightColors[j].rgb;

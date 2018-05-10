@@ -16,7 +16,8 @@ Shader "Hidden/VideoDecode"
 		sampler2D _MainTex;
 		sampler2D _SecondTex;
 		sampler2D _ThirdTex;
-		float  _AlphaParam;
+		float _AlphaParam;
+		float4 _RightEyeUVOffset;
 		float4 _MainTex_TexelSize;
 		float4 _MainTex_ST;
 
@@ -43,7 +44,7 @@ Shader "Hidden/VideoDecode"
 		{
 			v2f o;
 			o.vertex = UnityObjectToClipPos(v.vertex);
-			o.texcoord = TRANSFORM_TEX(v.texcoord.xy, _MainTex);
+			o.texcoord = TRANSFORM_TEX(v.texcoord.xy, _MainTex) + unity_StereoEyeIndex * _RightEyeUVOffset.xy;
 			return o;
 		}
 
@@ -107,15 +108,15 @@ Shader "Hidden/VideoDecode"
 
 		fixed4 fragmentNV12RGBA(v2f i) : SV_Target
 		{
-			float ty  = 0.5f * i.texcoord.x;	// Y  : left half of luma plane
-			float ta  = ty + 0.5f;			// A  : right half of luma plane
+			float ty = 0.5f * i.texcoord.x;	// Y : left half of luma plane
+			float ta = ty + 0.5f;			// A : right half of luma plane
 			float tuv = ty;					// UV : just use left half of chroma plane
 
-			fixed  y  = tex2D(_MainTex,	float2(ty,  i.texcoord.y)).a;
-			fixed  a  = tex2D(_MainTex,	float2(ta,  i.texcoord.y)).a;
+			fixed y = tex2D(_MainTex,	float2(ty, i.texcoord.y)).a;
+			fixed a = tex2D(_MainTex,	float2(ta, i.texcoord.y)).a;
 			fixed2 uv = tex2D(_SecondTex, float2(tuv, i.texcoord.y)).rg;
-			fixed  u  = uv.r;
-			fixed  v  = uv.g;
+			fixed u = uv.r;
+			fixed v = uv.g;
 
 			fixed y1 = 1.15625 * y;
 			fixed4 result = fixed4(y1 + 1.59375 * v - 0.87254,

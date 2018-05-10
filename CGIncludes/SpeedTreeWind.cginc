@@ -4,7 +4,7 @@
 #define SPEEDTREE_WIND_INCLUDED
 
 ///////////////////////////////////////////////////////////////////////
-//  Wind Info
+// Wind Info
 
 CBUFFER_START(SpeedTreeWind)
 	float4 _ST_WindVector;
@@ -27,7 +27,7 @@ CBUFFER_END
 
 
 ///////////////////////////////////////////////////////////////////////
-//  UnpackNormalFromFloat
+// UnpackNormalFromFloat
 
 float3 UnpackNormalFromFloat(float fValue)
 {
@@ -42,7 +42,7 @@ float3 UnpackNormalFromFloat(float fValue)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  CubicSmooth
+// CubicSmooth
 
 float4 CubicSmooth(float4 vData)
 {
@@ -51,7 +51,7 @@ float4 CubicSmooth(float4 vData)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  TriangleWave
+// TriangleWave
 
 float4 TriangleWave(float4 vData)
 {
@@ -60,7 +60,7 @@ float4 TriangleWave(float4 vData)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  TrigApproximate
+// TrigApproximate
 
 float4 TrigApproximate(float4 vData)
 {
@@ -69,9 +69,9 @@ float4 TrigApproximate(float4 vData)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  RotationMatrix
+// RotationMatrix
 //
-//  Constructs an arbitrary axis rotation matrix
+// Constructs an arbitrary axis rotation matrix
 
 float3x3 RotationMatrix(float3 vAxis, float fAngle)
 {
@@ -91,14 +91,14 @@ float3x3 RotationMatrix(float3 vAxis, float fAngle)
 	const float y = vAxis.y;
 	const float z = vAxis.z;
 
-	return float3x3(t * x * x + c,	t * x * y - s * z,  t * x * z + s * y,
-					t * x * y + s * z,  t * y * y + c,	t * y * z - s * x,
-					t * x * z - s * y,  t * y * z + s * x,  t * z * z + c);
+	return float3x3(t * x * x + c,	t * x * y - s * z, t * x * z + s * y,
+					t * x * y + s * z, t * y * y + c,	t * y * z - s * x,
+					t * x * z - s * y, t * y * z + s * x, t * z * z + c);
 }
 
 
 ///////////////////////////////////////////////////////////////////////
-//  mul_float3x3_float3x3
+// mul_float3x3_float3x3
 
 float3x3 mul_float3x3_float3x3(float3x3 mMatrixA, float3x3 mMatrixB)
 {
@@ -107,7 +107,7 @@ float3x3 mul_float3x3_float3x3(float3x3 mMatrixA, float3x3 mMatrixB)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  mul_float3x3_float3
+// mul_float3x3_float3
 
 float3 mul_float3x3_float3(float3x3 mMatrix, float3 vVector)
 {
@@ -116,13 +116,13 @@ float3 mul_float3x3_float3(float3x3 mMatrix, float3 vVector)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  cross()'s parameters are backwards in GLSL
+// cross()'s parameters are backwards in GLSL
 
 #define wind_cross(a, b) cross((a), (b))
 
 
 ///////////////////////////////////////////////////////////////////////
-//  Roll
+// Roll
 
 float Roll(float fCurrent,
 			float fMaxScale,
@@ -142,7 +142,7 @@ float Roll(float fCurrent,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  Twitch
+// Twitch
 
 float Twitch(float3 vPos, float fAmount, float fSharpness, float fTime)
 {
@@ -158,11 +158,11 @@ float Twitch(float3 vPos, float fAmount, float fSharpness, float fTime)
 
 
 ///////////////////////////////////////////////////////////////////////
-//  Oscillate
+// Oscillate
 //
-//  This function computes an oscillation value and whip value if necessary.
-//  Whip and oscillation are combined like this to minimize calls to
-//  TrigApproximate( ) when possible.
+// This function computes an oscillation value and whip value if necessary.
+// Whip and oscillation are combined like this to minimize calls to
+// TrigApproximate( ) when possible.
 
 float Oscillate(float3 vPos,
 				float fTime,
@@ -219,7 +219,7 @@ float Oscillate(float3 vPos,
 
 	//if (bRoll)
 	//{
-	//  fOscillation = Roll(fOscillation, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
+	// fOscillation = Roll(fOscillation, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
 	//}
 
 	return fOscillation;
@@ -227,7 +227,7 @@ float Oscillate(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  Turbulence
+// Turbulence
 
 float Turbulence(float fTime, float fOffset, float fGlobalTime, float fTurbulence)
 {
@@ -240,10 +240,10 @@ float Turbulence(float fTime, float fOffset, float fGlobalTime, float fTurbulenc
 
 
 ///////////////////////////////////////////////////////////////////////
-//  GlobalWind
+// GlobalWind
 //
-//  This function positions any tree geometry based on their untransformed
-//  position and 4 wind floats.
+// This function positions any tree geometry based on their untransformed
+// position and 4 wind floats.
 
 float3 GlobalWind(float3 vPos, float3 vInstancePos, bool bPreserveShape, float3 vRotatedWindVector, float time)
 {
@@ -289,7 +289,7 @@ float3 GlobalWind(float3 vPos, float3 vInstancePos, bool bPreserveShape, float3 
 
 
 ///////////////////////////////////////////////////////////////////////
-//  SimpleBranchWind
+// SimpleBranchWind
 
 float3 SimpleBranchWind(float3 vPos,
 						float3 vInstancePos,
@@ -323,7 +323,7 @@ float3 SimpleBranchWind(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  DirectionalBranchWind
+// DirectionalBranchWind
 
 float3 DirectionalBranchWind(float3 vPos,
 							float3 vInstancePos,
@@ -364,7 +364,7 @@ float3 DirectionalBranchWind(float3 vPos,
 		fAdherenceScale += vOscillations.w * _ST_WindVector.w * fWhip;
 
 	//if (bRoll)
-	//  fAdherenceScale = Roll(fAdherenceScale, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
+	// fAdherenceScale = Roll(fAdherenceScale, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
 
 	vPos.xyz += vRotatedWindVector * fAdherence * fAdherenceScale * fWeight;
 
@@ -373,7 +373,7 @@ float3 DirectionalBranchWind(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  DirectionalBranchWindFrondStyle
+// DirectionalBranchWindFrondStyle
 
 float3 DirectionalBranchWindFrondStyle(float3 vPos,
 										float3 vInstancePos,
@@ -412,7 +412,7 @@ float3 DirectionalBranchWindFrondStyle(float3 vPos,
 		fAdherenceScale = Turbulence(fTime, fOffset, _ST_WindAnimation.x, fTurbulence);
 
 	//if (bRoll)
-	//  fAdherenceScale = Roll(fAdherenceScale, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
+	// fAdherenceScale = Roll(fAdherenceScale, _ST_WindRollingBranches.x, _ST_WindRollingBranches.y, _ST_WindRollingBranches.z, _ST_WindRollingBranches.w, vPos.xyz, fTime + fOffset, vRotatedWindVector);
 
 	if (bWhip)
 		fAdherenceScale += vOscillations.w * _ST_WindVector.w * fWhip;
@@ -425,7 +425,7 @@ float3 DirectionalBranchWindFrondStyle(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  BranchWind
+// BranchWind
 
 // Apply only to better, best, palm winds
 float3 BranchWind(bool isPalmWind, float3 vPos, float3 vInstancePos, float4 vWindData, float3 vRotatedWindVector, float3 vRotatedBranchAnchor)
@@ -444,7 +444,7 @@ float3 BranchWind(bool isPalmWind, float3 vPos, float3 vInstancePos, float4 vWin
 
 
 ///////////////////////////////////////////////////////////////////////
-//  LeafRipple
+// LeafRipple
 
 float3 LeafRipple(float3 vPos,
 				inout float3 vDirection,
@@ -474,7 +474,7 @@ float3 LeafRipple(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  LeafTumble
+// LeafTumble
 
 float3 LeafTumble(float3 vPos,
 				inout float3 vDirection,
@@ -520,7 +520,7 @@ float3 LeafTumble(float3 vPos,
 	float fAdherenceScale = 1.0;
 	//if (bRoll)
 	//{
-	//  fAdherenceScale = Roll(fAdherenceScale, vRoll.x, vRoll.y, vRoll.z, vRoll.w, vAnchor.xyz, fTime, vRotatedWindVector);
+	// fAdherenceScale = Roll(fAdherenceScale, vRoll.x, vRoll.y, vRoll.z, vRoll.w, vAnchor.xyz, fTime, vRotatedWindVector);
 	//}
 
 	fOsc = vOscillations.y - vOscillations.x * vOscillations.x;
@@ -541,8 +541,8 @@ float3 LeafTumble(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  LeafWind
-//  Optimized (for instruction count) version. Assumes leaf 1 and 2 have the same options
+// LeafWind
+// Optimized (for instruction count) version. Assumes leaf 1 and 2 have the same options
 
 float3 LeafWind(bool isBestWind,
 				bool bLeaf2,
@@ -581,7 +581,7 @@ float3 LeafWind(bool isBestWind,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  RippleFrondOneSided
+// RippleFrondOneSided
 
 float3 RippleFrondOneSided(float3 vPos,
 							inout float3 vDirection,
@@ -616,7 +616,7 @@ float3 RippleFrondOneSided(float3 vPos,
 }
 
 ///////////////////////////////////////////////////////////////////////
-//  RippleFrondTwoSided
+// RippleFrondTwoSided
 
 float3 RippleFrondTwoSided(float3 vPos,
 							inout float3 vDirection,
@@ -652,7 +652,7 @@ float3 RippleFrondTwoSided(float3 vPos,
 
 
 ///////////////////////////////////////////////////////////////////////
-//  RippleFrond
+// RippleFrond
 
 float3 RippleFrond(float3 vPos,
 					inout float3 vDirection,

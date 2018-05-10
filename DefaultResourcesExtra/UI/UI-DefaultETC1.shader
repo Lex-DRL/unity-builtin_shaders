@@ -71,7 +71,7 @@ Shader "UI/DefaultETC1"
 			{
 				float4 vertex	: SV_POSITION;
 				fixed4 color	: COLOR;
-				float2 texcoord  : TEXCOORD0;
+				float2 texcoord : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
 			};
 

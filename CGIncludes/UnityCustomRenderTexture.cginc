@@ -38,8 +38,8 @@ float4	CustomRenderTextureSizesAndRotations[kCustomTextureBatchSize];
 float		CustomRenderTexturePrimitiveIDs[kCustomTextureBatchSize];
 
 float4	CustomRenderTextureParameters;
-#define	CustomRenderTextureUpdateSpace  CustomRenderTextureParameters.x // Normalized(0)/PixelSpace(1)
-#define	CustomRenderTexture3DTexcoordW  CustomRenderTextureParameters.y
+#define	CustomRenderTextureUpdateSpace CustomRenderTextureParameters.x // Normalized(0)/PixelSpace(1)
+#define	CustomRenderTexture3DTexcoordW CustomRenderTextureParameters.y
 #define	CustomRenderTextureIs3D		CustomRenderTextureParameters.z
 
 // User facing uniform variables
@@ -47,7 +47,7 @@ float4	_CustomRenderTextureInfo; // x = width, y = height, z = depth, w = face/3
 
 // Helpers
 #define _CustomRenderTextureWidth	_CustomRenderTextureInfo.x
-#define _CustomRenderTextureHeight  _CustomRenderTextureInfo.y
+#define _CustomRenderTextureHeight _CustomRenderTextureInfo.y
 #define _CustomRenderTextureDepth	_CustomRenderTextureInfo.z
 
 // Those two are mutually exclusive so we can use the same slot
@@ -98,12 +98,12 @@ v2f_customrendertexture CustomRenderTextureVertexShader(appdata_customrendertext
 #if UNITY_UV_STARTS_AT_TOP
 	const float2 vertexPositions[6] =
 	{
-		{ -1.0f,  1.0f },
+		{ -1.0f, 1.0f },
 		{ -1.0f, -1.0f },
-		{  1.0f, -1.0f },
-		{  1.0f,  1.0f },
-		{ -1.0f,  1.0f },
-		{  1.0f, -1.0f }
+		{ 1.0f, -1.0f },
+		{ 1.0f, 1.0f },
+		{ -1.0f, 1.0f },
+		{ 1.0f, -1.0f }
 	};
 
 	const float2 texCoords[6] =
@@ -118,12 +118,12 @@ v2f_customrendertexture CustomRenderTextureVertexShader(appdata_customrendertext
 #else
 	const float2 vertexPositions[6] =
 	{
-		{  1.0f,  1.0f },
+		{ 1.0f, 1.0f },
 		{ -1.0f, -1.0f },
-		{ -1.0f,  1.0f },
+		{ -1.0f, 1.0f },
 		{ -1.0f, -1.0f },
-		{  1.0f,  1.0f },
-		{  1.0f, -1.0f }
+		{ 1.0f, 1.0f },
+		{ 1.0f, -1.0f }
 	};
 
 	const float2 texCoords[6] =

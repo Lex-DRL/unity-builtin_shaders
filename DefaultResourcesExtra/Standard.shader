@@ -58,7 +58,7 @@ Shader "Standard"
 
 
 		// ------------------------------------------------------------------
-		//  Base forward pass (directional light, emission, lightmaps, ...)
+		// Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
 			Name "FORWARD"
@@ -95,7 +95,7 @@ Shader "Standard"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Additive forward pass (one light per pass)
+		// Additive forward pass (one light per pass)
 		Pass
 		{
 			Name "FORWARD_DELTA"
@@ -131,7 +131,7 @@ Shader "Standard"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Shadow rendering pass
+		// Shadow rendering pass
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }
@@ -160,7 +160,7 @@ Shader "Standard"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Deferred pass
+		// Deferred pass
 		Pass
 		{
 			Name "DEFERRED"
@@ -226,7 +226,7 @@ Shader "Standard"
 		LOD 150
 
 		// ------------------------------------------------------------------
-		//  Base forward pass (directional light, emission, lightmaps, ...)
+		// Base forward pass (directional light, emission, lightmaps, ...)
 		Pass
 		{
 			Name "FORWARD"
@@ -260,7 +260,7 @@ Shader "Standard"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Additive forward pass (one light per pass)
+		// Additive forward pass (one light per pass)
 		Pass
 		{
 			Name "FORWARD_DELTA"
@@ -292,7 +292,7 @@ Shader "Standard"
 			ENDCG
 		}
 		// ------------------------------------------------------------------
-		//  Shadow rendering pass
+		// Shadow rendering pass
 		Pass {
 			Name "ShadowCaster"
 			Tags { "LightMode" = "ShadowCaster" }

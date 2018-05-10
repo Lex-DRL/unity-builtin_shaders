@@ -13,7 +13,7 @@ float saturate(float x)
 
 
 // -------------------------------------------------------------------
-//  builtin values exposed from Unity
+// builtin values exposed from Unity
 
 // Time values from Unity
 uniform vec4 _Time;
@@ -38,7 +38,7 @@ uniform vec4 _WorldSpaceLightPos0;
 uniform vec4 _LightPositionRange; // xyz = pos, w = 1/range
 
 // -------------------------------------------------------------------
-//  helper functions and macros used in many standard shaders
+// helper functions and macros used in many standard shaders
 
 #if defined DIRECTIONAL || defined DIRECTIONAL_COOKIE
 #define USING_DIRECTIONAL_LIGHT

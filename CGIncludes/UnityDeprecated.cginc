@@ -28,7 +28,7 @@ inline half3 SebLagardeFresnelTerm (half3 F0, half roughness, half cosA)
 }
 
 // Cook-Torrance visibility term, doesn't take roughness into account
-inline half CookTorranceVisibilityTerm (half NdotL, half NdotV,  half NdotH, half VdotH)
+inline half CookTorranceVisibilityTerm (half NdotL, half NdotV, half NdotH, half VdotH)
 {
 	VdotH += 1e-5f;
 	half G = min (1.0, min (
@@ -65,7 +65,7 @@ inline half ImplicitVisibilityTerm ()
 	return 1;
 }
 
-// BlinnPhong normalized as reflection density­sity function (RDF)
+// BlinnPhong normalized as reflection densityÂ­sity function (RDF)
 // ready for use directly as specular: spec=D
 // http://www.thetenthplanet.de/archives/255
 inline half RDFBlinnPhongNormalizedTerm (half NdotH, half n)

@@ -11,8 +11,8 @@ Properties {
 SubShader {
 
 // Pass 1: Lighting pass
-//  LDR case - Lighting encoded into a subtractive ARGB8 buffer
-//  HDR case - Lighting additively blended into floating point buffer
+// LDR case - Lighting encoded into a subtractive ARGB8 buffer
+// HDR case - Lighting additively blended into floating point buffer
 Pass {
 	ZWrite Off
 	Blend [_SrcBlend] [_DstBlend]

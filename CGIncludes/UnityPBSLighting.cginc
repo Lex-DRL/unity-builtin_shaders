@@ -45,7 +45,7 @@ inline half3 BRDF_Unity_Indirect (half3 baseColor, half3 specColor, half oneMinu
 #define UNITY_GLOSSY_ENV_FROM_SURFACE(x, s, data)				\
 	Unity_GlossyEnvironmentData g;							\
 	g.roughness /* perceptualRoughness */	= SmoothnessToPerceptualRoughness(s.Smoothness); \
-	g.reflUVW = reflect(-data.worldViewDir, s.Normal);  \
+	g.reflUVW = reflect(-data.worldViewDir, s.Normal); \
 
 
 #if defined(UNITY_PASS_DEFERRED) && UNITY_ENABLE_REFLECTION_BUFFERS
@@ -104,7 +104,7 @@ inline half4 LightingStandard_Deferred (SurfaceOutputStandard s, half3 viewDir, 
 	UnityStandardData data;
 	data.diffuseColor	= s.Albedo;
 	data.occlusion	= s.Occlusion;
-	data.specularColor  = specColor;
+	data.specularColor = specColor;
 	data.smoothness	= s.Smoothness;
 	data.normalWorld	= s.Normal;
 
@@ -170,7 +170,7 @@ inline half4 LightingStandardSpecular_Deferred (SurfaceOutputStandardSpecular s,
 	UnityStandardData data;
 	data.diffuseColor	= s.Albedo;
 	data.occlusion	= s.Occlusion;
-	data.specularColor  = s.Specular;
+	data.specularColor = s.Specular;
 	data.smoothness	= s.Smoothness;
 	data.normalWorld	= s.Normal;
 

@@ -5,7 +5,7 @@
 
 #include "UnityStandardCore.cginc"
 
-//  Does not support: _PARALLAXMAP, DIRLIGHTMAP_COMBINED
+// Does not support: _PARALLAXMAP, DIRLIGHTMAP_COMBINED
 #define GLOSSMAP (defined(_SPECGLOSSMAP) || defined(_METALLICGLOSSMAP))
 
 #ifndef SPECULAR_HIGHLIGHTS
@@ -46,11 +46,6 @@ half MetallicSetup_Reflectivity()
 half SpecularSetup_Reflectivity()
 {
 	return SpecularStrength(_SpecColor.rgb);
-}
-
-half RoughnessSetup_Reflectivity()
-{
-	return MetallicSetup_Reflectivity();
 }
 
 #define JOIN2(a, b) a##b
@@ -141,9 +136,9 @@ FragmentCommonData FragmentSetupSimple(VertexOutputBaseSimple i)
 	s.reflUVW = i.fogCoord.yzw;
 
 	#ifdef _NORMALMAP
-		s.tangentSpaceNormal =  NormalInTangentSpace(i.tex);
+		s.tangentSpaceNormal = NormalInTangentSpace(i.tex);
 	#else
-		s.tangentSpaceNormal =  0;
+		s.tangentSpaceNormal = 0;
 	#endif
 
 	return s;
@@ -229,7 +224,7 @@ half4 fragForwardBaseSimpleInternal (VertexOutputBaseSimple i)
 	return OutputForward (half4(c, 1), s.alpha);
 }
 
-half4 fragForwardBaseSimple (VertexOutputBaseSimple i) : SV_Target  // backward compatibility (this used to be the fragment entry function)
+half4 fragForwardBaseSimple (VertexOutputBaseSimple i) : SV_Target // backward compatibility (this used to be the fragment entry function)
 {
 	return fragForwardBaseSimpleInternal(i);
 }

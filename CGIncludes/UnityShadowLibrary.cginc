@@ -17,7 +17,7 @@
 half	UnitySampleShadowmap_PCF7x7(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (7x7 kernel)
 half	UnitySampleShadowmap_PCF5x5(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (5x5 kernel)
 half	UnitySampleShadowmap_PCF3x3(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (3x3 kernel)
-float3  UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasbiasMultiply); // Receiver plane depth bias
+float3 UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasbiasMultiply); // Receiver plane depth bias
 
 // ------------------------------------------------------------------
 // Spot light shadows
@@ -68,19 +68,7 @@ inline fixed UnitySampleShadowmap (float4 shadowCoord)
 				shadows.z = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, coord + _ShadowOffsets[2]);
 				shadows.w = UNITY_SAMPLE_SHADOW(_ShadowMapTexture, coord + _ShadowOffsets[3]);
 				shadow = dot(shadows, 0.25f);
-			// D3D9 : 4-tap linear comparison filter
-			#elif defined (SHADER_API_D3D9)
-				// HLSL for D3D9, when modifying the shadow UV coordinate, really wants to do
-				// some funky swizzles, assuming that Z coordinate is unused in texture sampling.
-				// So force it to do projective texture reads here, with .w being one.
-				float4 coord = shadowCoord / shadowCoord.w;
-				half4 shadows;
-				shadows.x = UNITY_SAMPLE_SHADOW_PROJ(_ShadowMapTexture, coord + _ShadowOffsets[0]);
-				shadows.y = UNITY_SAMPLE_SHADOW_PROJ(_ShadowMapTexture, coord + _ShadowOffsets[1]);
-				shadows.z = UNITY_SAMPLE_SHADOW_PROJ(_ShadowMapTexture, coord + _ShadowOffsets[2]);
-				shadows.w = UNITY_SAMPLE_SHADOW_PROJ(_ShadowMapTexture, coord + _ShadowOffsets[3]);
-				shadow = dot(shadows, 0.25f);
-			// Everything else (not mobile/not d3d9/not xbox360)
+			// Everything else
 			#else
 				float3 coord = shadowCoord.xyz / shadowCoord.w;
 				float3 receiverPlaneDepthBias = UnityGetReceiverPlaneDepthBias(coord, 1.0f);
@@ -110,36 +98,70 @@ inline fixed UnitySampleShadowmap (float4 shadowCoord)
 
 #if defined (SHADOWS_CUBE)
 
-samplerCUBE_float _ShadowMapTexture;
-inline float SampleCubeDistance (float3 vec)
-{
-	// DX9 with SM2.0, and DX11 FL 9.x do not have texture LOD sampling.
-	#if ((SHADER_TARGET < 25) && defined(SHADER_API_D3D9)) || defined(SHADER_API_D3D11_9X)
-		return UnityDecodeCubeShadowDepth(texCUBE(_ShadowMapTexture, vec));
-	#else
-		return UnityDecodeCubeShadowDepth(texCUBElod(_ShadowMapTexture, float4(vec, 0)));
-	#endif
-}
+#if defined(SHADOWS_CUBE_IN_DEPTH_TEX)
+	UNITY_DECLARE_TEXCUBE_SHADOWMAP(_ShadowMapTexture);
+#else
+	UNITY_DECLARE_TEXCUBE(_ShadowMapTexture);
+	inline float SampleCubeDistance (float3 vec)
+	{
+		// DX9 with SM2.0, and DX11 FL 9.x do not have texture LOD sampling.
+		#if ((SHADER_TARGET < 25) && defined(SHADER_API_D3D9)) || defined(SHADER_API_D3D11_9X)
+			return UnityDecodeCubeShadowDepth(texCUBE(_ShadowMapTexture, vec));
+		#else
+			return UnityDecodeCubeShadowDepth(UNITY_SAMPLE_TEXCUBE_LOD(_ShadowMapTexture, vec, 0));
+		#endif
+	}
+
+#endif
+
 inline half UnitySampleShadowmap (float3 vec)
 {
-	float mydist = length(vec) * _LightPositionRange.w;
-	mydist *= 0.97; // bias
+	#if defined(SHADOWS_CUBE_IN_DEPTH_TEX)
+		float3 absVec = abs(vec);
+		float dominantAxis = max(max(absVec.x, absVec.y), absVec.z); // TODO use max3() instead
+		dominantAxis = max(0.00001, dominantAxis - _LightProjectionParams.z); // shadow bias from point light is apllied here.
+		dominantAxis *= _LightProjectionParams.w; // bias
+		float mydist = -_LightProjectionParams.x + _LightProjectionParams.y/dominantAxis; // project to shadow map clip space [0; 1]
+
+		#if defined(UNITY_REVERSED_Z)
+		mydist = 1.0 - mydist; // depth buffers are reversed! Additionally we can move this to CPP code!
+		#endif
+	#else
+		float mydist = length(vec) * _LightPositionRange.w;
+		mydist *= _LightProjectionParams.w; // bias
+	#endif
 
 	#if defined (SHADOWS_SOFT)
 		float z = 1.0/128.0;
 		float4 shadowVals;
-		shadowVals.x = SampleCubeDistance (vec+float3( z, z, z));
-		shadowVals.y = SampleCubeDistance (vec+float3(-z,-z, z));
-		shadowVals.z = SampleCubeDistance (vec+float3(-z, z,-z));
-		shadowVals.w = SampleCubeDistance (vec+float3( z,-z,-z));
-		half4 shadows = (shadowVals < mydist.xxxx) ? _LightShadowData.rrrr : 1.0f;
-		return dot(shadows,0.25);
+		// No hardware comparison sampler (ie some mobile + xbox360) : simple 4 tap PCF
+		#if defined (SHADOWS_CUBE_IN_DEPTH_TEX)
+			shadowVals.x = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec+float3( z, z, z), mydist));
+			shadowVals.y = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec+float3(-z,-z, z), mydist));
+			shadowVals.z = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec+float3(-z, z,-z), mydist));
+			shadowVals.w = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec+float3( z,-z,-z), mydist));
+			half shadow = dot(shadowVals, 0.25);
+			return lerp(_LightShadowData.r, 1.0, shadow);
+		#else
+			shadowVals.x = SampleCubeDistance (vec+float3( z, z, z));
+			shadowVals.y = SampleCubeDistance (vec+float3(-z,-z, z));
+			shadowVals.z = SampleCubeDistance (vec+float3(-z, z,-z));
+			shadowVals.w = SampleCubeDistance (vec+float3( z,-z,-z));
+			half4 shadows = (shadowVals < mydist.xxxx) ? _LightShadowData.rrrr : 1.0f;
+			return dot(shadows, 0.25);
+		#endif
 	#else
-		float dist = SampleCubeDistance (vec);
-		return dist < mydist ? _LightShadowData.r : 1.0;
+		#if defined (SHADOWS_CUBE_IN_DEPTH_TEX)
+			half shadow = UNITY_SAMPLE_TEXCUBE_SHADOW(_ShadowMapTexture, float4(vec, mydist));
+			return lerp(_LightShadowData.r, 1.0, shadow);
+		#else
+			half shadowVal = UnityDecodeCubeShadowDepth(UNITY_SAMPLE_TEXCUBE(_ShadowMapTexture, vec));
+			half shadow = shadowVal < mydist ? _LightShadowData.r : 1.0;
+			return shadow;
+		#endif
 	#endif
-}
 
+}
 #endif // #if defined (SHADOWS_CUBE)
 
 
@@ -289,7 +311,7 @@ half UnityComputeShadowFade(float fadeDist)
 
 
 // ------------------------------------------------------------------
-//  Bias
+// Bias
 // ------------------------------------------------------------------
 
 /**
@@ -338,7 +360,7 @@ float3 UnityCombineShadowcoordComponents(float2 baseUV, float2 deltaUV, float de
 }
 
 // ------------------------------------------------------------------
-//  PCF Filtering helpers
+// PCF Filtering helpers
 // ------------------------------------------------------------------
 
 /**
@@ -360,7 +382,7 @@ float _UnityInternalGetAreaAboveFirstTexelUnderAIsocelesRectangleTriangle(float 
 * This function return the area of the triangle above each of those texels.
 *	|	<-- offset from -0.5 to 0.5, 0 meaning triangle is exactly in the center
 *	/ \	<-- 45 degree slop isosceles triangle (ie tent projected in 2D)
-*  /	\
+* /	\
 * _ _ _ _ <-- texels
 * X Y Z W <-- result indices (in computedArea.xyzw and computedAreaUncut.xyzw)
 */
@@ -402,7 +424,7 @@ void _UnityInternalGetWeightPerTexel_3TexelsWideTriangleFilter(float offset, out
 /**
 * Assuming a isoceles triangle of 2.5 texel height and 5 texels wide lying on 6 texels.
 * This function return the weight of each texels area relative to the full triangle area.
-*  /		\
+* /		\
 * _ _ _ _ _ _ <-- texels
 * 0 1 2 3 4 5 <-- computed area indices (in texelsWeights[])
 */
@@ -427,7 +449,7 @@ void _UnityInternalGetWeightPerTexel_5TexelsWideTriangleFilter(float offset, out
 /**
 * Assuming a isoceles triangle of 3.5 texel height and 7 texels wide lying on 8 texels.
 * This function return the weight of each texels area relative to the full triangle area.
-*  /			\
+* /			\
 * _ _ _ _ _ _ _ _ <-- texels
 * 0 1 2 3 4 5 6 7 <-- computed area indices (in texelsWeights[])
 */
@@ -452,7 +474,7 @@ void _UnityInternalGetWeightPerTexel_7TexelsWideTriangleFilter(float offset, out
 }
 
 // ------------------------------------------------------------------
-//  PCF Filtering
+// PCF Filtering
 // ------------------------------------------------------------------
 
 /**
@@ -519,7 +541,7 @@ half UnitySampleShadowmap_PCF3x3Tent(float4 coord, float3 receiverPlaneDepthBias
 
 	// fetch !
 	float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-	shadow =  fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+	shadow = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.y * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
@@ -565,7 +587,7 @@ half UnitySampleShadowmap_PCF5x5Tent(float4 coord, float3 receiverPlaneDepthBias
 
 	// fetch !
 	float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-	shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+	shadow = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.x * fetchesWeightsV.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.y), coord.z, receiverPlaneDepthBias));
@@ -616,7 +638,7 @@ half UnitySampleShadowmap_PCF7x7Tent(float4 coord, float3 receiverPlaneDepthBias
 
 	// fetch !
 	float2 bilinearFetchOrigin = centerOfFetchesInTexelSpace * _ShadowMapTexture_TexelSize.xy;
-	shadow  = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
+	shadow = fetchesWeightsU.x * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.x, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.y * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.y, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.z * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.z, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
 	shadow += fetchesWeightsU.w * fetchesWeightsV.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(bilinearFetchOrigin, float2(fetchesOffsetsU.w, fetchesOffsetsV.x), coord.z, receiverPlaneDepthBias));
@@ -718,9 +740,9 @@ half UnitySampleShadowmap_PCF5x5Gaussian(float4 coord, float3 receiverPlaneDepth
 	sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.x), coord.z, receiverPlaneDepthBias));
 
 	accum = uw * vw.y;
-	sum += accum.x *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.y), coord.z, receiverPlaneDepthBias));
-	sum += accum.y *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.y, v.y), coord.z, receiverPlaneDepthBias));
-	sum += accum.z *  UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.y), coord.z, receiverPlaneDepthBias));
+	sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.y), coord.z, receiverPlaneDepthBias));
+	sum += accum.y * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.y, v.y), coord.z, receiverPlaneDepthBias));
+	sum += accum.z * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.z, v.y), coord.z, receiverPlaneDepthBias));
 
 	accum = uw * vw.z;
 	sum += accum.x * UNITY_SAMPLE_SHADOW(_ShadowMapTexture, UnityCombineShadowcoordComponents(base_uv, float2(u.x, v.z), coord.z, receiverPlaneDepthBias));

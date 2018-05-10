@@ -2,11 +2,11 @@
 
 Shader "VR/SpatialMapping/Occlusion"
 {
-	// The HoloLens uses an additive display.  This means
-	// that the color black is transparent.  When physical
+	// The HoloLens uses an additive display. This means
+	// that the color black is transparent. When physical
 	// surfaces are rendered, it will look as though nothing
-	// is being rendered.  You will still see the physical surface.
-	//  However since geometry is actually rendered, game objects
+	// is being rendered. You will still see the physical surface.
+	// However since geometry is actually rendered, game objects
 	// behind the physical surface will be occluded.
 
 	SubShader

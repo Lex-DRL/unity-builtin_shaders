@@ -352,7 +352,7 @@ inline half4 VertexGIForward(VertexInput v, float3 posWorld, half3 normalWorld)
 }
 
 // ------------------------------------------------------------------
-//  Base forward pass (directional light, emission, lightmaps, ...)
+// Base forward pass (directional light, emission, lightmaps, ...)
 
 struct VertexOutputForwardBase
 {
@@ -454,14 +454,14 @@ half4 fragForwardBase (VertexOutputForwardBase i) : SV_Target	// backward compat
 }
 
 // ------------------------------------------------------------------
-//  Additive forward pass (one light per pass)
+// Additive forward pass (one light per pass)
 
 struct VertexOutputForwardAdd
 {
 	UNITY_POSITION(pos);
 	float4 tex						: TEXCOORD0;
 	half3 eyeVec						: TEXCOORD1;
-	half4 tangentToWorldAndLightDir[3]  : TEXCOORD2;	// [3x3:tangentToWorld | 1x3:lightDir]
+	half4 tangentToWorldAndLightDir[3] : TEXCOORD2;	// [3x3:tangentToWorld | 1x3:lightDir]
 	float3 posWorld					: TEXCOORD5;
 	UNITY_SHADOW_COORDS(6)
 	UNITY_FOG_COORDS(7)
@@ -542,7 +542,7 @@ half4 fragForwardAdd (VertexOutputForwardAdd i) : SV_Target	// backward compatib
 }
 
 // ------------------------------------------------------------------
-//  Deferred pass
+// Deferred pass
 
 struct VertexOutputDeferred
 {
@@ -669,7 +669,7 @@ void fragDeferred (
 	UnityStandardData data;
 	data.diffuseColor	= s.diffColor;
 	data.occlusion	= occlusion;
-	data.specularColor  = s.specColor;
+	data.specularColor = s.specColor;
 	data.smoothness	= s.smoothness;
 	data.normalWorld	= s.normalWorld;
 

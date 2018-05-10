@@ -215,7 +215,7 @@ void IntegrateLambertDiffuseIBLRef( out float3 diffuseLighting,
 {
 	float3 acc	= float3(0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
-	float2 randNum  = InitRandom(N.xy * 0.5f + 0.5f);
+	float2 randNum = InitRandom(N.xy * 0.5f + 0.5f);
 
 	float3 tangentX, tangentY;
 	GetLocalFrame(N, tangentX, tangentY);
@@ -245,7 +245,7 @@ void IntegrateLambertDiffuseIBLRef( out float3 diffuseLighting,
 
 // ----------------------------------------------------------------------------
 
-void IntegrateDisneyDiffuseIBLRef(  out float3 diffuseLighting,
+void IntegrateDisneyDiffuseIBLRef( out float3 diffuseLighting,
 									UNITY_ARGS_TEXCUBE(tex),
 									float4 texHdrParam, // Multiplier to apply on hdr texture (in case of rgbm)
 									float3 N,
@@ -255,9 +255,9 @@ void IntegrateDisneyDiffuseIBLRef(  out float3 diffuseLighting,
 									uint sampleCount = 2048)
 {
 	float NdotV = dot(N, V);
-	float3 acc  = float3(0.0f, 0.0f, 0.0f);
+	float3 acc = float3(0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
-	float2 randNum  = InitRandom(N.xy * 0.5f + 0.5f);
+	float2 randNum = InitRandom(N.xy * 0.5f + 0.5f);
 
 	float3 tangentX, tangentY;
 	GetLocalFrame(N, tangentX, tangentY);
@@ -307,7 +307,7 @@ void IntegrateSpecularGGXIBLRef(out float3 specularLighting,
 	float NdotV	= saturate(dot(N, V));
 	float3 acc	= float3(0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
-	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
+	float2 randNum = InitRandom(V.xy * 0.5f + 0.5f);
 
 	float3 tangentX, tangentY;
 	GetLocalFrame(N, tangentX, tangentY);
@@ -351,7 +351,7 @@ float4 IntegrateDFG(float3 V, float3 N, float roughness, uint sampleCount)
 	float NdotV	= saturate(dot(N, V));
 	float4 acc	= float4(0.0f, 0.0f, 0.0f, 0.0f);
 	// Add some jittering on Hammersley2d
-	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
+	float2 randNum = InitRandom(V.xy * 0.5f + 0.5f);
 
 	float3 tangentX, tangentY;
 	GetLocalFrame(N, tangentX, tangentY);
@@ -372,8 +372,8 @@ float4 IntegrateDFG(float3 V, float3 N, float roughness, uint sampleCount)
 		if (NdotL > 0.0f)
 		{
 			// Integral is
-			//	1 / NumSample * \int[  L * fr * (N.L) / pdf ]  with pdf =  D(H) * (N.H) / (4 * (L.H)) and fr = F(H) * G(V, L) * D(H) / (4 * (N.L) * (N.V))
-			// This is split  in two part:
+			//	1 / NumSample * \int[ L * fr * (N.L) / pdf ] with pdf = D(H) * (N.H) / (4 * (L.H)) and fr = F(H) * G(V, L) * D(H) / (4 * (N.L) * (N.V))
+			// This is split in two part:
 			//	A) \int[ L * (N.L) ]
 			//	B) \int[ F(H) * 4 * (N.L) * V(V, L) * (L.H) / (N.H) ] with V(V, L) = G(V, L) / (4 * (N.L) * (N.V))
 			//	= \int[ F(H) * weightOverPdf ]
@@ -413,9 +413,9 @@ float4 IntegrateLD( UNITY_ARGS_TEXCUBE(tex),
 					bool prefilter = true) // static bool
 {
 	float3 acc		= float3(0.0f, 0.0f, 0.0f);
-	float  accWeight	= 0;
+	float accWeight	= 0;
 
-	float2 randNum  = InitRandom(V.xy * 0.5f + 0.5f);
+	float2 randNum = InitRandom(V.xy * 0.5f + 0.5f);
 
 	float3 tangentX, tangentY;
 	GetLocalFrame(N, tangentX, tangentY);
@@ -527,8 +527,8 @@ half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, Unity_GlossyE
 // For now disabled
 #if 0
 	float m = PerceptualRoughnessToRoughness(perceptualRoughness); // m is the real roughness parameter
-	const float fEps = 1.192092896e-07F;		// smallest such that 1.0+FLT_EPSILON != 1.0  (+1e-4h is NOT good here. is visibly very wrong)
-	float n =  (2.0/max(fEps, m*m))-2.0;		// remap to spec power. See eq. 21 in --> https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
+	const float fEps = 1.192092896e-07F;		// smallest such that 1.0+FLT_EPSILON != 1.0 (+1e-4h is NOT good here. is visibly very wrong)
+	float n = (2.0/max(fEps, m*m))-2.0;		// remap to spec power. See eq. 21 in --> https://dl.dropboxusercontent.com/u/55891920/papers/mm_brdf.pdf
 
 	n /= 4;									// remap from n_dot_h formulatino to n_dot_r. See section "Pre-convolved Cube Maps vs Path Tracers" --> https://s3.amazonaws.com/docs.knaldtech.com/knald/1.0.0/lys_power_drops.html
 
