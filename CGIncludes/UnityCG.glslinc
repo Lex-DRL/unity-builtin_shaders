@@ -8,7 +8,7 @@
 
 float saturate(float x)
 {
-    return max(0.0, min(1.0, x));
+	return max(0.0, min(1.0, x));
 }
 
 
@@ -54,44 +54,44 @@ uniform vec4 _LightPositionRange; // xyz = pos, w = 1/range
 // Computes world space light direction
 vec3 WorldSpaceLightDir( vec4 v )
 {
-    vec3 worldPos = (unity_ObjectToWorld * v).xyz;
-    #ifndef USING_LIGHT_MULTI_COMPILE
-        return _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
-    #else
-        #ifndef USING_DIRECTIONAL_LIGHT
-        return _WorldSpaceLightPos0.xyz - worldPos;
-        #else
-        return _WorldSpaceLightPos0.xyz;
-        #endif
-    #endif
+	vec3 worldPos = (unity_ObjectToWorld * v).xyz;
+	#ifndef USING_LIGHT_MULTI_COMPILE
+		return _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
+	#else
+		#ifndef USING_DIRECTIONAL_LIGHT
+		return _WorldSpaceLightPos0.xyz - worldPos;
+		#else
+		return _WorldSpaceLightPos0.xyz;
+		#endif
+	#endif
 }
 
 // Computes object space light direction
 vec3 ObjSpaceLightDir( vec4 v )
 {
-    vec3 objSpaceLightPos = (unity_WorldToObject * _WorldSpaceLightPos0).xyz;
-    #ifndef USING_LIGHT_MULTI_COMPILE
-        return objSpaceLightPos.xyz - v.xyz * _WorldSpaceLightPos0.w;
-    #else
-        #ifndef USING_DIRECTIONAL_LIGHT
-        return objSpaceLightPos.xyz - v.xyz;
-        #else
-        return objSpaceLightPos.xyz;
-        #endif
-    #endif
+	vec3 objSpaceLightPos = (unity_WorldToObject * _WorldSpaceLightPos0).xyz;
+	#ifndef USING_LIGHT_MULTI_COMPILE
+		return objSpaceLightPos.xyz - v.xyz * _WorldSpaceLightPos0.w;
+	#else
+		#ifndef USING_DIRECTIONAL_LIGHT
+		return objSpaceLightPos.xyz - v.xyz;
+		#else
+		return objSpaceLightPos.xyz;
+		#endif
+	#endif
 }
 
 // Computes world space view direction
 vec3 WorldSpaceViewDir( vec4 v )
 {
-    return _WorldSpaceCameraPos.xyz - (unity_ObjectToWorld * v).xyz;
+	return _WorldSpaceCameraPos.xyz - (unity_ObjectToWorld * v).xyz;
 }
 
 // Computes object space view direction
 vec3 ObjSpaceViewDir( vec4 v )
 {
-    vec3 objSpaceCameraPos = (unity_WorldToObject * vec4(_WorldSpaceCameraPos.xyz, 1.0)).xyz;
-    return objSpaceCameraPos - v.xyz;
+	vec3 objSpaceCameraPos = (unity_WorldToObject * vec4(_WorldSpaceCameraPos.xyz, 1.0)).xyz;
+	return objSpaceCameraPos - v.xyz;
 }
 
 // Declares 3x3 matrix 'rotation', filled with tangent space basis
@@ -103,7 +103,7 @@ vec3 ObjSpaceViewDir( vec4 v )
 // GLSL ES does not support ## concat operator so we also provide macro that expects xxx_ST
 #define TRANSFORM_TEX_ST(tex,namest) (tex.xy * namest.xy + namest.zw)
 #ifndef GL_ES
-    #define TRANSFORM_TEX(tex,name) TRANSFORM_TEX_ST(tex, name##_ST)
+	#define TRANSFORM_TEX(tex,name) TRANSFORM_TEX_ST(tex, name##_ST)
 #endif
 
 // Deprecated. Used to transform 4D UV by a fixed function texture matrix. Now just returns the passed UV.
@@ -116,17 +116,17 @@ vec3 ObjSpaceViewDir( vec4 v )
 // Calculates UV offset for parallax bump mapping
 vec2 ParallaxOffset( float h, float height, vec3 viewDir )
 {
-    h = h * height - height/2.0;
-    vec3 v = normalize(viewDir);
-    v.z += 0.42;
-    return h * (v.xy / v.z);
+	h = h * height - height/2.0;
+	vec3 v = normalize(viewDir);
+	v.z += 0.42;
+	return h * (v.xy / v.z);
 }
 
 
 // Converts color to luminance (grayscale)
 float Luminance( vec3 c )
 {
-    return dot( c, vec3(0.22, 0.707, 0.071) );
+	return dot( c, vec3(0.22, 0.707, 0.071) );
 }
 
 
