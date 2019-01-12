@@ -53,7 +53,7 @@ inline half4 LightingLambert_Deferred (SurfaceOutput s, UnityGI gi, out half4 ou
 	UnityStandardData data;
 	data.diffuseColor   = s.Albedo;
 	data.occlusion      = 1;
-	data.specularColor  = 0;
+	data.specularColor = 0;
 	data.smoothness     = 0;
 	data.normalWorld    = s.Normal;
 
@@ -120,7 +120,7 @@ inline half4 LightingBlinnPhong_Deferred (SurfaceOutput s, half3 viewDir, UnityG
 	data.diffuseColor   = s.Albedo;
 	data.occlusion      = 1;
 	// PI factor come from StandardBDRF (UnityStandardBRDF.cginc:351 for explanation)
-	data.specularColor  = _SpecColor.rgb * s.Gloss * (1/UNITY_PI);
+	data.specularColor = _SpecColor.rgb * s.Gloss * (1/UNITY_PI);
 	data.smoothness     = s.Specular;
 	data.normalWorld    = s.Normal;
 
@@ -163,14 +163,15 @@ struct UnityTessellationFactors {
 // Deprecated, kept around for existing user shaders.
 #define UNITY_DIRBASIS \
 const half3x3 unity_DirBasis = half3x3( \
-	half3( 0.81649658,  0.0,        0.57735027), \
-	half3(-0.40824830,  0.70710678, 0.57735027), \
+	half3( 0.81649658, 0.0,        0.57735027), \
+	half3(-0.40824830, 0.70710678, 0.57735027), \
 	half3(-0.40824830, -0.70710678, 0.57735027) \
 );
 
 // Deprecated, kept around for existing user shaders. Only sampling the flat lightmap now.
 half3 DirLightmapDiffuse(in half3x3 dirBasis, fixed4 color, fixed4 scale, half3 normal, bool surfFuncWritesNormal, out half3 scalePerBasisVector)
 {
+	scalePerBasisVector = 1;
 	return DecodeLightmap (color);
 }
 

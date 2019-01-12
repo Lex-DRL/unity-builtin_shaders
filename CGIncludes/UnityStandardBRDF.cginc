@@ -127,7 +127,7 @@ inline half SmithBeckmannVisibilityTerm (half NdotL, half NdotV, half roughness)
 }
 
 // Ref: http://jcgt.org/published/0003/02/03/paper.pdf
-inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughness)
+inline half SmithJointGGXVisibilityTerm (half NdotL, half NdotV, half roughness)
 {
 #if 0
 	// Original formulation:
@@ -147,9 +147,9 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
 												// therefore epsilon is smaller than can be represented by half
 #else
 	// Approximation of the above formulation (simplify the sqrt, not mathematically correct but close enough)
-	float a = roughness;
-	float lambdaV = NdotL * (NdotV * (1 - a) + a);
-	float lambdaL = NdotV * (NdotL * (1 - a) + a);
+	half a = roughness;
+	half lambdaV = NdotL * (NdotV * (1 - a) + a);
+	half lambdaL = NdotV * (NdotL * (1 - a) + a);
 
 	return 0.5f / (lambdaV + lambdaL + 1e-5f);
 #endif
@@ -249,12 +249,12 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 	// A re-normalization should be applied here but as the shift is small we don't do it to save ALU.
 	//normal = normalize(normal);
 
-	float nv = saturate(dot(normal, viewDir)); // TODO: this saturate should no be necessary here
+	half nv = saturate(dot(normal, viewDir)); // TODO: this saturate should no be necessary here
 #else
 	half nv = abs(dot(normal, viewDir));    // This abs allow to limit artifact
 #endif
 
-	float nl = saturate(dot(normal, light.dir));
+	half nl = saturate(dot(normal, light.dir));
 	float nh = saturate(dot(normal, halfDir));
 
 	half lv = saturate(dot(light.dir, viewDir));
@@ -271,7 +271,7 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 #if UNITY_BRDF_GGX
 	// GGX with roughtness to 0 would mean no specular at all, using max(roughness, 0.002) here to match HDrenderloop roughtness remapping.
 	roughness = max(roughness, 0.002);
-	float V = SmithJointGGXVisibilityTerm (nl, nv, roughness);
+	half V = SmithJointGGXVisibilityTerm (nl, nv, roughness);
 	float D = GGXTerm (nh, roughness);
 #else
 	// Legacy
@@ -279,7 +279,7 @@ half4 BRDF1_Unity_PBS (half3 diffColor, half3 specColor, half oneMinusReflectivi
 	half D = NDFBlinnPhongNormalizedTerm (nh, PerceptualRoughnessToSpecPower(perceptualRoughness));
 #endif
 
-	float specularTerm = V*D * UNITY_PI; // Torrance-Sparrow model, Fresnel is applied later
+	half specularTerm = V*D * UNITY_PI; // Torrance-Sparrow model, Fresnel is applied later
 
 	#ifdef UNITY_COLORSPACE_GAMMA
 		specularTerm = sqrt(max(1e-4h, specularTerm));
@@ -409,7 +409,7 @@ half3 BRDF3_Direct(half3 diffColor, half3 specColor, half rlPow4, half smoothnes
 {
 	half LUT_RANGE = 16.0; // must match range in NHxRoughness() function in GeneratedTextures.cpp
 	// Lookup texture to save instructions
-	half specular = tex2D(unity_NHxRoughness, half2(rlPow4, SmoothnessToPerceptualRoughness(smoothness))).UNITY_ATTEN_CHANNEL * LUT_RANGE;
+	half specular = tex2D(unity_NHxRoughness, half2(rlPow4, SmoothnessToPerceptualRoughness(smoothness))).r * LUT_RANGE;
 #if defined(_SPECULARHIGHLIGHTS_OFF)
 	specular = 0.0;
 #endif

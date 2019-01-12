@@ -47,7 +47,7 @@ float4      _CustomRenderTextureInfo; // x = width, y = height, z = depth, w = f
 
 // Helpers
 #define _CustomRenderTextureWidth   _CustomRenderTextureInfo.x
-#define _CustomRenderTextureHeight  _CustomRenderTextureInfo.y
+#define _CustomRenderTextureHeight _CustomRenderTextureInfo.y
 #define _CustomRenderTextureDepth   _CustomRenderTextureInfo.z
 
 // Those two are mutually exclusive so we can use the same slot
@@ -209,7 +209,7 @@ struct appdata_init_customrendertexture
 struct v2f_init_customrendertexture
 {
 	float4 vertex : SV_POSITION;
-	float2 texcoord : TEXCOORD0;
+	float3 texcoord : TEXCOORD0;
 	float3 direction : TEXCOORD1;
 };
 

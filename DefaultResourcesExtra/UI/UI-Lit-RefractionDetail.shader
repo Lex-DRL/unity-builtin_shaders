@@ -12,7 +12,7 @@ Shader "UI/Lit/Refraction Detail"
 		_DetailTex ("Detail (RGB)", 2D) = "white" {}
 		_DetailBump ("Detail Bump Map", 2D) = "bump" {}
 		_DetailMask ("Detail Mask (Spec, Shin, Ref)", 2D) = "white" {}
-		_Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
+		[PowerSlider(5.0)] _Shininess ("Shininess", Range(0.01, 1.0)) = 0.2
 		_Focus ("Focus", Range(-100.0, 100.0)) = -100.0
 
 		_StencilComp ("Stencil Comparison", Float) = 8
@@ -130,7 +130,7 @@ Shader "UI/Lit/Refraction Detail"
 				o.texcoord1.zw = TRANSFORM_TEX(v.texcoord1, _MainBump);
 				o.texcoord2.xy = TRANSFORM_TEX(v.texcoord2 * _DetailTex_TexelSize.xy, _DetailTex);
 				o.texcoord2.zw = TRANSFORM_TEX(v.texcoord2 * _DetailBump_TexelSize.xy, _DetailBump);
-				o.texcoord3    = TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
+				o.texcoord3     = TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
 
 			#if UNITY_UV_STARTS_AT_TOP
 				o.proj.xy = (float2(v.vertex.x, -v.vertex.y) + v.vertex.w) * 0.5;
