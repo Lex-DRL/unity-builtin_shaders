@@ -24,12 +24,12 @@ CBUFFER_END
 
 struct SpeedTreeBillboardData
 {
-	float4 vertex		: POSITION;
-	float2 texcoord	: TEXCOORD0;
-	float4 texcoord1	: TEXCOORD1;
-	float3 normal		: NORMAL;
-	float4 tangent	: TANGENT;
-	float4 color		: COLOR;
+	float4 vertex       : POSITION;
+	float2 texcoord     : TEXCOORD0;
+	float4 texcoord1    : TEXCOORD1;
+	float3 normal       : NORMAL;
+	float4 tangent      : TANGENT;
+	float4 color        : COLOR;
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -42,9 +42,9 @@ void SpeedTreeBillboardVert(inout SpeedTreeBillboardData IN, out Input OUT)
 
 #ifdef BILLBOARD_FACE_CAMERA_POS
 	float3 eyeVec = normalize(unity_BillboardCameraPosition - worldPos);
-	float3 billboardTangent = normalize(float3(-eyeVec.z, 0, eyeVec.x));			// cross(eyeVec, {0,1,0})
-	float3 billboardNormal = float3(billboardTangent.z, 0, -billboardTangent.x);	// cross({0,1,0},billboardTangent)
-	float3 angle = atan2(billboardNormal.z, billboardNormal.x);					// signed angle between billboardNormal to {0,0,1}
+	float3 billboardTangent = normalize(float3(-eyeVec.z, 0, eyeVec.x));            // cross(eyeVec, {0,1,0})
+	float3 billboardNormal = float3(billboardTangent.z, 0, -billboardTangent.x);    // cross({0,1,0},billboardTangent)
+	float3 angle = atan2(billboardNormal.z, billboardNormal.x);                     // signed angle between billboardNormal to {0,0,1}
 	angle += angle < 0 ? 2 * UNITY_PI : 0;
 #else
 	float3 billboardTangent = unity_BillboardTangent;

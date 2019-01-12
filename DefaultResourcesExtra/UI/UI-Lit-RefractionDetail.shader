@@ -130,7 +130,7 @@ Shader "UI/Lit/Refraction Detail"
 				o.texcoord1.zw = TRANSFORM_TEX(v.texcoord1, _MainBump);
 				o.texcoord2.xy = TRANSFORM_TEX(v.texcoord2 * _DetailTex_TexelSize.xy, _DetailTex);
 				o.texcoord2.zw = TRANSFORM_TEX(v.texcoord2 * _DetailBump_TexelSize.xy, _DetailBump);
-				o.texcoord3	= TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
+				o.texcoord3    = TRANSFORM_TEX(v.texcoord2 * _DetailMask_TexelSize.xy, _DetailMask);
 
 			#if UNITY_UV_STARTS_AT_TOP
 				o.proj.xy = (float2(v.vertex.x, -v.vertex.y) + v.vertex.w) * 0.5;

@@ -3,14 +3,14 @@
 #ifndef UNITY_CG_INCLUDED
 #define UNITY_CG_INCLUDED
 
-#define UNITY_PI			3.14159265359f
-#define UNITY_TWO_PI		6.28318530718f
-#define UNITY_FOUR_PI		12.56637061436f
-#define UNITY_INV_PI		0.31830988618f
-#define UNITY_INV_TWO_PI	0.15915494309f
-#define UNITY_INV_FOUR_PI	0.07957747155f
-#define UNITY_HALF_PI		1.57079632679f
-#define UNITY_INV_HALF_PI	0.636619772367f
+#define UNITY_PI            3.14159265359f
+#define UNITY_TWO_PI        6.28318530718f
+#define UNITY_FOUR_PI       12.56637061436f
+#define UNITY_INV_PI        0.31830988618f
+#define UNITY_INV_TWO_PI    0.15915494309f
+#define UNITY_INV_FOUR_PI   0.07957747155f
+#define UNITY_HALF_PI       1.57079632679f
+#define UNITY_INV_HALF_PI   0.636619772367f
 
 #include "UnityShaderVariables.cginc"
 #include "UnityShaderUtilities.cginc"
@@ -364,9 +364,9 @@ half3 ShadeSH9 (half4 normal)
 	// Quadratic polynomials
 	res += SHEvalLinearL2 (normal);
 
-#	ifdef UNITY_COLORSPACE_GAMMA
+	#ifdef UNITY_COLORSPACE_GAMMA
 		res = LinearToGammaSpace (res);
-#	endif
+	#endif
 
 	return res;
 }
@@ -377,9 +377,9 @@ half3 ShadeSH3Order(half4 normal)
 	// Quadratic polynomials
 	half3 res = SHEvalLinearL2 (normal);
 
-#	ifdef UNITY_COLORSPACE_GAMMA
+	#ifdef UNITY_COLORSPACE_GAMMA
 		res = LinearToGammaSpace (res);
-#	endif
+	#endif
 
 	return res;
 }
@@ -431,9 +431,9 @@ half3 ShadeSH12Order (half4 normal)
 	// Linear + constant polynomial terms
 	half3 res = SHEvalLinearL0L1 (normal);
 
-#	ifdef UNITY_COLORSPACE_GAMMA
+	#ifdef UNITY_COLORSPACE_GAMMA
 		res = LinearToGammaSpace (res);
-#	endif
+	#endif
 
 	return res;
 }
@@ -447,7 +447,7 @@ half3 ShadeSH12Order (half4 normal)
 
 
 struct v2f_vertex_lit {
-	float2 uv	: TEXCOORD0;
+	float2 uv   : TEXCOORD0;
 	fixed4 diff : COLOR0;
 	fixed4 spec : COLOR1;
 };
@@ -510,11 +510,11 @@ inline half3 DecodeHDR (half4 data, half4 decodeInstructions)
 	#if defined(UNITY_COLORSPACE_GAMMA)
 		return (decodeInstructions.x * alpha) * data.rgb;
 	#else
-	#	if defined(UNITY_USE_NATIVE_HDR)
+		#if defined(UNITY_USE_NATIVE_HDR)
 			return decodeInstructions.x * data.rgb; // Multiplier for future HDRI relative to absolute conversion.
-	#	else
+		#else
 			return (decodeInstructions.x * pow(alpha, decodeInstructions.y)) * data.rgb;
-	#	endif
+		#endif
 	#endif
 }
 
@@ -525,11 +525,11 @@ inline half3 DecodeLightmapRGBM (half4 data, half4 decodeInstructions)
 {
 	// If Linear mode is not supported we can skip exponent part
 	#if defined(UNITY_COLORSPACE_GAMMA)
-	# if defined(UNITY_FORCE_LINEAR_READ_FOR_RGBM)
+		#if defined(UNITY_FORCE_LINEAR_READ_FOR_RGBM)
 		return (decodeInstructions.x * data.a) * sqrt(data.rgb);
-	# else
+		#else
 		return (decodeInstructions.x * data.a) * data.rgb;
-	# endif
+		#endif
 	#else
 		return (decodeInstructions.x * pow(data.a, decodeInstructions.y)) * data.rgb;
 	#endif
@@ -897,11 +897,11 @@ float4 UnityApplyLinearShadowBias(float4 clipPos)
 	// For point lights that support depth cube map, the bias is applied in the fragment shader sampling the shadow map.
 	// This is because the legacy behaviour for point light shadow map cannot be implemented by offseting the vertex position
 	// in the vertex shader generating the shadow map.
-#	if !(defined(SHADOWS_CUBE) && defined(SHADOWS_CUBE_IN_DEPTH_TEX))
+	#if !(defined(SHADOWS_CUBE) && defined(SHADOWS_CUBE_IN_DEPTH_TEX))
 	// We use max/min instead of clamp to ensure proper handling of the rare case
 	// where both numerator and denominator are zero and the fraction becomes NaN.
 	clipPos.z += max(-1, min(unity_LightShadowBias.x / clipPos.w, 0));
-#	endif
+	#endif
 	float clamped = min(clipPos.z, clipPos.w*UNITY_NEAR_CLIP_VALUE);
 #else
 	clipPos.z += saturate(unity_LightShadowBias.x/clipPos.w);
@@ -1077,7 +1077,7 @@ UNITY_DECLARE_SHADOWMAP(_ShadowMapTexture);
 
 // Note: V2F_SHADOW_COLLECTOR and TRANSFER_SHADOW_COLLECTOR are deprecated
 #define V2F_SHADOW_COLLECTOR float4 pos : SV_POSITION; float3 _ShadowCoord0 : TEXCOORD0; float3 _ShadowCoord1 : TEXCOORD1; float3 _ShadowCoord2 : TEXCOORD2; float3 _ShadowCoord3 : TEXCOORD3; float4 _WorldPosViewZ : TEXCOORD4
-#define TRANSFER_SHADOW_COLLECTOR(o)	\
+#define TRANSFER_SHADOW_COLLECTOR(o)    \
 	o.pos = UnityObjectToClipPos(v.vertex); \
 	float4 wpos = mul(unity_ObjectToWorld, v.vertex); \
 	o._WorldPosViewZ.xyz = wpos; \

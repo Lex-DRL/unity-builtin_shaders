@@ -14,10 +14,10 @@
 #define unityShadowCoord4 float4
 #define unityShadowCoord4x4 float4x4
 
-half	UnitySampleShadowmap_PCF7x7(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (7x7 kernel)
-half	UnitySampleShadowmap_PCF5x5(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (5x5 kernel)
-half	UnitySampleShadowmap_PCF3x3(float4 coord, float3 receiverPlaneDepthBias);	// Samples the shadowmap based on PCF filtering (3x3 kernel)
-float3 UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasbiasMultiply); // Receiver plane depth bias
+half    UnitySampleShadowmap_PCF7x7(float4 coord, float3 receiverPlaneDepthBias);   // Samples the shadowmap based on PCF filtering (7x7 kernel)
+half    UnitySampleShadowmap_PCF5x5(float4 coord, float3 receiverPlaneDepthBias);   // Samples the shadowmap based on PCF filtering (5x5 kernel)
+half    UnitySampleShadowmap_PCF3x3(float4 coord, float3 receiverPlaneDepthBias);   // Samples the shadowmap based on PCF filtering (3x3 kernel)
+float3 UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasbiasMultiply);  // Receiver plane depth bias
 
 // ------------------------------------------------------------------
 // Spot light shadows
@@ -317,8 +317,8 @@ half UnityComputeShadowFade(float fadeDist)
 /**
 * Computes the receiver plane depth bias for the given shadow coord in screen space.
 * Inspirations:
-*	http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/
-*	http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Isidoro-ShadowMapping.pdf
+*   http://mynameismjp.wordpress.com/2013/09/10/shadow-maps/
+*   http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Isidoro-ShadowMapping.pdf
 */
 float3 UnityGetReceiverPlaneDepthBias(float3 shadowCoord, float biasMultiply)
 {
@@ -367,9 +367,9 @@ float3 UnityCombineShadowcoordComponents(float2 baseUV, float2 deltaUV, float de
 * Assuming a isoceles rectangle triangle of height "triangleHeight" (as drawn below).
 * This function return the area of the triangle above the first texel.
 *
-* |\	<-- 45 degree slop isosceles rectangle triangle
+* |\      <-- 45 degree slop isosceles rectangle triangle
 * | \
-* ----	<-- length of this side is "triangleHeight"
+* ----    <-- length of this side is "triangleHeight"
 * _ _ _ _ <-- texels
 */
 float _UnityInternalGetAreaAboveFirstTexelUnderAIsocelesRectangleTriangle(float triangleHeight)
@@ -380,9 +380,9 @@ float _UnityInternalGetAreaAboveFirstTexelUnderAIsocelesRectangleTriangle(float 
 /**
 * Assuming a isoceles triangle of 1.5 texels height and 3 texels wide lying on 4 texels.
 * This function return the area of the triangle above each of those texels.
-*	|	<-- offset from -0.5 to 0.5, 0 meaning triangle is exactly in the center
-*	/ \	<-- 45 degree slop isosceles triangle (ie tent projected in 2D)
-* /	\
+*    |    <-- offset from -0.5 to 0.5, 0 meaning triangle is exactly in the center
+*   / \   <-- 45 degree slop isosceles triangle (ie tent projected in 2D)
+*  /   \
 * _ _ _ _ <-- texels
 * X Y Z W <-- result indices (in computedArea.xyzw and computedAreaUncut.xyzw)
 */
@@ -411,9 +411,9 @@ void _UnityInternalGetAreaPerTexel_3TexelsWideTriangleFilter(float offset, out f
 }
 
 /**
- * Assuming a isoceles triangle of 1.5 texels height and 3 texels wide lying on 4 texels.
- * This function return the weight of each texels area relative to the full triangle area.
- */
+* Assuming a isoceles triangle of 1.5 texels height and 3 texels wide lying on 4 texels.
+* This function return the weight of each texels area relative to the full triangle area.
+*/
 void _UnityInternalGetWeightPerTexel_3TexelsWideTriangleFilter(float offset, out float4 computedWeight)
 {
 	float4 dummy;
@@ -424,7 +424,7 @@ void _UnityInternalGetWeightPerTexel_3TexelsWideTriangleFilter(float offset, out
 /**
 * Assuming a isoceles triangle of 2.5 texel height and 5 texels wide lying on 6 texels.
 * This function return the weight of each texels area relative to the full triangle area.
-* /		\
+*  /       \
 * _ _ _ _ _ _ <-- texels
 * 0 1 2 3 4 5 <-- computed area indices (in texelsWeights[])
 */
@@ -449,7 +449,7 @@ void _UnityInternalGetWeightPerTexel_5TexelsWideTriangleFilter(float offset, out
 /**
 * Assuming a isoceles triangle of 3.5 texel height and 7 texels wide lying on 8 texels.
 * This function return the weight of each texels area relative to the full triangle area.
-* /			\
+*  /           \
 * _ _ _ _ _ _ _ _ <-- texels
 * 0 1 2 3 4 5 6 7 <-- computed area indices (in texelsWeights[])
 */

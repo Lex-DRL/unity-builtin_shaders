@@ -5,12 +5,12 @@ Properties {
 	_Tint ("Tint Color", Color) = (.5, .5, .5, .5)
 	[Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
 	_Rotation ("Rotation", Range(0, 360)) = 0
-	[NoScaleOffset] _FrontTex ("Front [+Z]	(HDR)", 2D) = "grey" {}
-	[NoScaleOffset] _BackTex ("Back [-Z]	(HDR)", 2D) = "grey" {}
-	[NoScaleOffset] _LeftTex ("Left [+X]	(HDR)", 2D) = "grey" {}
-	[NoScaleOffset] _RightTex ("Right [-X]	(HDR)", 2D) = "grey" {}
-	[NoScaleOffset] _UpTex ("Up [+Y]	(HDR)", 2D) = "grey" {}
-	[NoScaleOffset] _DownTex ("Down [-Y]	(HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _FrontTex ("Front [+Z]   (HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _BackTex ("Back [-Z]   (HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _LeftTex ("Left [+X]   (HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _RightTex ("Right [-X]   (HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _UpTex ("Up [+Y]   (HDR)", 2D) = "grey" {}
+	[NoScaleOffset] _DownTex ("Down [-Y]   (HDR)", 2D) = "grey" {}
 }
 
 SubShader {

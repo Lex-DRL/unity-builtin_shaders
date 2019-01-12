@@ -324,9 +324,9 @@ static float4x4 unity_MatrixMV = mul(unity_MatrixV, unity_ObjectToWorld);
 static float4x4 unity_MatrixTMV = transpose(unity_MatrixMV);
 static float4x4 unity_MatrixITMV = transpose(mul(unity_WorldToObject, unity_MatrixInvV));
 // make them macros so that they can be redefined in UnityInstancing.cginc
-#define UNITY_MATRIX_MVP	unity_MatrixMVP
-#define UNITY_MATRIX_MV	unity_MatrixMV
-#define UNITY_MATRIX_T_MV	unity_MatrixTMV
+#define UNITY_MATRIX_MVP    unity_MatrixMVP
+#define UNITY_MATRIX_MV     unity_MatrixMV
+#define UNITY_MATRIX_T_MV   unity_MatrixTMV
 #define UNITY_MATRIX_IT_MV unity_MatrixITMV
 
 // ----------------------------------------------------------------------------

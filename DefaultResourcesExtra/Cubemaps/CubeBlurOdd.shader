@@ -30,9 +30,9 @@ Shader "Hidden/CubeBlurOdd" {
 	half _Level; // Workaround for Metal driver bug: please keep this uniform aligned to 4 bytes (case 899153)
 	half _Texel;
 
-	#define zero	half3(0., 0., 0.)
-	#define one	half3(1., 1., 1.)
-	#define two	half3(2., 2., 2.)
+	#define zero    half3(0., 0., 0.)
+	#define one     half3(1., 1., 1.)
+	#define two     half3(2., 2., 2.)
 
 	half3 fold(half3 st, half3 face)
 	{

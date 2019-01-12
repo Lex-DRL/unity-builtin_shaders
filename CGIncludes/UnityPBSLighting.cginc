@@ -42,17 +42,17 @@ inline half3 BRDF_Unity_Indirect (half3 baseColor, half3 specColor, half oneMinu
 	return half3(0,0,0);
 }
 
-#define UNITY_GLOSSY_ENV_FROM_SURFACE(x, s, data)				\
-	Unity_GlossyEnvironmentData g;							\
-	g.roughness /* perceptualRoughness */	= SmoothnessToPerceptualRoughness(s.Smoothness); \
+#define UNITY_GLOSSY_ENV_FROM_SURFACE(x, s, data)               \
+	Unity_GlossyEnvironmentData g;                              \
+	g.roughness /* perceptualRoughness */   = SmoothnessToPerceptualRoughness(s.Smoothness); \
 	g.reflUVW = reflect(-data.worldViewDir, s.Normal); \
 
 
 #if defined(UNITY_PASS_DEFERRED) && UNITY_ENABLE_REFLECTION_BUFFERS
 	#define UNITY_GI(x, s, data) x = UnityGlobalIllumination (data, s.Occlusion, s.Normal);
 #else
-	#define UNITY_GI(x, s, data)								\
-		UNITY_GLOSSY_ENV_FROM_SURFACE(g, s, data);			\
+	#define UNITY_GI(x, s, data)                                \
+		UNITY_GLOSSY_ENV_FROM_SURFACE(g, s, data);              \
 		x = UnityGlobalIllumination (data, s.Occlusion, s.Normal, g);
 #endif
 
@@ -64,15 +64,15 @@ inline half3 BRDF_Unity_Indirect (half3 baseColor, half3 specColor, half oneMinu
 
 struct SurfaceOutputStandard
 {
-	fixed3 Albedo;	// base (diffuse or specular) color
-	float3 Normal;	// tangent space normal, if written
+	fixed3 Albedo;      // base (diffuse or specular) color
+	float3 Normal;      // tangent space normal, if written
 	half3 Emission;
-	half Metallic;	// 0=non-metal, 1=metal
+	half Metallic;      // 0=non-metal, 1=metal
 	// Smoothness is the user facing name, it should be perceptual smoothness but user should not have to deal with it.
 	// Everywhere in the code you meet smoothness it is perceptual smoothness
-	half Smoothness;	// 0=rough, 1=smooth
-	half Occlusion;	// occlusion (default 1)
-	fixed Alpha;		// alpha for transparencies
+	half Smoothness;    // 0=rough, 1=smooth
+	half Occlusion;     // occlusion (default 1)
+	fixed Alpha;        // alpha for transparencies
 };
 
 inline half4 LightingStandard (SurfaceOutputStandard s, float3 viewDir, UnityGI gi)
@@ -102,11 +102,11 @@ inline half4 LightingStandard_Deferred (SurfaceOutputStandard s, float3 viewDir,
 	half4 c = UNITY_BRDF_PBS (s.Albedo, specColor, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.light, gi.indirect);
 
 	UnityStandardData data;
-	data.diffuseColor	= s.Albedo;
-	data.occlusion	= s.Occlusion;
-	data.specularColor = specColor;
-	data.smoothness	= s.Smoothness;
-	data.normalWorld	= s.Normal;
+	data.diffuseColor   = s.Albedo;
+	data.occlusion      = s.Occlusion;
+	data.specularColor  = specColor;
+	data.smoothness     = s.Smoothness;
+	data.normalWorld    = s.Normal;
 
 	UnityStandardDataToGbuffer(data, outGBuffer0, outGBuffer1, outGBuffer2);
 
@@ -132,13 +132,13 @@ inline void LightingStandard_GI (
 
 struct SurfaceOutputStandardSpecular
 {
-	fixed3 Albedo;	// diffuse color
-	fixed3 Specular;	// specular color
-	float3 Normal;	// tangent space normal, if written
+	fixed3 Albedo;      // diffuse color
+	fixed3 Specular;    // specular color
+	float3 Normal;      // tangent space normal, if written
 	half3 Emission;
-	half Smoothness;	// 0=rough, 1=smooth
-	half Occlusion;	// occlusion (default 1)
-	fixed Alpha;		// alpha for transparencies
+	half Smoothness;    // 0=rough, 1=smooth
+	half Occlusion;     // occlusion (default 1)
+	fixed Alpha;        // alpha for transparencies
 };
 
 inline half4 LightingStandardSpecular (SurfaceOutputStandardSpecular s, float3 viewDir, UnityGI gi)
@@ -168,11 +168,11 @@ inline half4 LightingStandardSpecular_Deferred (SurfaceOutputStandardSpecular s,
 	half4 c = UNITY_BRDF_PBS (s.Albedo, s.Specular, oneMinusReflectivity, s.Smoothness, s.Normal, viewDir, gi.light, gi.indirect);
 
 	UnityStandardData data;
-	data.diffuseColor	= s.Albedo;
-	data.occlusion	= s.Occlusion;
-	data.specularColor = s.Specular;
-	data.smoothness	= s.Smoothness;
-	data.normalWorld	= s.Normal;
+	data.diffuseColor   = s.Albedo;
+	data.occlusion      = s.Occlusion;
+	data.specularColor  = s.Specular;
+	data.smoothness     = s.Smoothness;
+	data.normalWorld    = s.Normal;
 
 	UnityStandardDataToGbuffer(data, outGBuffer0, outGBuffer1, outGBuffer2);
 

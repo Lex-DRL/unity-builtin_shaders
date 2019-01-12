@@ -91,9 +91,9 @@ float3x3 RotationMatrix(float3 vAxis, float fAngle)
 	const float y = vAxis.y;
 	const float z = vAxis.z;
 
-	return float3x3(t * x * x + c,	t * x * y - s * z, t * x * z + s * y,
-					t * x * y + s * z, t * y * y + c,	t * y * z - s * x,
-					t * x * z - s * y, t * y * z + s * x, t * z * z + c);
+	return float3x3(t * x * x + c,      t * x * y - s * z,  t * x * z + s * y,
+					t * x * y + s * z,  t * y * y + c,      t * y * z - s * x,
+					t * x * z - s * y,  t * y * z + s * x,  t * z * z + c);
 }
 
 
@@ -447,13 +447,13 @@ float3 BranchWind(bool isPalmWind, float3 vPos, float3 vInstancePos, float4 vWin
 // LeafRipple
 
 float3 LeafRipple(float3 vPos,
-				inout float3 vDirection,
-				float fScale,
-				float fPackedRippleDir,
-				float fTime,
-				float fAmount,
-				bool bDirectional,
-				float fTrigOffset)
+					inout float3 vDirection,
+					float fScale,
+					float fPackedRippleDir,
+					float fTime,
+					float fAmount,
+					bool bDirectional,
+					float fTrigOffset)
 {
 	// compute how much to move
 	float4 vInput = float4(fTime + fTrigOffset, 0.0, 0.0, 0.0);
@@ -477,20 +477,20 @@ float3 LeafRipple(float3 vPos,
 // LeafTumble
 
 float3 LeafTumble(float3 vPos,
-				inout float3 vDirection,
-				float fScale,
-				float3 vAnchor,
-				float3 vGrowthDir,
-				float fTrigOffset,
-				float fTime,
-				float fFlip,
-				float fTwist,
-				float fAdherence,
-				float3 vTwitch,
-				float4 vRoll,
-				bool bTwitch,
-				bool bRoll,
-				float3 vRotatedWindVector)
+					inout float3 vDirection,
+					float fScale,
+					float3 vAnchor,
+					float3 vGrowthDir,
+					float fTrigOffset,
+					float fTime,
+					float fFlip,
+					float fTwist,
+					float fAdherence,
+					float3 vTwitch,
+					float4 vRoll,
+					bool bTwitch,
+					bool bRoll,
+					float3 vRotatedWindVector)
 {
 	// compute all oscillations up front
 	float3 vFracs = frac((vAnchor + fTrigOffset) * 30.3);
@@ -565,15 +565,15 @@ float3 LeafWind(bool isBestWind,
 	{
 		float3 vGrowthDir = UnpackNormalFromFloat(fPackedGrowthDir);
 		vPos = LeafTumble(vPos, vDirection, fScale, vAnchor, vGrowthDir, fPackedGrowthDir,
-						(bLeaf2 ? _ST_WindLeaf2Tumble.x : _ST_WindLeaf1Tumble.x),
-						(bLeaf2 ? _ST_WindLeaf2Tumble.y : _ST_WindLeaf1Tumble.y),
-						(bLeaf2 ? _ST_WindLeaf2Tumble.z : _ST_WindLeaf1Tumble.z),
-						(bLeaf2 ? _ST_WindLeaf2Tumble.w : _ST_WindLeaf1Tumble.w),
-						(bLeaf2 ? _ST_WindLeaf2Twitch.xyz : _ST_WindLeaf1Twitch.xyz),
-						0.0f,
-						(bLeaf2 ? true : true),
-						(bLeaf2 ? true : true),
-						vRotatedWindVector);
+							(bLeaf2 ? _ST_WindLeaf2Tumble.x : _ST_WindLeaf1Tumble.x),
+							(bLeaf2 ? _ST_WindLeaf2Tumble.y : _ST_WindLeaf1Tumble.y),
+							(bLeaf2 ? _ST_WindLeaf2Tumble.z : _ST_WindLeaf1Tumble.z),
+							(bLeaf2 ? _ST_WindLeaf2Tumble.w : _ST_WindLeaf1Tumble.w),
+							(bLeaf2 ? _ST_WindLeaf2Twitch.xyz : _ST_WindLeaf1Twitch.xyz),
+							0.0f,
+							(bLeaf2 ? true : true),
+							(bLeaf2 ? true : true),
+							vRotatedWindVector);
 	}
 
 	return vPos;

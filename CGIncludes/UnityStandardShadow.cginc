@@ -32,27 +32,27 @@
 #endif
 
 
-half4		_Color;
-half		_Cutoff;
-sampler2D	_MainTex;
-float4	_MainTex_ST;
+half4       _Color;
+half        _Cutoff;
+sampler2D   _MainTex;
+float4      _MainTex_ST;
 #ifdef UNITY_STANDARD_USE_DITHER_MASK
-sampler3D	_DitherMaskLOD;
+sampler3D   _DitherMaskLOD;
 #endif
 
 // Handle PremultipliedAlpha from Fade or Transparent shading mode
-half4		_SpecColor;
-half		_Metallic;
+half4       _SpecColor;
+half        _Metallic;
 #ifdef _SPECGLOSSMAP
-sampler2D	_SpecGlossMap;
+sampler2D   _SpecGlossMap;
 #endif
 #ifdef _METALLICGLOSSMAP
-sampler2D	_MetallicGlossMap;
+sampler2D   _MetallicGlossMap;
 #endif
 
 #if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
-sampler2D	_ParallaxMap;
-half		_Parallax;
+sampler2D   _ParallaxMap;
+half        _Parallax;
 #endif
 
 half MetallicSetup_ShadowGetOneMinusReflectivity(half2 uv)
@@ -89,11 +89,11 @@ half SpecularSetup_ShadowGetOneMinusReflectivity(half2 uv)
 
 struct VertexInput
 {
-	float4 vertex	: POSITION;
-	float3 normal	: NORMAL;
-	float2 uv0	: TEXCOORD0;
+	float4 vertex   : POSITION;
+	float3 normal   : NORMAL;
+	float2 uv0      : TEXCOORD0;
 	#if defined(UNITY_STANDARD_USE_SHADOW_UVS) && defined(_PARALLAXMAP)
-		half4 tangent	: TANGENT;
+		half4 tangent   : TANGENT;
 	#endif
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };

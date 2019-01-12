@@ -61,14 +61,14 @@ Shader "Hidden/UI/Overdraw"
 
 			struct appdata_t
 			{
-				float4 vertex	: POSITION;
-				float4 color	: COLOR;
+				float4 vertex   : POSITION;
+				float4 color    : COLOR;
 			};
 
 			struct v2f
 			{
-				float4 vertex	: SV_POSITION;
-				fixed4 color	: COLOR;
+				float4 vertex   : SV_POSITION;
+				fixed4 color    : COLOR;
 				float4 worldPosition : TEXCOORD1;
 			};
 

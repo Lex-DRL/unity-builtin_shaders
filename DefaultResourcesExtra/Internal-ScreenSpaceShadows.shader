@@ -106,9 +106,9 @@ float4 unity_ShadowCascadeScales;
 // Keywords based defines
 //
 #if defined (SHADOWS_SPLIT_SPHERES)
-	#define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights_splitSpheres(wpos)
+	#define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights_splitSpheres(wpos)
 #else
-	#define GET_CASCADE_WEIGHTS(wpos, z)	getCascadeWeights( wpos, z )
+	#define GET_CASCADE_WEIGHTS(wpos, z)    getCascadeWeights( wpos, z )
 #endif
 
 #if defined (SHADOWS_SINGLE_CASCADE)
@@ -118,9 +118,9 @@ float4 unity_ShadowCascadeScales;
 #endif
 
 /**
- * Gets the cascade weights based on the world position of the fragment.
- * Returns a float4 with only one component set that corresponds to the appropriate cascade.
- */
+* Gets the cascade weights based on the world position of the fragment.
+* Returns a float4 with only one component set that corresponds to the appropriate cascade.
+*/
 inline fixed4 getCascadeWeights(float3 wpos, float z)
 {
 	fixed4 zNear = float4( z >= _LightSplitsNear );
@@ -130,9 +130,9 @@ inline fixed4 getCascadeWeights(float3 wpos, float z)
 }
 
 /**
- * Gets the cascade weights based on the world position of the fragment and the poisitions of the split spheres for each cascade.
- * Returns a float4 with only one component set that corresponds to the appropriate cascade.
- */
+* Gets the cascade weights based on the world position of the fragment and the poisitions of the split spheres for each cascade.
+* Returns a float4 with only one component set that corresponds to the appropriate cascade.
+*/
 inline fixed4 getCascadeWeights_splitSpheres(float3 wpos)
 {
 	float3 fromCenter0 = wpos.xyz - unity_ShadowSplitSpheres[0].xyz;
@@ -146,9 +146,9 @@ inline fixed4 getCascadeWeights_splitSpheres(float3 wpos)
 }
 
 /**
- * Returns the shadowmap coordinates for the given fragment based on the world position and z-depth.
- * These coordinates belong to the shadowmap atlas that contains the maps for all cascades.
- */
+* Returns the shadowmap coordinates for the given fragment based on the world position and z-depth.
+* These coordinates belong to the shadowmap atlas that contains the maps for all cascades.
+*/
 inline float4 getShadowCoord( float4 wpos, fixed4 cascadeWeights )
 {
 	float3 sc0 = mul (unity_WorldToShadow[0], wpos).xyz;
@@ -164,8 +164,8 @@ inline float4 getShadowCoord( float4 wpos, fixed4 cascadeWeights )
 }
 
 /**
- * Same as the getShadowCoord; but optimized for single cascade
- */
+* Same as the getShadowCoord; but optimized for single cascade
+*/
 inline float4 getShadowCoord_SingleCascade( float4 wpos )
 {
 	return float4( mul (unity_WorldToShadow[0], wpos).xyz, 0);
@@ -218,8 +218,8 @@ inline float3 computeCameraSpacePosFromDepthAndVSInfo(v2f i)
 inline float3 computeCameraSpacePosFromDepth(v2f i);
 
 /**
- * Hard shadow
- */
+* Hard shadow
+*/
 fixed4 frag_hard (v2f i) : SV_Target
 {
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array
@@ -241,8 +241,8 @@ fixed4 frag_hard (v2f i) : SV_Target
 }
 
 /**
- * Soft Shadow (SM 3.0)
- */
+* Soft Shadow (SM 3.0)
+*/
 fixed4 frag_pcfSoft(v2f i) : SV_Target
 {
 	UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(i); // required for sampling the correct slice of the shadow map render texture array

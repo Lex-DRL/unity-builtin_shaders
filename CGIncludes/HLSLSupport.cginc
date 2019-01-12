@@ -74,54 +74,54 @@
 
 // SV_Target[n] / SV_Depth defines, if not defined by compiler already
 #if !defined(SV_Target)
-#	if !defined(SHADER_API_XBOXONE)
-#		define SV_Target COLOR
-#	endif
+	#if !defined(SHADER_API_XBOXONE)
+		#define SV_Target COLOR
+	#endif
 #endif
 #if !defined(SV_Target0)
-#	if !defined(SHADER_API_XBOXONE)
-#		define SV_Target0 COLOR0
-#	endif
+	#if !defined(SHADER_API_XBOXONE)
+		#define SV_Target0 COLOR0
+	#endif
 #endif
 #if !defined(SV_Target1)
-#	if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
-#		define SV_Target1 COLOR1
-#	endif
+	#if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
+		#define SV_Target1 COLOR1
+	#endif
 #endif
 #if !defined(SV_Target2)
-#	if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
-#		define SV_Target2 COLOR2
-#	endif
+	#if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
+		#define SV_Target2 COLOR2
+	#endif
 #endif
 #if !defined(SV_Target3)
-#	if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
-#		define SV_Target3 COLOR3
-#	endif
+	#if !defined(SHADER_API_XBOXONE) && !defined(SHADER_API_PSP2)
+		#define SV_Target3 COLOR3
+	#endif
 #endif
 #if !defined(SV_Target4)
-#	if defined(SHADER_API_PSSL)
-#		define SV_Target4 S_TARGET_OUTPUT4
-#	endif
+	#if defined(SHADER_API_PSSL)
+		#define SV_Target4 S_TARGET_OUTPUT4
+	#endif
 #endif
 #if !defined(SV_Target5)
-#	if defined(SHADER_API_PSSL)
-#		define SV_Target5 S_TARGET_OUTPUT5
-#	endif
+	#if defined(SHADER_API_PSSL)
+		#define SV_Target5 S_TARGET_OUTPUT5
+	#endif
 #endif
 #if !defined(SV_Target6)
-#	if defined(SHADER_API_PSSL)
-#		define SV_Target6 S_TARGET_OUTPUT6
-#	endif
+	#if defined(SHADER_API_PSSL)
+		#define SV_Target6 S_TARGET_OUTPUT6
+	#endif
 #endif
 #if !defined(SV_Target7)
-#	if defined(SHADER_API_PSSL)
-#		define SV_Target7 S_TARGET_OUTPUT7
-#	endif
+	#if defined(SHADER_API_PSSL)
+		#define SV_Target7 S_TARGET_OUTPUT7
+	#endif
 #endif
 #if !defined(SV_Depth)
-#	if !defined(SHADER_API_XBOXONE)
-#		define SV_Depth DEPTH
-#	endif
+	#if !defined(SHADER_API_XBOXONE)
+		#define SV_Depth DEPTH
+	#endif
 #endif
 
 #if (defined(SHADER_API_GLES3) && !defined(SHADER_API_DESKTOP)) || defined(SHADER_API_GLES) || defined(SHADER_API_D3D11_9X) || defined(SHADER_API_PSP2) || defined(SHADER_API_N3DS)
@@ -249,11 +249,11 @@
 #endif
 
 #if defined(UNITY_STEREO_MULTIVIEW_ENABLED) || (defined(UNITY_SINGLE_PASS_STEREO) && (defined(SHADER_API_GLCORE) || defined(SHADER_API_METAL)))
-	#define GLOBAL_CBUFFER_START(name)	cbuffer name {
-	#define GLOBAL_CBUFFER_END			}
+	#define GLOBAL_CBUFFER_START(name)    cbuffer name {
+	#define GLOBAL_CBUFFER_END            }
 #else
-	#define GLOBAL_CBUFFER_START(name)	CBUFFER_START(name)
-	#define GLOBAL_CBUFFER_END			CBUFFER_END
+	#define GLOBAL_CBUFFER_START(name)    CBUFFER_START(name)
+	#define GLOBAL_CBUFFER_END            CBUFFER_END
 #endif
 
 #if defined(UNITY_STEREO_MULTIVIEW_ENABLED) && defined(SHADER_STAGE_VERTEX)
@@ -276,19 +276,19 @@
 	// For tex2Dproj the PSP2 cg compiler doesn't like casting half3/4 to
 	// float3/4 with swizzle (optimizer generates invalid assembly), so declare
 	// explicit versions for half3/4
-	half4 tex2Dproj(sampler2D s, in half3 t)		{ return tex2D(s, t.xy / t.z); }
-	half4 tex2Dproj(sampler2D s, in half4 t)		{ return tex2D(s, t.xy / t.w); }
+	half4 tex2Dproj(sampler2D s, in half3 t)        { return tex2D(s, t.xy / t.z); }
+	half4 tex2Dproj(sampler2D s, in half4 t)        { return tex2D(s, t.xy / t.w); }
 
 	// As above but for sampling from single component textures, e.g. depth textures.
 	// NOTE that hardware PCF does not work with these versions, currently we have to ensure
 	// that tex coords for shadow sampling use float, not half; and for some reason casting half
 	// to float and using tex2Dproj also does not work.
-	half4 tex2DprojShadow(sampler2D s, in half3 t)	{ return tex2D<float>(s, t.xy / t.z); }
-	half4 tex2DprojShadow(sampler2D s, in half4 t)	{ return tex2D<float>(s, t.xy / t.w); }
+	half4 tex2DprojShadow(sampler2D s, in half3 t)      { return tex2D<float>(s, t.xy / t.z); }
+	half4 tex2DprojShadow(sampler2D s, in half4 t)      { return tex2D<float>(s, t.xy / t.w); }
 
 	// ...and versions of tex2DprojShadow for float uv.
-	half4 tex2DprojShadow(sampler2D s, in float3 t)	{ return tex2Dproj<float>(s, t); }
-	half4 tex2DprojShadow(sampler2D s, in float4 t)	{ return tex2Dproj<float>(s, t); }
+	half4 tex2DprojShadow(sampler2D s, in float3 t)     { return tex2Dproj<float>(s, t); }
+	half4 tex2DprojShadow(sampler2D s, in float4 t)     { return tex2Dproj<float>(s, t); }
 #endif
 
 
@@ -311,29 +311,29 @@
 	half SAMPLE_DEPTH_TEXTURE(sampler2D s, float4 uv) { return tex2D<float>(s, (float3)uv); }
 	half SAMPLE_DEPTH_TEXTURE(sampler2D s, float3 uv) { return tex2D<float>(s, uv); }
 	half SAMPLE_DEPTH_TEXTURE(sampler2D s, float2 uv) { return tex2D<float>(s, uv); }
-#	define SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2DprojShadow(sampler, uv))
-#	define SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod<float>(sampler, uv))
-#	define SAMPLE_RAW_DEPTH_TEXTURE(sampler, uv) SAMPLE_DEPTH_TEXTURE(sampler, uv)
-#	define SAMPLE_RAW_DEPTH_TEXTURE_PROJ(sampler, uv) SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv)
-#	define SAMPLE_RAW_DEPTH_TEXTURE_LOD(sampler, uv) SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv)
+	#define SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2DprojShadow(sampler, uv))
+	#define SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod<float>(sampler, uv))
+	#define SAMPLE_RAW_DEPTH_TEXTURE(sampler, uv) SAMPLE_DEPTH_TEXTURE(sampler, uv)
+	#define SAMPLE_RAW_DEPTH_TEXTURE_PROJ(sampler, uv) SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv)
+	#define SAMPLE_RAW_DEPTH_TEXTURE_LOD(sampler, uv) SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv)
 	half SAMPLE_DEPTH_CUBE_TEXTURE(samplerCUBE s, float3 uv) { return texCUBE<float>(s, uv); }
 #else
 	// Sample depth, just the red component.
-#	define SAMPLE_DEPTH_TEXTURE(sampler, uv) (tex2D(sampler, uv).r)
-#	define SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2Dproj(sampler, uv).r)
-#	define SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod(sampler, uv).r)
+	#define SAMPLE_DEPTH_TEXTURE(sampler, uv) (tex2D(sampler, uv).r)
+	#define SAMPLE_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2Dproj(sampler, uv).r)
+	#define SAMPLE_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod(sampler, uv).r)
 	// Sample depth, all components.
-#	define SAMPLE_RAW_DEPTH_TEXTURE(sampler, uv) (tex2D(sampler, uv))
-#	define SAMPLE_RAW_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2Dproj(sampler, uv))
-#	define SAMPLE_RAW_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod(sampler, uv))
-#	define SAMPLE_DEPTH_CUBE_TEXTURE(sampler, uv) (texCUBE(sampler, uv).r)
+	#define SAMPLE_RAW_DEPTH_TEXTURE(sampler, uv) (tex2D(sampler, uv))
+	#define SAMPLE_RAW_DEPTH_TEXTURE_PROJ(sampler, uv) (tex2Dproj(sampler, uv))
+	#define SAMPLE_RAW_DEPTH_TEXTURE_LOD(sampler, uv) (tex2Dlod(sampler, uv))
+	#define SAMPLE_DEPTH_CUBE_TEXTURE(sampler, uv) (texCUBE(sampler, uv).r)
 #endif
 
 // Deprecated; use SAMPLE_DEPTH_TEXTURE & SAMPLE_DEPTH_TEXTURE_PROJ instead
 #if defined(SHADER_API_PSP2)
-#	define UNITY_SAMPLE_DEPTH(value) (value).r
+	#define UNITY_SAMPLE_DEPTH(value) (value).r
 #else
-#	define UNITY_SAMPLE_DEPTH(value) (value).r
+	#define UNITY_SAMPLE_DEPTH(value) (value).r
 #endif
 
 
@@ -386,9 +386,9 @@
 	#define UNITY_SAMPLE_TEXCUBE_SHADOW(tex,coord) (texCUBEproj(tex,coord).r)
 #elif defined(SHADER_API_PSSL)
 	// PS4: built-in PCF
-	#define UNITY_DECLARE_SHADOWMAP(tex)		Texture2D tex; SamplerComparisonState sampler##tex
+	#define UNITY_DECLARE_SHADOWMAP(tex)        Texture2D tex; SamplerComparisonState sampler##tex
 	#define UNITY_DECLARE_TEXCUBE_SHADOWMAP(tex) samplerCUBE tex; SamplerComparisonState sampler##tex
-	#define UNITY_SAMPLE_SHADOW(tex,coord)	tex.SampleCmpLOD0(sampler##tex,(coord).xy,(coord).z)
+	#define UNITY_SAMPLE_SHADOW(tex,coord)      tex.SampleCmpLOD0(sampler##tex,(coord).xy,(coord).z)
 	#define UNITY_SAMPLE_SHADOW_PROJ(tex,coord) tex.SampleCmpLOD0(sampler##tex,(coord).xy/(coord).w,(coord).z/(coord).w)
 	#define UNITY_SAMPLE_TEXCUBE_SHADOW(tex,coord) tex.SampleCmpLOD0(sampler##tex,(coord).xyz,(coord).w)
 #elif defined(SHADER_API_PSP2)
@@ -523,11 +523,11 @@
 	// DX11 FL 9.x do not have texture LOD sampling.
 	// We will approximate that with mip bias (very poor approximation, but not much we can do)
 	#if defined(SHADER_API_D3D11_9X)
-	#	define UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod) texCUBEbias(tex, half4(coord, lod))
-	#	define UNITY_SAMPLE_TEXCUBE_SAMPLER_LOD(tex,samplertex,coord,lod) UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod)
+		#define UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod) texCUBEbias(tex, half4(coord, lod))
+		#define UNITY_SAMPLE_TEXCUBE_SAMPLER_LOD(tex,samplertex,coord,lod) UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod)
 	#else
-	#	define UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod) texCUBElod (tex, half4(coord, lod))
-	#	define UNITY_SAMPLE_TEXCUBE_SAMPLER_LOD(tex,samplertex,coord,lod) UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod)
+		#define UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod) texCUBElod (tex, half4(coord, lod))
+		#define UNITY_SAMPLE_TEXCUBE_SAMPLER_LOD(tex,samplertex,coord,lod) UNITY_SAMPLE_TEXCUBE_LOD(tex,coord,lod)
 	#endif
 	#define UNITY_SAMPLE_TEXCUBE_SAMPLER(tex,samplertex,coord) texCUBE (tex,coord)
 
@@ -573,7 +573,7 @@
 #define texRECTproj tex2Dproj
 
 #if defined(SHADER_API_PSSL)
-#define VPOS			S_POSITION
+#define VPOS            S_POSITION
 #elif defined(UNITY_COMPILER_CG)
 // Cg seems to use WPOS instead of VPOS semantic?
 #define VPOS WPOS
@@ -646,10 +646,10 @@
 #endif
 
 // "platform caps" defines that were moved to editor, so they are set automatically when compiling shader
-// UNITY_NO_DXT5nm			- no DXT5NM support, so normal maps will encoded in rgb
-// UNITY_NO_RGBM				- no RGBM support, so doubleLDR
+// UNITY_NO_DXT5nm              - no DXT5NM support, so normal maps will encoded in rgb
+// UNITY_NO_RGBM                - no RGBM support, so doubleLDR
 // UNITY_NO_SCREENSPACE_SHADOWS - no screenspace cascaded shadowmaps
-// UNITY_FRAMEBUFFER_FETCH_AVAILABLE	- framebuffer fetch
+// UNITY_FRAMEBUFFER_FETCH_AVAILABLE    - framebuffer fetch
 // UNITY_ENABLE_REFLECTION_BUFFERS - render reflection probes in deferred way, when using deferred shading
 
 
@@ -681,11 +681,11 @@
 
 #if defined(SHADER_API_D3D11) || defined(SHADER_API_GLES3) || defined(SHADER_API_GLCORE) || defined(SHADER_API_VULKAN) || defined(SHADER_API_PSSL)
 #define UNITY_CAN_COMPILE_TESSELLATION 1
-#	define UNITY_domain				domain
-#	define UNITY_partitioning			partitioning
-#	define UNITY_outputtopology		outputtopology
-#	define UNITY_patchconstantfunc	patchconstantfunc
-#	define UNITY_outputcontrolpoints	outputcontrolpoints
+	#define UNITY_domain                 domain
+	#define UNITY_partitioning           partitioning
+	#define UNITY_outputtopology         outputtopology
+	#define UNITY_patchconstantfunc      patchconstantfunc
+	#define UNITY_outputcontrolpoints    outputcontrolpoints
 #endif
 
 // Not really needed anymore, but did ship in Unity 4.0; with D3D11_9X remapping them to .r channel.
@@ -696,11 +696,11 @@
 
 // HLSL attributes
 #if defined(UNITY_COMPILER_HLSL)
-	#define UNITY_BRANCH	[branch]
-	#define UNITY_FLATTEN	[flatten]
-	#define UNITY_UNROLL	[unroll]
-	#define UNITY_LOOP	[loop]
-	#define UNITY_FASTOPT	[fastopt]
+	#define UNITY_BRANCH    [branch]
+	#define UNITY_FLATTEN   [flatten]
+	#define UNITY_UNROLL    [unroll]
+	#define UNITY_LOOP      [loop]
+	#define UNITY_FASTOPT   [fastopt]
 #else
 	#define UNITY_BRANCH
 	#define UNITY_FLATTEN

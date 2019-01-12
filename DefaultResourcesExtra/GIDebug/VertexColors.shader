@@ -16,8 +16,8 @@ Shader "Hidden/GIDebug/VertexColors" {
 
 			struct v2f_surf
 			{
-				float4 pos	: SV_POSITION;
-				fixed4 color	: COLOR;
+				float4 pos      : SV_POSITION;
+				fixed4 color    : COLOR;
 			};
 
 			v2f_surf vert_surf (appdata_full v)

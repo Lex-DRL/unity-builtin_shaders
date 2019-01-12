@@ -117,7 +117,7 @@ void StoreVerts( SAMPLER_UNIFORM RWBuffer<float> g_MeshVertsOut, float3 pos, flo
 	const int tangOffset = 0;
 #endif
 
-	g_MeshVertsOut[t * stride]	 = pos.x;
+	g_MeshVertsOut[t * stride]     = pos.x;
 	g_MeshVertsOut[t * stride + 1] = pos.y;
 	g_MeshVertsOut[t * stride + 2] = pos.z;
 
@@ -128,7 +128,7 @@ void StoreVerts( SAMPLER_UNIFORM RWBuffer<float> g_MeshVertsOut, float3 pos, flo
 #endif
 
 #if SKIN_TANG
-	g_MeshVertsOut[t * stride + tangOffset]	 = tang.x;
+	g_MeshVertsOut[t * stride + tangOffset]     = tang.x;
 	g_MeshVertsOut[t * stride + tangOffset + 1] = tang.y;
 	g_MeshVertsOut[t * stride + tangOffset + 2] = tang.z;
 	g_MeshVertsOut[t * stride + tangOffset + 3] = tang.w;
@@ -160,7 +160,7 @@ void main(uint3 threadID : SV_DispatchThreadID, SAMPLER_UNIFORM StructuredBuffer
 #else
 	const SVertInVBO vert = g_SourceVBO[t];
 #endif
-	SVertInSkin si = g_SourceSkin[t];			// get skinning info.
+	SVertInSkin si = g_SourceSkin[t];           // get skinning info.
 	float3 vP = vert.pos.xyz;
 	float3 vPacc = float3(0,0,0);
 

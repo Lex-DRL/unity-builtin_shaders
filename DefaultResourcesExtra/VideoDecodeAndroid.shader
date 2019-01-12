@@ -97,7 +97,7 @@ ENDGLSL
 			void main()
 			{
 				gl_FragColor.rgb = AdjustForColorSpace(textureExternal(_MainTex, textureCoordSplit.xz)).rgb;
-				gl_FragColor.a	= textureExternal(_MainTex, textureCoordSplit.yz).g;
+				gl_FragColor.a   = textureExternal(_MainTex, textureCoordSplit.yz).g;
 			}
 
 			#endif

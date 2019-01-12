@@ -35,18 +35,18 @@
 #endif
 
 #ifdef _ALPHATEST_ON
-half		_Cutoff;
+half        _Cutoff;
 #endif
-sampler2D	_MainTex;
-float4	_MainTex_ST;
+sampler2D   _MainTex;
+float4      _MainTex_ST;
 #ifdef UNITY_STANDARD_USE_DITHER_MASK
-sampler3D	_DitherMaskLOD;
+sampler3D   _DitherMaskLOD;
 #endif
 
 // Handle PremultipliedAlpha from Fade or Transparent shading mode
-half		_Metallic;
+half        _Metallic;
 #ifdef _METALLICGLOSSMAP
-sampler2D	_MetallicGlossMap;
+sampler2D   _MetallicGlossMap;
 #endif
 
 half MetallicSetup_ShadowGetOneMinusReflectivity(half2 uv)
@@ -60,9 +60,9 @@ half MetallicSetup_ShadowGetOneMinusReflectivity(half2 uv)
 
 struct VertexInput
 {
-	float4 vertex	: POSITION;
-	float3 normal	: NORMAL;
-	fixed4 color	: COLOR;
+	float4 vertex   : POSITION;
+	float3 normal   : NORMAL;
+	fixed4 color    : COLOR;
 	#ifdef _FLIPBOOK_BLENDING
 		float4 texcoords : TEXCOORD0;
 		float texcoordBlend : TEXCOORD1;

@@ -47,19 +47,19 @@ Shader "Hidden/BlitToDepth_MSAA" {
 			uint width, height, sampleCount;
 
 			#if defined(UNITY_STEREO_INSTANCING_ENABLED) || defined(UNITY_STEREO_MULTIVIEW_ENABLED)
-			uint arraySliceCount;
-			_MainTex.GetDimensions(width, height, arraySliceCount, sampleCount);
-			int3 coord = int3(width * i.texcoord.x, height * i.texcoord.y, unity_StereoEyeIndex);
+				uint arraySliceCount;
+				_MainTex.GetDimensions(width, height, arraySliceCount, sampleCount);
+				int3 coord = int3(width * i.texcoord.x, height * i.texcoord.y, unity_StereoEyeIndex);
 			#else
-			_MainTex.GetDimensions(width, height, sampleCount);
-			int2 coord = int2(width * i.texcoord.x, height * i.texcoord.y);
+				_MainTex.GetDimensions(width, height, sampleCount);
+				int2 coord = int2(width * i.texcoord.x, height * i.texcoord.y);
 			#endif
 
 			// Resolve using max depth
 			float maxDepth = 0.0;
 			for(uint curSample = 0; curSample < sampleCount; ++curSample)
 			{
-			maxDepth = max(_MainTex.Load(coord, curSample).x, maxDepth);
+				maxDepth = max(_MainTex.Load(coord, curSample).x, maxDepth);
 			}
 			oDepth = maxDepth;
 #else

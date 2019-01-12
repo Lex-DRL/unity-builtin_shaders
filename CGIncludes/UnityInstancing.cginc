@@ -58,9 +58,9 @@
 
 ////////////////////////////////////////////////////////
 // instancing paths
-// - UNITY_INSTANCING_ENABLED				Defined if instancing path is taken.
-// - UNITY_PROCEDURAL_INSTANCING_ENABLED	Defined if procedural instancing path is taken.
-// - UNITY_STEREO_INSTANCING_ENABLED		Defined if stereo instancing path is taken.
+// - UNITY_INSTANCING_ENABLED               Defined if instancing path is taken.
+// - UNITY_PROCEDURAL_INSTANCING_ENABLED    Defined if procedural instancing path is taken.
+// - UNITY_STEREO_INSTANCING_ENABLED        Defined if stereo instancing path is taken.
 #if defined(UNITY_SUPPORT_INSTANCING) && defined(INSTANCING_ON)
 	#define UNITY_INSTANCING_ENABLED
 #endif
@@ -74,16 +74,16 @@
 #if defined(SHADER_API_GLES3) || defined(SHADER_API_GLCORE) || defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN)
 	// These platforms have constant buffers disabled normally, but not here (see CBUFFER_START/CBUFFER_END in HLSLSupport.cginc).
 	#define UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(name) cbuffer name {
-	#define UNITY_INSTANCING_CBUFFER_SCOPE_END		}
+	#define UNITY_INSTANCING_CBUFFER_SCOPE_END          }
 #else
 	#define UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(name) CBUFFER_START(name)
-	#define UNITY_INSTANCING_CBUFFER_SCOPE_END		CBUFFER_END
+	#define UNITY_INSTANCING_CBUFFER_SCOPE_END          CBUFFER_END
 #endif
 
 ////////////////////////////////////////////////////////
 // basic instancing setups
-// - UNITY_VERTEX_INPUT_INSTANCE_ID	Declare instance ID field in vertex shader input / output struct.
-// - UNITY_GET_INSTANCE_ID			(Internal) Get the instance ID from input struct.
+// - UNITY_VERTEX_INPUT_INSTANCE_ID     Declare instance ID field in vertex shader input / output struct.
+// - UNITY_GET_INSTANCE_ID              (Internal) Get the instance ID from input struct.
 #if defined(UNITY_INSTANCING_ENABLED) || defined(UNITY_PROCEDURAL_INSTANCING_ENABLED) || defined(UNITY_STEREO_INSTANCING_ENABLED)
 
 	// A global instance ID variable that functions can directly access.
@@ -101,10 +101,10 @@
 
 	#ifdef SHADER_API_PSSL
 		#define DEFAULT_UNITY_VERTEX_INPUT_INSTANCE_ID uint instanceID;
-		#define UNITY_GET_INSTANCE_ID(input)	_GETINSTANCEID(input)
+		#define UNITY_GET_INSTANCE_ID(input)    _GETINSTANCEID(input)
 	#else
 		#define DEFAULT_UNITY_VERTEX_INPUT_INSTANCE_ID uint instanceID : SV_InstanceID;
-		#define UNITY_GET_INSTANCE_ID(input)	input.instanceID
+		#define UNITY_GET_INSTANCE_ID(input)    input.instanceID
 	#endif
 
 #else
@@ -112,18 +112,18 @@
 #endif // UNITY_INSTANCING_ENABLED || UNITY_PROCEDURAL_INSTANCING_ENABLED || UNITY_STEREO_INSTANCING_ENABLED
 
 #if !defined(UNITY_VERTEX_INPUT_INSTANCE_ID)
-#	define UNITY_VERTEX_INPUT_INSTANCE_ID DEFAULT_UNITY_VERTEX_INPUT_INSTANCE_ID
+	#define UNITY_VERTEX_INPUT_INSTANCE_ID DEFAULT_UNITY_VERTEX_INPUT_INSTANCE_ID
 #endif
 
 ////////////////////////////////////////////////////////
 // basic stereo instancing setups
-// - UNITY_VERTEX_OUTPUT_STEREO			Declare stereo target eye field in vertex shader output struct.
+// - UNITY_VERTEX_OUTPUT_STEREO             Declare stereo target eye field in vertex shader output struct.
 // - UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO Assign the stereo target eye.
-// - UNITY_TRANSFER_VERTEX_OUTPUT_STEREO	Copy stero target from input struct to output struct. Used in vertex shader.
+// - UNITY_TRANSFER_VERTEX_OUTPUT_STEREO    Copy stero target from input struct to output struct. Used in vertex shader.
 // - UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX
 #ifdef UNITY_STEREO_INSTANCING_ENABLED
-	#define DEFAULT_UNITY_VERTEX_OUTPUT_STEREO						uint stereoTargetEyeIndex : SV_RenderTargetArrayIndex;
-	#define DEFAULT_UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)		output.stereoTargetEyeIndex = unity_StereoEyeIndex
+	#define DEFAULT_UNITY_VERTEX_OUTPUT_STEREO                          uint stereoTargetEyeIndex : SV_RenderTargetArrayIndex;
+	#define DEFAULT_UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)       output.stereoTargetEyeIndex = unity_StereoEyeIndex
 	#define DEFAULT_UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input, output) output.stereoTargetEyeIndex = input.stereoTargetEyeIndex;
 	#define DEFAULT_UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input) unity_StereoEyeIndex = input.stereoTargetEyeIndex;
 #elif defined(UNITY_STEREO_MULTIVIEW_ENABLED)
@@ -145,23 +145,23 @@
 
 
 #if !defined(UNITY_VERTEX_OUTPUT_STEREO)
-#	define UNITY_VERTEX_OUTPUT_STEREO							DEFAULT_UNITY_VERTEX_OUTPUT_STEREO
+	#define UNITY_VERTEX_OUTPUT_STEREO                           DEFAULT_UNITY_VERTEX_OUTPUT_STEREO
 #endif
 #if !defined(UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO)
-#	define UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)		DEFAULT_UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)
+	#define UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)        DEFAULT_UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(output)
 #endif
 #if !defined(UNITY_TRANSFER_VERTEX_OUTPUT_STEREO)
-#	define UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input, output)	DEFAULT_UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input, output)
+	#define UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input, output)   DEFAULT_UNITY_TRANSFER_VERTEX_OUTPUT_STEREO(input, output)
 #endif
 #if !defined(UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX)
-#	define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)	DEFAULT_UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
+	#define UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)      DEFAULT_UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input)
 #endif
 
 ////////////////////////////////////////////////////////
-// - UNITY_SETUP_INSTANCE_ID		Should be used at the very beginning of the vertex shader / fragment shader,
+// - UNITY_SETUP_INSTANCE_ID        Should be used at the very beginning of the vertex shader / fragment shader,
 //								so that succeeding code can have access to the global unity_InstanceID.
 //								Also procedural function is called to setup instance data.
-// - UNITY_TRANSFER_INSTANCE_ID	Copy instance ID from input struct to output struct. Used in vertex shader.
+// - UNITY_TRANSFER_INSTANCE_ID     Copy instance ID from input struct to output struct. Used in vertex shader.
 
 #if defined(UNITY_INSTANCING_ENABLED) || defined(UNITY_PROCEDURAL_INSTANCING_ENABLED) || defined(UNITY_STEREO_INSTANCING_ENABLED)
 	void UnitySetupInstanceID(uint inputInstanceID)
@@ -180,19 +180,19 @@
 			#error "UNITY_INSTANCING_PROCEDURAL_FUNC must be defined."
 		#else
 			void UNITY_INSTANCING_PROCEDURAL_FUNC(); // forward declaration of the procedural function
-			#define DEFAULT_UNITY_SETUP_INSTANCE_ID(input)	{ UnitySetupInstanceID(UNITY_GET_INSTANCE_ID(input)); UNITY_INSTANCING_PROCEDURAL_FUNC(); UnitySetupCompoundMatrices(); }
+			#define DEFAULT_UNITY_SETUP_INSTANCE_ID(input)      { UnitySetupInstanceID(UNITY_GET_INSTANCE_ID(input)); UNITY_INSTANCING_PROCEDURAL_FUNC(); UnitySetupCompoundMatrices(); }
 		#endif
 	#else
-		#define DEFAULT_UNITY_SETUP_INSTANCE_ID(input)		{ UnitySetupInstanceID(UNITY_GET_INSTANCE_ID(input)); UnitySetupCompoundMatrices(); }
+		#define DEFAULT_UNITY_SETUP_INSTANCE_ID(input)          { UnitySetupInstanceID(UNITY_GET_INSTANCE_ID(input)); UnitySetupCompoundMatrices(); }
 	#endif
-	#define UNITY_TRANSFER_INSTANCE_ID(input, output)	output.instanceID = UNITY_GET_INSTANCE_ID(input)
+	#define UNITY_TRANSFER_INSTANCE_ID(input, output)   output.instanceID = UNITY_GET_INSTANCE_ID(input)
 #else
 	#define DEFAULT_UNITY_SETUP_INSTANCE_ID(input)
 	#define UNITY_TRANSFER_INSTANCE_ID(input, output)
 #endif
 
 #if !defined(UNITY_SETUP_INSTANCE_ID)
-#	define UNITY_SETUP_INSTANCE_ID(input) DEFAULT_UNITY_SETUP_INSTANCE_ID(input)
+	#define UNITY_SETUP_INSTANCE_ID(input) DEFAULT_UNITY_SETUP_INSTANCE_ID(input)
 #endif
 
 ////////////////////////////////////////////////////////
@@ -210,15 +210,15 @@
 	#endif
 
 	#ifdef UNITY_INSTANCING_AOS
-		#define UNITY_INSTANCING_BUFFER_START(buf)	UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(UnityInstancing_##buf) struct {
-		#define UNITY_INSTANCING_BUFFER_END(arr)		} arr##Array[UNITY_INSTANCED_ARRAY_SIZE]; UNITY_INSTANCING_CBUFFER_SCOPE_END
+		#define UNITY_INSTANCING_BUFFER_START(buf)      UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(UnityInstancing_##buf) struct {
+		#define UNITY_INSTANCING_BUFFER_END(arr)        } arr##Array[UNITY_INSTANCED_ARRAY_SIZE]; UNITY_INSTANCING_CBUFFER_SCOPE_END
 		#define UNITY_DEFINE_INSTANCED_PROP(type, var) type var;
-		#define UNITY_ACCESS_INSTANCED_PROP(arr, var)	arr##Array[unity_InstanceID].var
+		#define UNITY_ACCESS_INSTANCED_PROP(arr, var)   arr##Array[unity_InstanceID].var
 	#else
-		#define UNITY_INSTANCING_BUFFER_START(buf)	UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(UnityInstancing_##buf)
-		#define UNITY_INSTANCING_BUFFER_END(arr)		UNITY_INSTANCING_CBUFFER_SCOPE_END
+		#define UNITY_INSTANCING_BUFFER_START(buf)      UNITY_INSTANCING_CBUFFER_SCOPE_BEGIN(UnityInstancing_##buf)
+		#define UNITY_INSTANCING_BUFFER_END(arr)        UNITY_INSTANCING_CBUFFER_SCOPE_END
 		#define UNITY_DEFINE_INSTANCED_PROP(type, var) type var[UNITY_INSTANCED_ARRAY_SIZE];
-		#define UNITY_ACCESS_INSTANCED_PROP(arr, var)	var[unity_InstanceID]
+		#define UNITY_ACCESS_INSTANCED_PROP(arr, var)   var[unity_InstanceID]
 	#endif
 
 	// Put worldToObject array to a separate CB if UNITY_ASSUME_UNIFORM_SCALING is defined. Most of the time it will not be used.
@@ -248,15 +248,15 @@
 		#endif
 	UNITY_INSTANCING_BUFFER_END(unity_Builtins1)
 
-	#define unity_ObjectToWorld	UNITY_ACCESS_INSTANCED_PROP(unity_Builtins0, unity_ObjectToWorldArray)
+	#define unity_ObjectToWorld     UNITY_ACCESS_INSTANCED_PROP(unity_Builtins0, unity_ObjectToWorldArray)
 
 	#define MERGE_UNITY_BUILTINS_INDEX(X) unity_Builtins##X
 
-	#define unity_WorldToObject	UNITY_ACCESS_INSTANCED_PROP(MERGE_UNITY_BUILTINS_INDEX(UNITY_WORLDTOOBJECTARRAY_CB), unity_WorldToObjectArray)
+	#define unity_WorldToObject     UNITY_ACCESS_INSTANCED_PROP(MERGE_UNITY_BUILTINS_INDEX(UNITY_WORLDTOOBJECTARRAY_CB), unity_WorldToObjectArray)
 
 	#ifdef UNITY_USE_LODFADEARRAY
 		// the quantized fade value (unity_LODFade.y) is automatically used for cross-fading instances
-		#define unity_LODFade		UNITY_ACCESS_INSTANCED_PROP(unity_Builtins0, unity_LODFadeArray).xxxx
+		#define unity_LODFade       UNITY_ACCESS_INSTANCED_PROP(unity_Builtins0, unity_LODFadeArray).xxxx
 	#endif
 
 	inline float4 UnityObjectToClipPosInstanced(in float3 pos)
@@ -275,14 +275,14 @@
 	#ifdef UNITY_PROCEDURAL_INSTANCING_ENABLED
 		#define UNITY_INSTANCING_BUFFER_START(buf)
 		#define UNITY_INSTANCING_BUFFER_END(arr)
-		#define UNITY_DEFINE_INSTANCED_PROP(type, var)	static type var;
+		#define UNITY_DEFINE_INSTANCED_PROP(type, var)      static type var;
 	#else
-		#define UNITY_INSTANCING_BUFFER_START(buf)		CBUFFER_START(buf)
-		#define UNITY_INSTANCING_BUFFER_END(arr)			CBUFFER_END
-		#define UNITY_DEFINE_INSTANCED_PROP(type, var)	type var;
+		#define UNITY_INSTANCING_BUFFER_START(buf)          CBUFFER_START(buf)
+		#define UNITY_INSTANCING_BUFFER_END(arr)            CBUFFER_END
+		#define UNITY_DEFINE_INSTANCED_PROP(type, var)      type var;
 	#endif
 
-	#define UNITY_ACCESS_INSTANCED_PROP(arr, var)			var
+	#define UNITY_ACCESS_INSTANCED_PROP(arr, var)           var
 
 #endif // UNITY_INSTANCING_ENABLED
 
@@ -303,9 +303,9 @@
 	#undef UNITY_MATRIX_MV
 	#undef UNITY_MATRIX_T_MV
 	#undef UNITY_MATRIX_IT_MV
-	#define UNITY_MATRIX_MVP	unity_MatrixMVP_Instanced
-	#define UNITY_MATRIX_MV	unity_MatrixMV_Instanced
-	#define UNITY_MATRIX_T_MV	unity_MatrixTMV_Instanced
+	#define UNITY_MATRIX_MVP    unity_MatrixMVP_Instanced
+	#define UNITY_MATRIX_MV     unity_MatrixMV_Instanced
+	#define UNITY_MATRIX_T_MV   unity_MatrixTMV_Instanced
 	#define UNITY_MATRIX_IT_MV unity_MatrixITMV_Instanced
 #endif
 

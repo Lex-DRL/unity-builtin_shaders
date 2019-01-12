@@ -19,12 +19,12 @@ uniform mat4 unity_MatrixV;
 uniform mat4 unity_MatrixInvV;
 uniform mat4 glstate_matrix_projection;
 
-#define gl_ModelViewProjectionMatrix		(unity_MatrixVP * unity_ObjectToWorld)
-#define gl_ModelViewMatrix				(unity_MatrixV * unity_ObjectToWorld)
-#define gl_ModelViewMatrixTranspose		(transpose(unity_MatrixV * unity_ObjectToWorld))
+#define gl_ModelViewProjectionMatrix        (unity_MatrixVP * unity_ObjectToWorld)
+#define gl_ModelViewMatrix                  (unity_MatrixV * unity_ObjectToWorld)
+#define gl_ModelViewMatrixTranspose         (transpose(unity_MatrixV * unity_ObjectToWorld))
 #define gl_ModelViewMatrixInverseTranspose (transpose(unity_WorldToObject * unity_MatrixInvV))
-#define gl_NormalMatrix					(transpose(mat3(unity_WorldToObject * unity_MatrixInvV)))
-#define gl_ProjectionMatrix				glstate_matrix_projection
+#define gl_NormalMatrix                     (transpose(mat3(unity_WorldToObject * unity_MatrixInvV)))
+#define gl_ProjectionMatrix                 glstate_matrix_projection
 
 #if __VERSION__ < 120
 #ifndef UNITY_GLSL_STRIP_TRANSPOSE

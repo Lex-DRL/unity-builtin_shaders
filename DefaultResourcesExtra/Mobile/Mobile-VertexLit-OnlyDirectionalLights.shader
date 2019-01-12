@@ -47,20 +47,20 @@ CGPROGRAM
 			o.Alpha = c.a;
 		}
 		struct v2f_surf {
- float4 pos : SV_POSITION;
- float2 pack0 : TEXCOORD0;
- #ifndef LIGHTMAP_ON
- fixed3 normal : TEXCOORD1;
- #endif
- #ifdef LIGHTMAP_ON
- float2 lmap : TEXCOORD2;
- #endif
- #ifndef LIGHTMAP_ON
- fixed3 vlight : TEXCOORD2;
- #endif
- LIGHTING_COORDS(3,4)
- UNITY_FOG_COORDS(5)
- UNITY_VERTEX_OUTPUT_STEREO
+	float4 pos : SV_POSITION;
+	float2 pack0 : TEXCOORD0;
+	#ifndef LIGHTMAP_ON
+	fixed3 normal : TEXCOORD1;
+	#endif
+	#ifdef LIGHTMAP_ON
+	float2 lmap : TEXCOORD2;
+	#endif
+	#ifndef LIGHTMAP_ON
+	fixed3 vlight : TEXCOORD2;
+	#endif
+	LIGHTING_COORDS(3,4)
+	UNITY_FOG_COORDS(5)
+	UNITY_VERTEX_OUTPUT_STEREO
 };
 float4 _MainTex_ST;
 v2f_surf vert_surf (appdata_full v)

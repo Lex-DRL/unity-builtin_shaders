@@ -5,7 +5,7 @@ Properties {
 	_Tint ("Tint Color", Color) = (.5, .5, .5, .5)
 	[Gamma] _Exposure ("Exposure", Range(0, 8)) = 1.0
 	_Rotation ("Rotation", Range(0, 360)) = 0
-	[NoScaleOffset] _Tex ("Cubemap	(HDR)", Cube) = "grey" {}
+	[NoScaleOffset] _Tex ("Cubemap   (HDR)", Cube) = "grey" {}
 }
 
 SubShader {

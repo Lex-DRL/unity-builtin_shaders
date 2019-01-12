@@ -17,13 +17,13 @@
 
 inline half3 LazarovFresnelTerm (half3 F0, half roughness, half cosA)
 {
-	half t = Pow5 (1 - cosA);	// ala Schlick interpoliation
+	half t = Pow5 (1 - cosA);   // ala Schlick interpoliation
 	t /= 4 - 3 * roughness;
 	return F0 + (1-F0) * t;
 }
 inline half3 SebLagardeFresnelTerm (half3 F0, half roughness, half cosA)
 {
-	half t = Pow5 (1 - cosA);	// ala Schlick interpoliation
+	half t = Pow5 (1 - cosA);   // ala Schlick interpoliation
 	return F0 + (max (F0, roughness) - F0) * t;
 }
 
@@ -116,15 +116,15 @@ half RoughnessToSpecPower (half roughness)
 //-------------------------------------------------------------------------------------
 // Legacy, to keep backwards compatibility for (pre Unity 5.3) custom user shaders:
 #ifdef UNITY_COLORSPACE_GAMMA
-#	define unity_LightGammaCorrectionConsts_PIDiv4 ((UNITY_PI/4)*(UNITY_PI/4))
-#	define unity_LightGammaCorrectionConsts_HalfDivPI ((.5h/UNITY_PI)*(.5h/UNITY_PI))
-#	define unity_LightGammaCorrectionConsts_8 (8*8)
-#	define unity_LightGammaCorrectionConsts_SqrtHalfPI (2/UNITY_PI)
+	#define unity_LightGammaCorrectionConsts_PIDiv4 ((UNITY_PI/4)*(UNITY_PI/4))
+	#define unity_LightGammaCorrectionConsts_HalfDivPI ((.5h/UNITY_PI)*(.5h/UNITY_PI))
+	#define unity_LightGammaCorrectionConsts_8 (8*8)
+	#define unity_LightGammaCorrectionConsts_SqrtHalfPI (2/UNITY_PI)
 #else
-#	define unity_LightGammaCorrectionConsts_PIDiv4 (UNITY_PI/4)
-#	define unity_LightGammaCorrectionConsts_HalfDivPI (.5h/UNITY_PI)
-#	define unity_LightGammaCorrectionConsts_8 (8)
-#	define unity_LightGammaCorrectionConsts_SqrtHalfPI (0.79788)
+	#define unity_LightGammaCorrectionConsts_PIDiv4 (UNITY_PI/4)
+	#define unity_LightGammaCorrectionConsts_HalfDivPI (.5h/UNITY_PI)
+	#define unity_LightGammaCorrectionConsts_8 (8)
+	#define unity_LightGammaCorrectionConsts_SqrtHalfPI (0.79788)
 #endif
 
 #endif // INCLUDE_UNITY_STANDARD_BRDF_DEPRECATED
@@ -136,7 +136,7 @@ half3 Unity_GlossyEnvironment (UNITY_ARGS_TEXCUBE(tex), half4 hdr, half3 worldNo
 {
 	Unity_GlossyEnvironmentData g;
 	g.roughness /* perceptualRoughness */ = perceptualRoughness;
-	g.reflUVW	= worldNormal;
+	g.reflUVW   = worldNormal;
 
 	return Unity_GlossyEnvironment (UNITY_PASS_TEXCUBE(tex), hdr, g);
 }

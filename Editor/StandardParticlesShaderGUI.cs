@@ -13,7 +13,7 @@ namespace UnityEditor
 		{
 			Opaque,
 			Cutout,
-			Fade,	// Old school alpha-blending mode, fresnel does not affect amount of transparency
+			Fade,   // Old school alpha-blending mode, fresnel does not affect amount of transparency
 			Transparent, // Physically plausible transparency mode, implemented as alpha pre-multiply
 			Additive,
 			Subtractive,
@@ -752,7 +752,7 @@ namespace UnityEditor
 			SetKeyword(material, "EFFECT_BUMP", useDistortion);
 			material.SetShaderPassEnabled("Always", useDistortion);
 			if (useDistortion)
-				material.SetFloat("_DistortionStrengthScaled", material.GetFloat("_DistortionStrength") * 0.1f);	// more friendly number scale than 1 unit per size of the screen
+				material.SetFloat("_DistortionStrengthScaled", material.GetFloat("_DistortionStrength") * 0.1f);   // more friendly number scale than 1 unit per size of the screen
 		}
 
 		void MaterialChanged(Material material)

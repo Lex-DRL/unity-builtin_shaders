@@ -171,7 +171,7 @@ half3 ShadeSHPerVertex (half3 normal, half3 ambient)
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = GammaToLinearSpace (ambient);
 		#endif
-		ambient += SHEvalLinearL2 (half4(normal, 1.0));	// no max since this is only L2 contribution
+		ambient += SHEvalLinearL2 (half4(normal, 1.0));     // no max since this is only L2 contribution
 	#endif
 
 	return ambient;
@@ -214,7 +214,7 @@ half3 ShadeSHPerPixel (half3 normal, half3 ambient, float3 worldPos)
 			ambient_contrib = SHEvalLinearL0L1 (half4(normal, 1.0));
 		#endif
 
-		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);	// include L2 contribution in vertex shader before clamp.
+		ambient = max(half3(0, 0, 0), ambient+ambient_contrib);     // include L2 contribution in vertex shader before clamp.
 		#ifdef UNITY_COLORSPACE_GAMMA
 			ambient = LinearToGammaSpace (ambient);
 		#endif

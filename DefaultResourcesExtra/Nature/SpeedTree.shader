@@ -122,7 +122,7 @@ Shader "Nature/SpeedTree"
 				{
 					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
-					Input data	: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_INPUT_INSTANCE_ID
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
@@ -238,7 +238,7 @@ Shader "Nature/SpeedTree"
 				{
 					UNITY_POSITION(vertex);
 					UNITY_FOG_COORDS(0)
-					Input data	: TEXCOORD1;
+					Input data      : TEXCOORD1;
 					UNITY_VERTEX_OUTPUT_STEREO
 				};
 

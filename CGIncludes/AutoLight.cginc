@@ -29,7 +29,7 @@
 				return shadow;
 			#else
 				unityShadowCoord dist = SAMPLE_DEPTH_TEXTURE(_ShadowMapTexture, shadowCoord.xy);
-				// tegra is confused if we use _LightShadowData.x directly
+				// tegra is confused if we use _LightShadowData.x directly
 				// with "ambiguous overloaded function reference max(mediump float, float)"
 				unityShadowCoord lightShadowDataX = _LightShadowData.x;
 				unityShadowCoord threshold = shadowCoord.z;
@@ -105,50 +105,50 @@ half UnityComputeForwardShadows(float2 lightmapUV, float3 worldPos, float4 scree
 }
 
 #if defined(SHADER_API_D3D11) || defined(SHADER_API_D3D12) || defined(SHADER_API_D3D11_9X) || defined(SHADER_API_XBOXONE) || defined(SHADER_API_PSSL)
-#	define UNITY_SHADOW_W(_w) _w
+	#define UNITY_SHADOW_W(_w) _w
 #else
-#	define UNITY_SHADOW_W(_w) (1.0/_w)
+	#define UNITY_SHADOW_W(_w) (1.0/_w)
 #endif
 
 #if defined(HANDLE_SHADOWS_BLENDING_IN_GI) // handles shadows in the depths of the GI function for performance reasons
-#	define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
-#	define UNITY_TRANSFER_SHADOW(a, coord) TRANSFER_SHADOW(a)
-#	define UNITY_SHADOW_ATTENUATION(a, worldPos) SHADOW_ATTENUATION(a)
+	#define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
+	#define UNITY_TRANSFER_SHADOW(a, coord) TRANSFER_SHADOW(a)
+	#define UNITY_SHADOW_ATTENUATION(a, worldPos) SHADOW_ATTENUATION(a)
 #elif defined(SHADOWS_SCREEN) && !defined(LIGHTMAP_ON) && !defined(UNITY_NO_SCREENSPACE_SHADOWS) // no lightmap uv thus store screenPos instead
 	// can happen if we have two directional lights. main light gets handled in GI code, but 2nd dir light can have shadow screen and mask.
 	// - Disabled on DX9 as we don't get valid .zw in vpos
 	// - Disabled on ES2 because WebGL 1.0 seems to have junk in .w (even though it shouldn't)
-#	if defined(SHADOWS_SHADOWMASK) && !defined(SHADER_API_D3D9) && !defined(SHADER_API_GLES)
-#		define UNITY_SHADOW_COORDS(idx1) unityShadowCoord4 _ShadowCoord : TEXCOORD##idx1;
-#		define UNITY_TRANSFER_SHADOW(a, coord) {a._ShadowCoord.xy = coord * unity_LightmapST.xy + unity_LightmapST.zw; a._ShadowCoord.zw = ComputeScreenPos(a.pos).xy;}
-#		define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord.xy, worldPos, float4(a._ShadowCoord.zw, 0.0, UNITY_SHADOW_W(a.pos.w)));
-#	else
-#		define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
-#		define UNITY_TRANSFER_SHADOW(a, coord) TRANSFER_SHADOW(a)
-#		define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, a._ShadowCoord)
-#	endif
+	#if defined(SHADOWS_SHADOWMASK) && !defined(SHADER_API_D3D9) && !defined(SHADER_API_GLES)
+		#define UNITY_SHADOW_COORDS(idx1) unityShadowCoord4 _ShadowCoord : TEXCOORD##idx1;
+		#define UNITY_TRANSFER_SHADOW(a, coord) {a._ShadowCoord.xy = coord * unity_LightmapST.xy + unity_LightmapST.zw; a._ShadowCoord.zw = ComputeScreenPos(a.pos).xy;}
+		#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord.xy, worldPos, float4(a._ShadowCoord.zw, 0.0, UNITY_SHADOW_W(a.pos.w)));
+	#else
+		#define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
+		#define UNITY_TRANSFER_SHADOW(a, coord) TRANSFER_SHADOW(a)
+		#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, a._ShadowCoord)
+	#endif
 #else
-#	if defined(SHADOWS_SHADOWMASK)
-#		define UNITY_SHADOW_COORDS(idx1) unityShadowCoord2 _ShadowCoord : TEXCOORD##idx1;
-#		define UNITY_TRANSFER_SHADOW(a, coord) a._ShadowCoord = coord * unity_LightmapST.xy + unity_LightmapST.zw;
-#		if (defined(SHADOWS_DEPTH) || defined(SHADOWS_SCREEN) || defined(SHADOWS_CUBE) || UNITY_LIGHT_PROBE_PROXY_VOLUME)
-#			define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord, worldPos, 0)
-#		else
-#			define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord, 0, 0)
-#		endif
-#	else
-#		define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
-#		define UNITY_TRANSFER_SHADOW(a, coord)
-#		if (defined(SHADOWS_DEPTH) || defined(SHADOWS_SCREEN) || defined(SHADOWS_CUBE))
-#			define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, 0)
-#		else
+	#if defined(SHADOWS_SHADOWMASK)
+		#define UNITY_SHADOW_COORDS(idx1) unityShadowCoord2 _ShadowCoord : TEXCOORD##idx1;
+		#define UNITY_TRANSFER_SHADOW(a, coord) a._ShadowCoord = coord * unity_LightmapST.xy + unity_LightmapST.zw;
+		#if (defined(SHADOWS_DEPTH) || defined(SHADOWS_SCREEN) || defined(SHADOWS_CUBE) || UNITY_LIGHT_PROBE_PROXY_VOLUME)
+			#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord, worldPos, 0)
+		#else
+			#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(a._ShadowCoord, 0, 0)
+		#endif
+	#else
+		#define UNITY_SHADOW_COORDS(idx1) SHADOW_COORDS(idx1)
+		#define UNITY_TRANSFER_SHADOW(a, coord)
+		#if (defined(SHADOWS_DEPTH) || defined(SHADOWS_SCREEN) || defined(SHADOWS_CUBE))
+			#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, 0)
+		#else
 			#if UNITY_LIGHT_PROBE_PROXY_VOLUME
-#				define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, 0)
+				#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, worldPos, 0)
 			#else
-#				define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, 0, 0)
+				#define UNITY_SHADOW_ATTENUATION(a, worldPos) UnityComputeForwardShadows(0, 0, 0)
 			#endif
-#		endif
-#	endif
+		#endif
+	#endif
 #endif
 
 #ifdef POINT
@@ -231,31 +231,31 @@ unityShadowCoord4x4 unity_WorldToLight;
 #ifdef POINT
 #define LIGHTING_COORDS(idx1,idx2) unityShadowCoord3 _LightCoord : TEXCOORD##idx1; SHADOW_COORDS(idx2)
 #define TRANSFER_VERTEX_TO_FRAGMENT(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz; TRANSFER_SHADOW(a)
-#define LIGHT_ATTENUATION(a)	(tex2D(_LightTexture0, dot(a._LightCoord,a._LightCoord).rr).UNITY_ATTEN_CHANNEL * SHADOW_ATTENUATION(a))
+#define LIGHT_ATTENUATION(a)    (tex2D(_LightTexture0, dot(a._LightCoord,a._LightCoord).rr).UNITY_ATTEN_CHANNEL * SHADOW_ATTENUATION(a))
 #endif
 
 #ifdef SPOT
 #define LIGHTING_COORDS(idx1,idx2) unityShadowCoord4 _LightCoord : TEXCOORD##idx1; SHADOW_COORDS(idx2)
 #define TRANSFER_VERTEX_TO_FRAGMENT(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)); TRANSFER_SHADOW(a)
-#define LIGHT_ATTENUATION(a)	( (a._LightCoord.z > 0) * UnitySpotCookie(a._LightCoord) * UnitySpotAttenuate(a._LightCoord.xyz) * SHADOW_ATTENUATION(a) )
+#define LIGHT_ATTENUATION(a)    ( (a._LightCoord.z > 0) * UnitySpotCookie(a._LightCoord) * UnitySpotAttenuate(a._LightCoord.xyz) * SHADOW_ATTENUATION(a) )
 #endif
 
 #ifdef DIRECTIONAL
 	#define LIGHTING_COORDS(idx1,idx2) SHADOW_COORDS(idx1)
 	#define TRANSFER_VERTEX_TO_FRAGMENT(a) TRANSFER_SHADOW(a)
-	#define LIGHT_ATTENUATION(a)	SHADOW_ATTENUATION(a)
+	#define LIGHT_ATTENUATION(a)    SHADOW_ATTENUATION(a)
 #endif
 
 #ifdef POINT_COOKIE
 #define LIGHTING_COORDS(idx1,idx2) unityShadowCoord3 _LightCoord : TEXCOORD##idx1; SHADOW_COORDS(idx2)
 #define TRANSFER_VERTEX_TO_FRAGMENT(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xyz; TRANSFER_SHADOW(a)
-#define LIGHT_ATTENUATION(a)	(tex2D(_LightTextureB0, dot(a._LightCoord,a._LightCoord).rr).UNITY_ATTEN_CHANNEL * texCUBE(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
+#define LIGHT_ATTENUATION(a)    (tex2D(_LightTextureB0, dot(a._LightCoord,a._LightCoord).rr).UNITY_ATTEN_CHANNEL * texCUBE(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
 #endif
 
 #ifdef DIRECTIONAL_COOKIE
 #define LIGHTING_COORDS(idx1,idx2) unityShadowCoord2 _LightCoord : TEXCOORD##idx1; SHADOW_COORDS(idx2)
 #define TRANSFER_VERTEX_TO_FRAGMENT(a) a._LightCoord = mul(unity_WorldToLight, mul(unity_ObjectToWorld, v.vertex)).xy; TRANSFER_SHADOW(a)
-#define LIGHT_ATTENUATION(a)	(tex2D(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
+#define LIGHT_ATTENUATION(a)    (tex2D(_LightTexture0, a._LightCoord).w * SHADOW_ATTENUATION(a))
 #endif
 
 

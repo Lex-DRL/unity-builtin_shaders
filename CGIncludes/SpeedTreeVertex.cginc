@@ -11,21 +11,21 @@
 
 // texcoord setup
 //
-//	BRANCHES						FRONDS					LEAVES
-// 0	diffuse uv, branch wind xy	"							"
-// 1	lod xyz, 0					lod xyz, 0				anchor xyz, lod scalar
-// 2	detail/seam uv, seam amount, 0 frond wind xyz, 0			leaf wind xyz, leaf group
+//	BRANCHES                        FRONDS                      LEAVES
+// 0    diffuse uv, branch wind xy      "                           "
+// 1    lod xyz, 0                      lod xyz, 0                  anchor xyz, lod scalar
+// 2    detail/seam uv, seam amount, 0 frond wind xyz, 0           leaf wind xyz, leaf group
 
 struct SpeedTreeVB
 {
-	float4 vertex		: POSITION;
-	float4 tangent	: TANGENT;
-	float3 normal		: NORMAL;
-	float4 texcoord	: TEXCOORD0;
-	float4 texcoord1	: TEXCOORD1;
-	float4 texcoord2	: TEXCOORD2;
-	float2 texcoord3	: TEXCOORD3;
-	half4 color		: COLOR;
+	float4 vertex       : POSITION;
+	float4 tangent      : TANGENT;
+	float3 normal       : NORMAL;
+	float4 texcoord     : TEXCOORD0;
+	float4 texcoord1    : TEXCOORD1;
+	float4 texcoord2    : TEXCOORD2;
+	float2 texcoord3    : TEXCOORD3;
+	half4 color         : COLOR;
 	UNITY_VERTEX_INPUT_INSTANCE_ID
 };
 
@@ -35,12 +35,12 @@ struct SpeedTreeVB
 
 #ifdef ENABLE_WIND
 
-#define WIND_QUALITY_NONE		0
-#define WIND_QUALITY_FASTEST	1
-#define WIND_QUALITY_FAST		2
-#define WIND_QUALITY_BETTER	3
-#define WIND_QUALITY_BEST		4
-#define WIND_QUALITY_PALM		5
+#define WIND_QUALITY_NONE       0
+#define WIND_QUALITY_FASTEST    1
+#define WIND_QUALITY_FAST       2
+#define WIND_QUALITY_BETTER     3
+#define WIND_QUALITY_BEST       4
+#define WIND_QUALITY_PALM       5
 
 uniform half _WindQuality;
 uniform half _WindEnabled;
