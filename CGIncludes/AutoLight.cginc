@@ -189,7 +189,7 @@ inline fixed UnitySpotAttenuate(unityShadowCoord3 LightCoord)
 #else
 	#define DECLARE_LIGHT_COORD(input, worldPos) unityShadowCoord4 lightCoord = input._LightCoord
 #endif
-#define UNITY_LIGHT_ATTENUATION(destName, input, worldPos) \
+	#define UNITY_LIGHT_ATTENUATION(destName, input, worldPos) \
 		DECLARE_LIGHT_COORD(input, worldPos); \
 		fixed shadow = UNITY_SHADOW_ATTENUATION(input, worldPos); \
 		fixed destName = (lightCoord.z > 0) * UnitySpotCookie(lightCoord) * UnitySpotAttenuate(lightCoord.xyz) * shadow;
