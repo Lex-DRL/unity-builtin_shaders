@@ -20,6 +20,9 @@ Shader "Hidden/Internal-Colored"
 	SubShader
 	{
 		Tags { "Queue"="Transparent" "IgnoreProjector"="True" "RenderType"="Transparent" }
+		//add lod
+		LOD 100
+		
 		Pass
 		{
 			Blend [_SrcBlend] [_DstBlend]
