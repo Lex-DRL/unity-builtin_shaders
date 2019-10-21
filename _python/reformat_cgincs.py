@@ -109,7 +109,6 @@ except:
 # endregion
 
 import re as _re
-from drl_common import filesystem as _fs
 
 # region RE's
 
@@ -254,6 +253,13 @@ def reformat_file(file_path=''):
 	"""
 	Re-format a single file, at the given path.
 	"""
+	try:
+		from drl_common import filesystem as _fs
+	except ImportError:
+		raise ImportError(
+			"This script uses a non-shared external module. Read the description first: "
+			"you need to manually re-work the script a bit."
+		)
 	# file_path = r'p:\0-Unity\builtin_shaders\CGIncludes\AutoLight.cginc'
 
 	# DRL: the next function reads a file to a list of lines,
