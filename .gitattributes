@@ -1,1 +1,81 @@
-﻿*    text eol=lf
+﻿# Based on FPS-sample: https://github.com/Unity-Technologies/FPSSample
+# Organized+extended by Lex-DRL: https://github.com/Lex-DRL
+
+*    text=auto eol=lf
+
+# Common text files
+*.txt text
+*.cs diff=csharp text
+*.csv text
+*.py text
+*.md5 text
+*.md text
+*.json text
+*.[Xx][Mm][Ll] text
+*.[Hh][Tt][Mm] text
+*.[Hh][Tt][Mm][Ll] text
+
+# OS scripts
+*.[Bb][Aa][Tt] text
+*.[Cc][Mm][Dd] text
+*.[Pp][Ss]1 text
+*.[Pp][Ll] text
+*.[Ss][Hh] text
+
+# All about shading
+*.shader text
+*.cginc text
+*.hlsl text
+*.shadervariants text
+*.compute text
+*.ShaderGraph text
+*.giparams text
+*.mat text
+
+# Other Unity's text files
+*.unity text
+*.prefab text
+*.meta text
+*.asmdef text
+*.mixer text
+*.anim text
+*.controller text
+*.overrideController text
+*.mask text
+*.playable text
+*.guiskin text
+*.[Ss]prite[Aa]tlas text
+
+# Unity's physics
+*.[pP]hysic[Mm]aterial text
+*.[pP]hysic[Mm]aterial[23][dD] text
+
+
+# -----------------------------------------------
+# LFS binary formats
+# -----------------------------------------------
+
+# Archives
+*.7[Zz] filter=lfs diff=lfs merge=lfs -text
+*.[Zz][Ii][Pp] filter=lfs diff=lfs merge=lfs -text
+*.[Rr][Aa][Rr] filter=lfs diff=lfs merge=lfs -text
+*.[Gg][Zz] filter=lfs diff=lfs merge=lfs -text
+
+# Fonts
+*.[OoTt][Tt][Ff] filter=lfs diff=lfs merge=lfs -text
+
+# OS libraries
+*.[Dd][Ll][Ll] filter=lfs diff=lfs merge=lfs -text
+*.[Ss][Oo] filter=lfs diff=lfs merge=lfs -text
+*.[Ss][Yy][Ss] filter=lfs diff=lfs merge=lfs -text
+*.bytes filter=lfs diff=lfs merge=lfs -text
+
+# Python binaries:
+*.[Pp][Yy][Dd] filter=lfs diff=lfs merge=lfs -text
+*.[Pp][Dd][Bb] filter=lfs diff=lfs merge=lfs -text
+*.[Ww][Hh][Ll] filter=lfs diff=lfs merge=lfs -text
+
+# Unity
+*.bundle filter=lfs diff=lfs merge=lfs -text
+*.entities filter=lfs diff=lfs merge=lfs -text
+*.unity[Pp]ackage filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,12 @@
+﻿# ============ #
+# OS generated #
+# ============ #
+.DS_Store*
+[Tt]humbs.db
+[Dd]esktop.ini
+
+# =============== #
+# Python-specific #
+# =============== #
+*/.idea/
+*.pyc
