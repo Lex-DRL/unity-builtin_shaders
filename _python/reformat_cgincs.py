@@ -1,8 +1,14 @@
 # encoding: utf-8
 """
-MIT License
+=====
+Unity's shaders re-formatter
+=====
 
-Copyright (c) 2019 Lex Darlog
+-----
+MIT License
+-----
+
+Copyright (c) 2019 `Lex Darlog <https://github.com/Lex-DRL>`_
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +27,56 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+=====
+Description
+=====
+
+This script re-formats all the Unity's `.shader` and `.cginc` files, making them
+compliant to my code style. It just fixes:
+	* spaces-to-tabs
+	* macro indents
+
+This is just a script for my personal use, so it's far from a complete tool.
+I don't endorse you to use it but I also don't mind if you want to.
+
+-----
+Usage
+-----
+
+Unfortunately, you can't just run this script if you don't know me in person.
+It depends on my external `drl_common` package I don't publicly share yet
+(and don't intend to).
+A few service functions from that package is used, that perform
+a high-level (file encoding- and python-version-independent) reads and writes
+to files.
+
+So you have two options:
+	* replace those lines with a built-in file-treating functions.
+	*
+		never call this script directly from a command line and only
+		use it as a module with the main `reformat_line` function in your own
+		wrapper script, also never calling the other (`reformat_file`) function.
+
+Keep in mind, however, that some Unity's cgincs contain a non-ASCII characters
+(which most likely are just typos of some european guy), which caused some
+troubles on attempt to read thos efiles with Python2's default `open()`
+and which were very difficult to find. So I guess, you'll **NEED** to read
+those files with a right encoding, after all. Using `io.open()`.
+
+After you've done that step, it's just a matter of selecting all the
+shader-related files (`.shader`, `.glslinc`, `.cginc`, `.compute`) and
+drag-n-dropping them to this script.
+Or, from a command line:
+
+::
+
+	python.exe reformat_cgincs.py "path/to/file1.cginc" "path/to/file2.cginc" ...
+
+Some manual fixes are still required, but there's just a couple of them -
+related to intentionally put multiple-spaces. It's much easier to manually
+restore them with your git client's diff.
+
 """
 
 __author__ = 'Lex Darlog (DRL)'
@@ -87,7 +143,12 @@ _re_equal_post = _re.compile('=\s{2,}')
 def reformat_line(
 	file_line=''  # type: str_hint
 ):
-	# first, let's replace any non-brake space to a regular spaces, since it's not catched by re's "\s":
+	"""
+	The main function performing re-formatting of a single line.
+	"""
+
+	# first, let's replace any non-brake space to a regular spaces,
+	# since it's not catched by re's "\s":
 	if isinstance(file_line, unicode):
 		file_line = file_line.replace(u'\xa0', u' ')
 	else:
@@ -190,13 +251,21 @@ def reformat_line(
 
 
 def reformat_file(file_path=''):
+	"""
+	Re-format a single file, at the given path.
+	"""
 	# file_path = r'p:\0-Unity\builtin_shaders\CGIncludes\AutoLight.cginc'
 
+	# DRL: the next function reads a file to a list of lines,
+	# automatically assuming it's encoding and using the `line_process_f` function
+	# to process each line. Re-implement it yourself:
 	lines, encoding, enc_sure = _fs.read_file_lines_best_enc(
-		file_path, True, line_process_f=reformat_line,
+		file_path, strip_newline_char=True,
+		line_process_f=reformat_line,
 		detect_limit=256*1024, detect_mode=_fs.DetectEncodingMode.FALLBACK_CHARDET
 	)
 
+	# similarly, this one writes the processed lines, detecting the best encoding:
 	_fs.write_file_lines(file_path, lines, encoding)
 
 
