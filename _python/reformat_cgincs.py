@@ -106,6 +106,12 @@ try:
 except:
 	_str_t = (bytes, str)
 
+try:
+	_h_replacement = _t.Tuple[_str_h, _str_h]
+	_h_replacements = _t.Iterable[_h_replacement]
+except:
+	pass
+
 # endregion
 
 from os import path as _pth
@@ -140,21 +146,67 @@ _re_equal_post = _re.compile('=\s{2,}')
 
 # endregion
 
-# TODO:
+# a list of per-file full-line replacements with some manual tweaks
+# to clean-up after auto-replacements:
 _final_fixes = {
 	k.lower(): v for k, v in {
-		# a list of per-file full-line replacements with some manual tweaks
-		# to clean-up after auto-replacements:
-		'FileName.ext': (
-			('source string', 'replacement string'),
+		'AutoLight.cginc': (
+			('sampler2D_float _LightTexture0;', '	sampler2D_float _LightTexture0;'),
+			('sampler2D_float _LightTextureB0;', '	sampler2D_float _LightTextureB0;'),
+			('samplerCUBE_float _LightTexture0;', '	samplerCUBE_float _LightTexture0;'),
+			('unityShadowCoord4x4 unity_WorldToLight;', '	unityShadowCoord4x4 unity_WorldToLight;'),
+			(
+				'#define DECLARE_LIGHT_COORD(input, worldPos) unityShadowCoord4 lightCoord = ',
+				'	#define DECLARE_LIGHT_COORD(input, worldPos) unityShadowCoord4 lightCoord = '
+			)
 		),
-	}.iteritems()
+		'SpatialMappingWireframe.shader': (
+			('fixed4(1.0, 1.0, 1.0, 1.0), // White',     'fixed4(1.0, 1.0, 1.0, 1.0),  // White'),
+			('fixed4(1.0, 0.0, 0.0, 1.0), // Red',       'fixed4(1.0, 0.0, 0.0, 1.0),  // Red'),
+			('fixed4(0.0, 1.0, 0.0, 1.0), // Green',     'fixed4(0.0, 1.0, 0.0, 1.0),  // Green'),
+			('fixed4(0.0, 0.0, 1.0, 1.0), // Blue',      'fixed4(0.0, 0.0, 1.0, 1.0),  // Blue'),
+			('fixed4(1.0, 1.0, 0.0, 1.0), // Yellow',    'fixed4(1.0, 1.0, 0.0, 1.0),  // Yellow'),
+			('fixed4(0.0, 1.0, 1.0, 1.0), // Cyan/Aqua', 'fixed4(0.0, 1.0, 1.0, 1.0),  // Cyan/Aqua'),
+			('fixed4(1.0, 0.0, 1.0, 1.0), // Magenta',   'fixed4(1.0, 0.0, 1.0, 1.0),  // Magenta'),
+			('fixed4(0.5, 0.0, 0.0, 1.0), // Maroon',    'fixed4(0.5, 0.0, 0.0, 1.0),  // Maroon'),
+			('fixed4(0.0, 0.5, 0.5, 1.0), // Teal',      'fixed4(0.0, 0.5, 0.5, 1.0),  // Teal'),
+		),
+		'SpeedTreeWind.cginc': (
+			(
+				'return float3x3(t * x * x + c,      t * x * y - s * z, t * x * z + s * y,',
+				'return float3x3(t * x * x + c,      t * x * y - s * z,  t * x * z + s * y,'
+			),
+			(
+				't * x * y + s * z, t * y * y + c,      t * y * z - s * x,',
+				't * x * y + s * z,  t * y * y + c,      t * y * z - s * x,'
+			),
+			(
+				't * x * z - s * y, t * y * z + s * x, t * z * z + c);',
+				't * x * z - s * y,  t * y * z + s * x,  t * z * z + c);'
+			),
+		),
+		'UnityGBuffer.cginc': (
+			('data.specularColor = inGBuffer1.rgb;', 'data.specularColor  = inGBuffer1.rgb;'),
+		),
+		'UnityPBSLighting.cginc': (
+			('data.specularColor = specColor;', 'data.specularColor  = specColor;'),
+			('data.specularColor = s.Specular;', 'data.specularColor  = s.Specular;'),
+		),
+		'UnityShadowLibrary.cginc': (
+			('* /   \\', '*  /   \\'),
+			('* /       \\', '*  /       \\'),
+			('* /           \\', '*  /           \\'),
+		),
+		'UnityStandardCore.cginc': (
+			('data.specularColor = s.specColor;', 'data.specularColor  = s.specColor;'),
+		)
+	}.items()
 }  # type: _t.Dict[_str_h, _t.Tuple[_t.Tuple[_str_h, _str_h], ...]]
 
 
 def reformat_line(
 	file_line='',  # type: _str_h
-	filename_lower=''  # TODO
+	replacements=None  # type: _t.Optional[_h_replacements]
 ):
 	"""
 	The main function performing re-formatting of a single line.
@@ -260,6 +312,12 @@ def reformat_line(
 	file_line = _clean_indents_in_macro(file_line)
 	file_line = _clean_syntax(file_line)
 
+	if not replacements:
+		return file_line
+
+	for src_str, new_str in replacements:
+		file_line = file_line.replace(src_str, new_str, 1)
+
 	return file_line
 
 
@@ -276,16 +334,21 @@ def reformat_file(file_path=''):
 		)
 	# file_path = r'p:\0-Unity\builtin_shaders\CGIncludes\AutoLight.cginc'
 	file_nm_low = file_path.replace('\\', '/').split('/')[-1].lower()
+	try:
+		replacements = _final_fixes[file_nm_low]
+	except KeyError:
+		replacements = None
 
-	def reformat_this_file_line(line=''):
-		return reformat_line(line, file_nm_low)
+	def reformat_with_replacements(line=''):
+		return reformat_line(line, replacements)
+	line_f = reformat_with_replacements if replacements else reformat_line
 
 	# DRL: the next function reads a file to a list of lines,
 	# automatically assuming it's encoding and using the `line_process_f` function
 	# to process each line. Re-implement it yourself:
 	lines, encoding, enc_sure = _fs.read_file_lines_best_enc(
 		file_path, strip_newline_char=True,
-		line_process_f=reformat_this_file_line,
+		line_process_f=line_f,
 		detect_limit=256*1024, detect_mode=_fs.DetectEncodingMode.FALLBACK_CHARDET
 	)
 
