@@ -1,8 +1,8 @@
 ﻿# Built-in Unity shaders (with tab indents)
 
 This repo is originally created for my own personal usage. It contains the source Unity's shaders, but with a couple of modifications:
-	* Tabs instead of spaces
-	* slightly different indents
+* Tabs instead of spaces
+* slightly different indents
 
 Apart from that, it's the Unity's shaders as they are, with no change in their behavior.
 I commit shaders for new Unity versions as I need them.
