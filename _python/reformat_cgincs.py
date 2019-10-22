@@ -92,19 +92,19 @@ except ImportError:
 
 # noinspection PyBroadException
 try:
-	str_hint = _t.Union[str, unicode]
+	_str_h = _t.Union[str, unicode]
 except:
 	# noinspection PyBroadException
 	try:
-		str_hint = _t.Union[str, bytes]
+		_str_h = _t.Union[str, bytes]
 	except:
-		str_hint = str
+		_str_h = str
 
 # noinspection PyBroadException
 try:
-	str_t = (str, unicode)
+	_str_t = (str, unicode)
 except:
-	str_t = (bytes, str)
+	_str_t = (bytes, str)
 
 # endregion
 
@@ -140,7 +140,7 @@ _re_equal_post = _re.compile('=\s{2,}')
 
 
 def reformat_line(
-	file_line=''  # type: str_hint
+	file_line=''  # type: _str_h
 ):
 	"""
 	The main function performing re-formatting of a single line.
@@ -155,7 +155,7 @@ def reformat_line(
 		file_line = file_line.replace('\xc2\xa0', ' ')
 
 	def _clean_main_indent(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		replace space indentations to tabs
@@ -173,7 +173,7 @@ def reformat_line(
 		return line
 
 	def _clean_indent_in_comment(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		same thing with spaces in only-comment lines
@@ -193,7 +193,7 @@ def reformat_line(
 		return line
 
 	def _clean_redundant_spaces(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		remove any trailing whitespace chars, if they're not a comment
@@ -206,7 +206,7 @@ def reformat_line(
 		return line
 
 	def _clean_indents_in_macro(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		Move indents after the "#" sign outside the macro.
@@ -216,7 +216,7 @@ def reformat_line(
 		if not match_macro:
 			return line
 
-		pre_indent = match_macro.groups()[0]  # type: str_hint
+		pre_indent = match_macro.groups()[0]  # type: _str_h
 		in_macro = _re_indent_macro.sub(' ', line)
 
 		# since now, there's no dash sign at start
@@ -228,9 +228,9 @@ def reformat_line(
 		return pre_indent + macro_tabs + '#' + in_macro
 
 	def _clean_syntax(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
-		indent, main_code = _re_split_indent.match(line).groups()  # type: str_hint, str_hint
+		indent, main_code = _re_split_indent.match(line).groups()  # type: _str_h, _str_h
 		while _re_spaces_brace_pre.search(main_code):
 			main_code = _re_spaces_brace_pre.sub(r'( ', main_code)
 		while _re_spaces_brace_post.search(main_code):
