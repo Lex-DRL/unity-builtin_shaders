@@ -92,21 +92,29 @@ except ImportError:
 
 # noinspection PyBroadException
 try:
-	str_hint = _t.Union[str, unicode]
+	_str_h = _t.Union[str, unicode]
 except:
 	# noinspection PyBroadException
 	try:
-		str_hint = _t.Union[str, bytes]
+		_str_h = _t.Union[str, bytes]
 	except:
-		str_hint = str
+		_str_h = str
 
 # noinspection PyBroadException
 try:
-	str_t = (str, unicode)
+	_str_t = (str, unicode)
 except:
-	str_t = (bytes, str)
+	_str_t = (bytes, str)
+
+try:
+	_h_replacement = _t.Tuple[_str_h, _str_h]
+	_h_replacements = _t.Iterable[_h_replacement]
+except:
+	pass
 
 # endregion
+
+from os import path as _pth
 
 import re as _re
 
@@ -138,9 +146,67 @@ _re_equal_post = _re.compile('=\s{2,}')
 
 # endregion
 
+# a list of per-file full-line replacements with some manual tweaks
+# to clean-up after auto-replacements:
+_final_fixes = {
+	k.lower(): v for k, v in {
+		'AutoLight.cginc': (
+			('sampler2D_float _LightTexture0;', '	sampler2D_float _LightTexture0;'),
+			('sampler2D_float _LightTextureB0;', '	sampler2D_float _LightTextureB0;'),
+			('samplerCUBE_float _LightTexture0;', '	samplerCUBE_float _LightTexture0;'),
+			('unityShadowCoord4x4 unity_WorldToLight;', '	unityShadowCoord4x4 unity_WorldToLight;'),
+			(
+				'#define DECLARE_LIGHT_COORD(input, worldPos) unityShadowCoord4 lightCoord = ',
+				'	#define DECLARE_LIGHT_COORD(input, worldPos) unityShadowCoord4 lightCoord = '
+			)
+		),
+		'SpatialMappingWireframe.shader': (
+			('fixed4(1.0, 1.0, 1.0, 1.0), // White',     'fixed4(1.0, 1.0, 1.0, 1.0),  // White'),
+			('fixed4(1.0, 0.0, 0.0, 1.0), // Red',       'fixed4(1.0, 0.0, 0.0, 1.0),  // Red'),
+			('fixed4(0.0, 1.0, 0.0, 1.0), // Green',     'fixed4(0.0, 1.0, 0.0, 1.0),  // Green'),
+			('fixed4(0.0, 0.0, 1.0, 1.0), // Blue',      'fixed4(0.0, 0.0, 1.0, 1.0),  // Blue'),
+			('fixed4(1.0, 1.0, 0.0, 1.0), // Yellow',    'fixed4(1.0, 1.0, 0.0, 1.0),  // Yellow'),
+			('fixed4(0.0, 1.0, 1.0, 1.0), // Cyan/Aqua', 'fixed4(0.0, 1.0, 1.0, 1.0),  // Cyan/Aqua'),
+			('fixed4(1.0, 0.0, 1.0, 1.0), // Magenta',   'fixed4(1.0, 0.0, 1.0, 1.0),  // Magenta'),
+			('fixed4(0.5, 0.0, 0.0, 1.0), // Maroon',    'fixed4(0.5, 0.0, 0.0, 1.0),  // Maroon'),
+			('fixed4(0.0, 0.5, 0.5, 1.0), // Teal',      'fixed4(0.0, 0.5, 0.5, 1.0),  // Teal'),
+		),
+		'SpeedTreeWind.cginc': (
+			(
+				'return float3x3(t * x * x + c,      t * x * y - s * z, t * x * z + s * y,',
+				'return float3x3(t * x * x + c,      t * x * y - s * z,  t * x * z + s * y,'
+			),
+			(
+				't * x * y + s * z, t * y * y + c,      t * y * z - s * x,',
+				't * x * y + s * z,  t * y * y + c,      t * y * z - s * x,'
+			),
+			(
+				't * x * z - s * y, t * y * z + s * x, t * z * z + c);',
+				't * x * z - s * y,  t * y * z + s * x,  t * z * z + c);'
+			),
+		),
+		'UnityGBuffer.cginc': (
+			('data.specularColor = inGBuffer1.rgb;', 'data.specularColor  = inGBuffer1.rgb;'),
+		),
+		'UnityPBSLighting.cginc': (
+			('data.specularColor = specColor;', 'data.specularColor  = specColor;'),
+			('data.specularColor = s.Specular;', 'data.specularColor  = s.Specular;'),
+		),
+		'UnityShadowLibrary.cginc': (
+			('* /   \\', '*  /   \\'),
+			('* /       \\', '*  /       \\'),
+			('* /           \\', '*  /           \\'),
+		),
+		'UnityStandardCore.cginc': (
+			('data.specularColor = s.specColor;', 'data.specularColor  = s.specColor;'),
+		)
+	}.items()
+}  # type: _t.Dict[_str_h, _t.Tuple[_t.Tuple[_str_h, _str_h], ...]]
+
 
 def reformat_line(
-	file_line=''  # type: str_hint
+	file_line='',  # type: _str_h
+	replacements=None  # type: _t.Optional[_h_replacements]
 ):
 	"""
 	The main function performing re-formatting of a single line.
@@ -155,7 +221,7 @@ def reformat_line(
 		file_line = file_line.replace('\xc2\xa0', ' ')
 
 	def _clean_main_indent(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		replace space indentations to tabs
@@ -173,7 +239,7 @@ def reformat_line(
 		return line
 
 	def _clean_indent_in_comment(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		same thing with spaces in only-comment lines
@@ -193,7 +259,7 @@ def reformat_line(
 		return line
 
 	def _clean_redundant_spaces(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		remove any trailing whitespace chars, if they're not a comment
@@ -206,7 +272,7 @@ def reformat_line(
 		return line
 
 	def _clean_indents_in_macro(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
 		"""
 		Move indents after the "#" sign outside the macro.
@@ -216,7 +282,7 @@ def reformat_line(
 		if not match_macro:
 			return line
 
-		pre_indent = match_macro.groups()[0]  # type: str_hint
+		pre_indent = match_macro.groups()[0]  # type: _str_h
 		in_macro = _re_indent_macro.sub(' ', line)
 
 		# since now, there's no dash sign at start
@@ -228,9 +294,9 @@ def reformat_line(
 		return pre_indent + macro_tabs + '#' + in_macro
 
 	def _clean_syntax(
-		line  # type: str_hint
+		line  # type: _str_h
 	):
-		indent, main_code = _re_split_indent.match(line).groups()  # type: str_hint, str_hint
+		indent, main_code = _re_split_indent.match(line).groups()  # type: _str_h, _str_h
 		while _re_spaces_brace_pre.search(main_code):
 			main_code = _re_spaces_brace_pre.sub(r'( ', main_code)
 		while _re_spaces_brace_post.search(main_code):
@@ -245,6 +311,12 @@ def reformat_line(
 	file_line = _clean_redundant_spaces(file_line)
 	file_line = _clean_indents_in_macro(file_line)
 	file_line = _clean_syntax(file_line)
+
+	if not replacements:
+		return file_line
+
+	for src_str, new_str in replacements:
+		file_line = file_line.replace(src_str, new_str, 1)
 
 	return file_line
 
@@ -261,13 +333,22 @@ def reformat_file(file_path=''):
 			"you need to manually re-work the script a bit."
 		)
 	# file_path = r'p:\0-Unity\builtin_shaders\CGIncludes\AutoLight.cginc'
+	file_nm_low = file_path.replace('\\', '/').split('/')[-1].lower()
+	try:
+		replacements = _final_fixes[file_nm_low]
+	except KeyError:
+		replacements = None
+
+	def reformat_with_replacements(line=''):
+		return reformat_line(line, replacements)
+	line_f = reformat_with_replacements if replacements else reformat_line
 
 	# DRL: the next function reads a file to a list of lines,
 	# automatically assuming it's encoding and using the `line_process_f` function
 	# to process each line. Re-implement it yourself:
 	lines, encoding, enc_sure = _fs.read_file_lines_best_enc(
 		file_path, strip_newline_char=True,
-		line_process_f=reformat_line,
+		line_process_f=line_f,
 		detect_limit=256*1024, detect_mode=_fs.DetectEncodingMode.FALLBACK_CHARDET
 	)
 
@@ -275,11 +356,143 @@ def reformat_file(file_path=''):
 	_fs.write_file_lines(file_path, lines, encoding)
 
 
+_required_subdirs = (
+	'CGIncludes', 'DefaultResources', 'DefaultResourcesExtra', 'Editor'
+)
+_extensions = {
+	'.shader', '.cginc', '.glslinc', '.compute', '.cs'
+}
+
+
+def list_files_gen(
+	root='',  # type: _str_h
+	onerror=None,  # type: _t.Optional[_t.Callable[[OSError], _t.Any]]
+	dirs_limit=30
+):
+	"""
+	A generator, listing all the files that should be re-formatted in the
+	given root dir with Unity's built-in shaders folder structure.
+
+	:param root: The root directory.
+	:param onerror: a callback function passed to the os.walk()
+	:param dirs_limit: max number of subdirs checked.
+	"""
+	import os
+	import string
+
+	def p_join(*path_segs):
+		# type: (_t.Tuple[_str_h, ...]) -> _str_h
+		"""
+		A shorthand for joining arguments with '/'.
+		Just lets to avoid writing lists on each join.
+		"""
+		return '/'.join(path_segs)
+
+	if not (root and isinstance(root, _str_t)):
+		return
+	if not _pth.exists(root) and _pth.isdir(root):
+		print("The path isn't a folder: " + root)
+		return
+
+	# root = r'C:\_builtin_shaders'
+	if not (isinstance(dirs_limit, int) and 5 < dirs_limit < 100):
+		dirs_limit = 30
+
+	root = root.replace('\\', '/')
+	notrail = root.rstrip('/')
+	if notrail:
+		root = notrail
+	main_subdirs = [p_join(root, subdir) for subdir in _required_subdirs]
+
+	root_listed = set(os.listdir(root))
+	# separate loop - to make sure at least main subfolders exist
+	for subdir, subdir_path in zip(_required_subdirs, main_subdirs):
+		if not(
+			root_listed  # will return on the 1st iteration
+			and subdir in root_listed
+			and _pth.isdir(subdir_path)
+		):
+			print(
+				"The path doesn't seem to be a Unity-builtin-shaders root dir, "
+				"the subfolder isn't found: " + subdir
+			)
+			return
+
+	# we're pretty sure it's a shader dir, let's start listing:
+
+	supported_first_chars = set(string.ascii_letters)
+
+	total_subdirs = 0  # prevent listing too much dirs
+	for subdir_path in main_subdirs:
+		for cur_root, dirs, files in os.walk(
+			subdir_path, topdown=True, onerror=onerror, followlinks=False
+		):
+			# cur_root = 'C:/_builtin_shaders/DefaultResourcesExtra\\AR\\Shaders'
+			cur_root = cur_root.replace('\\', '/')
+			if dirs:
+				# In-place list modification to filter out dir names starting from
+				# anything but an ASCII letter ('.git' or similar):
+				dirs[:] = (
+					d for d in dirs if (d and d[0] in supported_first_chars)
+				)
+			# Starting subdirs are pre-checked, so no need to also check cur_root.
+
+			if total_subdirs > dirs_limit:
+				print (
+					"Somehow, more then {} directories are already listed.\n"
+					"Probably, {} is not a Unity-builtin-shaders folder after all. "
+					"Or maybe we're stuck in a symlink loop.\n"
+					"Anyway, file listing is terminated.".format(dirs_limit, repr(root))
+				)
+				return
+
+			for fl in files:
+				# fl = 'TangoARRender.shader'
+				if fl and _pth.splitext(fl)[-1].lower() in _extensions:
+					yield p_join(cur_root, fl)
+			total_subdirs += 1
+	return
+
+
+def _cleanup_args_gen(*args):
+	"""
+	A generator, checking passed arguments and turning them to
+	a list of files to process.
+
+	Each argument should be either a file of dir path:
+		* passed files are checked to exist and have the right extension.
+		*
+			passed dirs are supposed to be a root folder for Unity's built-in
+			shaders with a standard folder structure.
+	"""
+	for arg in args:
+		if not(arg and isinstance(arg, _str_t)):
+			print ("Wrong argument, skipped: {}".format(repr(arg)))
+			continue
+		if not _pth.exists(arg):
+			print ("File/folder not found: {}".format(arg))
+
+		if _pth.isdir(arg):
+			# assume a root shaders folder
+			for file_path in list_files_gen(arg):
+				yield file_path
+			continue
+
+		# should be an existing file
+		if _pth.splitext(arg)[-1].lower() not in _extensions:
+			print ("Unsupported file type, skipped: {}".format(repr(arg)))
+			continue
+		yield arg
+
+
 if __name__ == '__main__':
 	import sys, warnings
 	errors = list()
+
 	i = 1
-	for fl_pth in sys.argv[1:]:
+	for fl_pth in sorted(
+		_cleanup_args_gen(*sys.argv[1:])
+	):
 		try:
 			with warnings.catch_warnings():
 				warnings.simplefilter("ignore")
