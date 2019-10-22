@@ -73,9 +73,13 @@ Or, from a command line:
 
 	python.exe reformat_cgincs.py "path/to/file1.cginc" "path/to/file2.cginc" ...
 
-Some manual fixes are still required, but there's just a couple of them -
-related to intentionally put multiple-spaces. It's much easier to manually
-restore them with your git client's diff.
+Alternatively, you can drag-n-drop the root shaders folder itself (the one
+containing the `CGIncludes`, `DefaultResources` folders, etc.)
+Or, from the command line (with or without trailing slash - doesn't matter):
+
+::
+
+	python.exe reformat_cgincs.py "path/to/builtin_shaders_dir"
 
 """
 
