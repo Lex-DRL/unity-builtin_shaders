@@ -409,8 +409,11 @@ def _cleanup_args_gen(*args):
 if __name__ == '__main__':
 	import sys, warnings
 	errors = list()
+
 	i = 1
-	for fl_pth in sys.argv[1:]:
+	for fl_pth in sorted(
+		_cleanup_args_gen(*sys.argv[1:])
+	):
 		try:
 			with warnings.catch_warnings():
 				warnings.simplefilter("ignore")
