@@ -350,19 +350,14 @@ def list_files_gen(
 		):
 			# cur_root = 'C:/_builtin_shaders/DefaultResourcesExtra\\AR\\Shaders'
 			cur_root = cur_root.replace('\\', '/')
-			cur_root_base = cur_root.split('/')[-1]  # the sub-dir name
-			if not(
-				cur_root_base and
-				# the 1st letter - is always ascii for all unity dirs, so...
-				cur_root_base[0] in supported_first_chars  # if not - '.git' or similar
-			):
-				continue
 			if dirs:
-				# The same check - for the pending sub-dirs.
-				# In-place list modification to filter out skipped ones:
+				# In-place list modification to filter out dir names starting from
+				# anything but an ASCII letter ('.git' or similar):
 				dirs[:] = (
 					d for d in dirs if (d and d[0] in supported_first_chars)
 				)
+			# Starting subdirs are pre-checked, so no need to also check cur_root.
+
 			if total_subdirs > dirs_limit:
 				print (
 					"Somehow, more then {} directories are already listed.\n"
