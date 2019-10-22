@@ -302,7 +302,7 @@ def list_files_gen(
 	import string
 
 	def p_join(*path_segs):
-		# type: (_t.Iterable[_str_h]) -> _str_h
+		# type: (_t.Tuple[_str_h, ...]) -> _str_h
 		"""
 		A shorthand for joining arguments with '/'.
 		Just lets to avoid writing lists on each join.
@@ -369,10 +369,41 @@ def list_files_gen(
 
 			for fl in files:
 				# fl = 'TangoARRender.shader'
-				if fl and _pth.splitext(fl)[-1] in _extensions:
+				if fl and _pth.splitext(fl)[-1].lower() in _extensions:
 					yield p_join(cur_root, fl)
 			total_subdirs += 1
 	return
+
+
+def _cleanup_args_gen(*args):
+	"""
+	A generator, checking passed arguments and turning them to
+	a list of files to process.
+
+	Each argument should be either a file of dir path:
+		* passed files are checked to exist and have the right extension.
+		*
+			passed dirs are supposed to be a root folder for Unity's built-in
+			shaders with a standard folder structure.
+	"""
+	for arg in args:
+		if not(arg and isinstance(arg, _str_t)):
+			print ("Wrong argument, skipped: {}".format(repr(arg)))
+			continue
+		if not _pth.exists(arg):
+			print ("File/folder not found: {}".format(arg))
+
+		if _pth.isdir(arg):
+			# assume a root shaders folder
+			for file_path in list_files_gen(arg):
+				yield file_path
+			continue
+
+		# should be an existing file
+		if _pth.splitext(arg)[-1].lower() not in _extensions:
+			print ("Unsupported file type, skipped: {}".format(repr(arg)))
+			continue
+		yield arg
 
 
 if __name__ == '__main__':
