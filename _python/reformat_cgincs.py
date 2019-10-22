@@ -140,9 +140,21 @@ _re_equal_post = _re.compile('=\s{2,}')
 
 # endregion
 
+# TODO:
+_final_fixes = {
+	k.lower(): v for k, v in {
+		# a list of per-file full-line replacements with some manual tweaks
+		# to clean-up after auto-replacements:
+		'FileName.ext': (
+			('source string', 'replacement string'),
+		),
+	}.iteritems()
+}  # type: _t.Dict[_str_h, _t.Tuple[_t.Tuple[_str_h, _str_h], ...]]
+
 
 def reformat_line(
-	file_line=''  # type: _str_h
+	file_line='',  # type: _str_h
+	filename_lower=''  # TODO
 ):
 	"""
 	The main function performing re-formatting of a single line.
@@ -263,13 +275,17 @@ def reformat_file(file_path=''):
 			"you need to manually re-work the script a bit."
 		)
 	# file_path = r'p:\0-Unity\builtin_shaders\CGIncludes\AutoLight.cginc'
+	file_nm_low = file_path.replace('\\', '/').split('/')[-1].lower()
+
+	def reformat_this_file_line(line=''):
+		return reformat_line(line, file_nm_low)
 
 	# DRL: the next function reads a file to a list of lines,
 	# automatically assuming it's encoding and using the `line_process_f` function
 	# to process each line. Re-implement it yourself:
 	lines, encoding, enc_sure = _fs.read_file_lines_best_enc(
 		file_path, strip_newline_char=True,
-		line_process_f=reformat_line,
+		line_process_f=reformat_this_file_line,
 		detect_limit=256*1024, detect_mode=_fs.DetectEncodingMode.FALLBACK_CHARDET
 	)
 
