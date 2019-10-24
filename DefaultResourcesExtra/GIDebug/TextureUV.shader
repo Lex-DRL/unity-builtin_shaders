@@ -25,7 +25,6 @@ Shader "Hidden/GIDebug/TextureUV" {
 			half4 _Decode_HDR;
 			float _ConvertToLinearSpace;
 			float _StaticUV1;
-			float _Exposure;
 
 			v2f_surf vert_surf (appdata_full v)
 			{
@@ -53,7 +52,7 @@ Shader "Hidden/GIDebug/TextureUV" {
 				if (_ConvertToLinearSpace)
 					result = LinearToGammaSpace (result);
 
-				return float4 (result * exp2(_Exposure), 1);
+				return float4 (result, 1);
 			}
 			ENDCG
 		}

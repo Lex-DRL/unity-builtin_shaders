@@ -32,7 +32,7 @@ Shader "Hidden/Internal-MotionVectors"
 		struct MotionVertexInput
 		{
 			float4 vertex : POSITION;
-			float3 oldPos : TEXCOORD4;
+			float3 oldPos : NORMAL;
 			UNITY_VERTEX_INPUT_INSTANCE_ID
 		};
 

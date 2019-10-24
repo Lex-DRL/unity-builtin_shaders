@@ -75,11 +75,9 @@ Shader "UI/DefaultETC1"
 				float4 worldPosition : TEXCOORD1;
 			};
 
-			sampler2D _MainTex;
 			fixed4 _Color;
 			fixed4 _TextureSampleAdd;
 			float4 _ClipRect;
-			float4 _MainTex_ST;
 
 			v2f vert(appdata_t IN)
 			{
@@ -87,7 +85,7 @@ Shader "UI/DefaultETC1"
 				OUT.worldPosition = IN.vertex;
 				OUT.vertex = UnityObjectToClipPos(OUT.worldPosition);
 
-				OUT.texcoord = TRANSFORM_TEX(IN.texcoord, _MainTex);
+				OUT.texcoord = IN.texcoord;
 
 				#ifdef UNITY_HALF_TEXEL_OFFSET
 				OUT.vertex.xy += (_ScreenParams.zw-1.0) * float2(-1,1) * OUT.vertex.w;
@@ -97,6 +95,7 @@ Shader "UI/DefaultETC1"
 				return OUT;
 			}
 
+			sampler2D _MainTex;
 			sampler2D _AlphaTex;
 
 			fixed4 frag(v2f IN) : SV_Target

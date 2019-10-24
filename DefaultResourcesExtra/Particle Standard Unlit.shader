@@ -78,63 +78,11 @@ Shader "Particles/Standard Unlit"
 				#pragma shader_feature _ _COLOROVERLAY_ON _COLORCOLOR_ON _COLORADDSUBDIFF_ON
 				#pragma shader_feature _REQUIRE_UV2
 				#pragma multi_compile_shadowcaster
-				#pragma multi_compile_instancing
-				#pragma instancing_options procedural:vertInstancingSetup
 
 				#pragma vertex vertParticleShadowCaster
 				#pragma fragment fragParticleShadowCaster
 
 				#include "UnityStandardParticleShadow.cginc"
-				ENDCG
-			}
-
-			Pass
-			{
-				Name "SceneSelectionPass"
-				Tags { "LightMode" = "SceneSelectionPass" }
-
-				BlendOp Add
-				Blend One Zero
-				ZWrite On
-				Cull Off
-
-				CGPROGRAM
-				#pragma target 2.5
-
-				#pragma shader_feature _ _ALPHATEST_ON
-				#pragma shader_feature _REQUIRE_UV2
-				#pragma multi_compile_instancing
-				#pragma instancing_options procedural:vertInstancingSetup
-
-				#pragma vertex vertEditorPass
-				#pragma fragment fragSceneHighlightPass
-
-				#include "UnityStandardParticleEditor.cginc"
-				ENDCG
-			}
-
-			Pass
-			{
-				Name "ScenePickingPass"
-				Tags{ "LightMode" = "Picking" }
-
-				BlendOp Add
-				Blend One Zero
-				ZWrite On
-				Cull Off
-
-				CGPROGRAM
-				#pragma target 2.5
-
-				#pragma shader_feature _ _ALPHATEST_ON
-				#pragma shader_feature _REQUIRE_UV2
-				#pragma multi_compile_instancing
-				#pragma instancing_options procedural:vertInstancingSetup
-
-				#pragma vertex vertEditorPass
-				#pragma fragment fragScenePickingPass
-
-				#include "UnityStandardParticleEditor.cginc"
 				ENDCG
 			}
 
@@ -157,8 +105,6 @@ Shader "Particles/Standard Unlit"
 
 				#pragma vertex vertParticleUnlit
 				#pragma fragment fragParticleUnlit
-				#pragma multi_compile_instancing
-				#pragma instancing_options procedural:vertInstancingSetup
 
 				#include "UnityStandardParticles.cginc"
 				ENDCG

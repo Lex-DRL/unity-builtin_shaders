@@ -1,6 +1,6 @@
 // Unity built-in shader source. Copyright (c) 2016 Unity Technologies. MIT license (see license.txt)
 
-Shader "Legacy Shaders/Particles/VertexLit Blended" {
+Shader "Particles/VertexLit Blended" {
 Properties {
 	_EmisColor ("Emissive Color", Color) = (.2,.2,.2,0)
 	_MainTex ("Particle Texture", 2D) = "white" {}

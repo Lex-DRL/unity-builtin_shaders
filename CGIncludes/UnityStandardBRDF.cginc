@@ -151,12 +151,7 @@ inline float SmithJointGGXVisibilityTerm (float NdotL, float NdotV, float roughn
 	float lambdaV = NdotL * (NdotV * (1 - a) + a);
 	float lambdaL = NdotV * (NdotL * (1 - a) + a);
 
-#if defined(SHADER_API_SWITCH)
-	return 0.5f / (lambdaV + lambdaL + 1e-4f); // work-around against hlslcc rounding error
-#else
 	return 0.5f / (lambdaV + lambdaL + 1e-5f);
-#endif
-
 #endif
 }
 
@@ -414,7 +409,7 @@ half3 BRDF3_Direct(half3 diffColor, half3 specColor, half rlPow4, half smoothnes
 {
 	half LUT_RANGE = 16.0; // must match range in NHxRoughness() function in GeneratedTextures.cpp
 	// Lookup texture to save instructions
-	half specular = tex2D(unity_NHxRoughness, half2(rlPow4, SmoothnessToPerceptualRoughness(smoothness))).r * LUT_RANGE;
+	half specular = tex2D(unity_NHxRoughness, half2(rlPow4, SmoothnessToPerceptualRoughness(smoothness))).UNITY_ATTEN_CHANNEL * LUT_RANGE;
 #if defined(_SPECULARHIGHLIGHTS_OFF)
 	specular = 0.0;
 #endif

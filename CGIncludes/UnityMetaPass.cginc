@@ -24,23 +24,14 @@ struct UnityMetaInput
 	half3 Albedo;
 	half3 Emission;
 	half3 SpecularColor;
-#ifdef EDITOR_VISUALIZATION
-	float2 VizUV;
-	float4 LightCoord;
-#endif
 };
 
-#ifdef EDITOR_VISUALIZATION
+#if defined(EDITOR_VISUALIZATION)
 
 //Visualization defines
 // Should be kept in sync with the EditorVisualizationMode enum in EditorCameraDrawing.cpp
-#define EDITORVIZ_PBR_VALIDATION_ALBEDO         0
-#define EDITORVIZ_PBR_VALIDATION_METALSPECULAR 1
-#define EDITORVIZ_TEXTURE                       2
-#define EDITORVIZ_SHOWLIGHTMASK                 3
-// Old names...
-#define PBR_VALIDATION_ALBEDO EDITORVIZ_PBR_VALIDATION_ALBEDO
-#define PBR_VALIDATION_METALSPECULAR EDITORVIZ_PBR_VALIDATION_METALSPECULAR
+#define PBR_VALIDATION_ALBEDO 0
+#define PBR_VALIDATION_METALSPECULAR 1
 
 uniform int _CheckPureMetal = 0;// flag to check only full metal, not partial metal, known because it has metallic features and pure black albedo
 uniform int _CheckAlbedo = 0; // if 0, pass through untouched color
@@ -49,20 +40,6 @@ uniform half _AlbedoMinLuminance = 0.0;
 uniform half _AlbedoMaxLuminance = 1.0;
 uniform half _AlbedoHueTolerance = 0.1;
 uniform half _AlbedoSaturationTolerance = 0.1;
-
-uniform sampler2D unity_EditorViz_Texture;
-uniform half4 unity_EditorViz_Texture_ST;
-uniform int unity_EditorViz_UVIndex;
-uniform half4 unity_EditorViz_Decode_HDR;
-uniform bool unity_EditorViz_ConvertToLinearSpace;
-uniform half4 unity_EditorViz_ColorMul;
-uniform half4 unity_EditorViz_ColorAdd;
-uniform sampler2D unity_EditorViz_LightTexture;
-uniform sampler2D unity_EditorViz_LightTextureB;
-#define unity_EditorViz_ChannelSelect unity_EditorViz_ColorMul
-#define unity_EditorViz_Color         unity_EditorViz_ColorAdd
-#define unity_EditorViz_LightType     unity_EditorViz_UVIndex
-uniform float4x4 unity_EditorViz_WorldToLight;
 
 uniform half4 unity_MaterialValidateLowColor = half4(1.0f, 0.0f, 0.0f, 0.0f);
 uniform half4 unity_MaterialValidateHighColor = half4(0.0f, 0.0f, 1.0f, 0.0f);
@@ -131,6 +108,8 @@ half3 UnityMeta_RGBToHSV(half3 rgbColor)
 	else
 		return UnityMeta_RGBToHSVHelper(0.0, rgbColor.r, rgbColor.g, rgbColor.b);
 }
+
+
 
 // Pass 0 - Albedo
 half4 UnityMeta_pbrAlbedo(UnityMetaInput IN)
@@ -245,21 +224,10 @@ half4 UnityMeta_pbrMetalspec(UnityMetaInput IN)
 	return outColor;
 }
 
-#endif // EDITOR_VISUALIZATION
+#endif
 
-float2 UnityMetaVizUV(int uvIndex, float2 uv0, float2 uv1, float2 uv2, float4 st)
+float4 UnityMetaVertexPosition (float4 vertex, float2 uv1, float2 uv2, float4 lightmapST, float4 dynlightmapST)
 {
-	if (uvIndex == 0)
-		return uv0 * st.xy + st.zw;
-	else if (uvIndex == 1)
-		return uv1 * st.xy + st.zw;
-	else
-		return uv2 * st.xy + st.zw;
-}
-
-float4 UnityMetaVertexPosition(float4 vertex, float2 uv1, float2 uv2, float4 lightmapST, float4 dynlightmapST)
-{
-#if !defined(EDITOR_VISUALIZATION)
 	if (unity_MetaVertexControl.x)
 	{
 		vertex.xy = uv1 * lightmapST.xy + lightmapST.zw;
@@ -274,10 +242,7 @@ float4 UnityMetaVertexPosition(float4 vertex, float2 uv1, float2 uv2, float4 lig
 		// so use it in a very dummy way
 		vertex.z = vertex.z > 0 ? 1.0e-4f : 0.0f;
 	}
-	return mul(UNITY_MATRIX_VP, float4(vertex.xyz, 1.0));
-#else
 	return UnityObjectToClipPos(vertex);
-#endif
 }
 
 float unity_OneOverOutputBoost;
@@ -287,7 +252,7 @@ float unity_UseLinearSpace;
 half4 UnityMetaFragment (UnityMetaInput IN)
 {
 	half4 res = 0;
-#if !defined(EDITOR_VISUALIZATION)
+	#if !defined(EDITOR_VISUALIZATION)
 	if (unity_MetaFragmentControl.x)
 	{
 		res = half4(IN.Albedo,1);
@@ -308,56 +273,16 @@ half4 UnityMetaFragment (UnityMetaInput IN)
 
 		res = half4(emission, 1.0);
 	}
-#else
-	if ( unity_VisualizationMode == EDITORVIZ_PBR_VALIDATION_ALBEDO)
+	#else
+	if ( unity_VisualizationMode == PBR_VALIDATION_ALBEDO )
 	{
 		res = UnityMeta_pbrAlbedo(IN);
 	}
-	else if (unity_VisualizationMode == EDITORVIZ_PBR_VALIDATION_METALSPECULAR)
+	else if (unity_VisualizationMode == PBR_VALIDATION_METALSPECULAR)
 	{
 		res = UnityMeta_pbrMetalspec(IN);
 	}
-	else if (unity_VisualizationMode == EDITORVIZ_TEXTURE)
-	{
-		res = tex2D(unity_EditorViz_Texture, IN.VizUV);
-
-		if (unity_EditorViz_Decode_HDR.x > 0)
-			res = half4(DecodeHDR(res, unity_EditorViz_Decode_HDR), 1);
-
-		if (unity_EditorViz_ConvertToLinearSpace)
-			res.rgb = LinearToGammaSpace(res.rgb);
-
-		res *= unity_EditorViz_ColorMul;
-		res += unity_EditorViz_ColorAdd;
-	}
-	else if (unity_VisualizationMode == EDITORVIZ_SHOWLIGHTMASK)
-	{
-		float result = dot(unity_EditorViz_ChannelSelect, tex2D(unity_EditorViz_Texture, IN.VizUV).rgba);
-		if (result == 0)
-			discard;
-
-		float atten = 1;
-		if (unity_EditorViz_LightType == 0)
-		{
-			// directional: no attenuation
-		}
-		else if (unity_EditorViz_LightType == 1)
-		{
-			// point
-			atten = tex2D(unity_EditorViz_LightTexture, dot(IN.LightCoord.xyz, IN.LightCoord.xyz).xx).r;
-		}
-		else if (unity_EditorViz_LightType == 2)
-		{
-			// spot
-			atten = tex2D(unity_EditorViz_LightTexture, dot(IN.LightCoord.xyz, IN.LightCoord.xyz).xx).r;
-			float cookie = tex2D(unity_EditorViz_LightTextureB, IN.LightCoord.xy / IN.LightCoord.w + 0.5).w;
-			atten *= (IN.LightCoord.z > 0) * cookie;
-		}
-		clip(atten - 0.001f);
-
-		res = float4(unity_EditorViz_Color.xyz * result, unity_EditorViz_Color.w);
-	}
-#endif // EDITOR_VISUALIZATION
+	#endif
 	return res;
 }
 

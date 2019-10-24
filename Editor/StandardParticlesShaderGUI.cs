@@ -38,55 +38,54 @@ namespace UnityEditor
 
 		private static class Styles
 		{
-			public static GUIContent albedoText = EditorGUIUtility.TrTextContent("Albedo", "Albedo (RGB) and Transparency (A).");
-			public static GUIContent alphaCutoffText = EditorGUIUtility.TrTextContent("Alpha Cutoff", "Threshold for alpha cutoff.");
-			public static GUIContent metallicMapText = EditorGUIUtility.TrTextContent("Metallic", "Metallic (R) and Smoothness (A).");
-			public static GUIContent smoothnessText = EditorGUIUtility.TrTextContent("Smoothness", "Smoothness value.");
-			public static GUIContent smoothnessScaleText = EditorGUIUtility.TrTextContent("Smoothness", "Smoothness scale factor.");
-			public static GUIContent normalMapText = EditorGUIUtility.TrTextContent("Normal Map", "Normal Map.");
-			public static GUIContent emissionText = EditorGUIUtility.TrTextContent("Color", "Emission (RGB).");
+			public static GUIContent albedoText = new GUIContent("Albedo", "Albedo (RGB) and Transparency (A).");
+			public static GUIContent alphaCutoffText = new GUIContent("Alpha Cutoff", "Threshold for alpha cutoff.");
+			public static GUIContent metallicMapText = new GUIContent("Metallic", "Metallic (R) and Smoothness (A).");
+			public static GUIContent smoothnessText = new GUIContent("Smoothness", "Smoothness value.");
+			public static GUIContent smoothnessScaleText = new GUIContent("Smoothness", "Smoothness scale factor.");
+			public static GUIContent normalMapText = new GUIContent("Normal Map", "Normal Map.");
+			public static GUIContent emissionText = new GUIContent("Color", "Emission (RGB).");
 
-			public static GUIContent renderingMode = EditorGUIUtility.TrTextContent("Rendering Mode", "Determines the transparency and blending method for drawing the object to the screen.");
+			public static GUIContent renderingMode = new GUIContent("Rendering Mode", "Determines the transparency and blending method for drawing the object to the screen.");
 			public static GUIContent[] blendNames = Array.ConvertAll(Enum.GetNames(typeof(BlendMode)), item => new GUIContent(item));
 
-			public static GUIContent colorMode = EditorGUIUtility.TrTextContent("Color Mode", "Determines the blending mode between the particle color and the texture albedo.");
+			public static GUIContent colorMode = new GUIContent("Color Mode", "Determines the blending mode between the particle color and the texture albedo.");
 			public static GUIContent[] colorNames = Array.ConvertAll(Enum.GetNames(typeof(ColorMode)), item => new GUIContent(item));
 
-			public static GUIContent flipbookBlending = EditorGUIUtility.TrTextContent("Flip-Book Frame Blending", "Enables blending between the frames of animated texture sheets.");
-			public static GUIContent twoSidedEnabled = EditorGUIUtility.TrTextContent("Two Sided", "Render both front and back faces of the particle geometry.");
+			public static GUIContent flipbookMode = new GUIContent("Flip-Book Mode", "Determines the blending mode used for animated texture sheets.");
+			public static GUIContent[] flipbookNames = Array.ConvertAll(Enum.GetNames(typeof(FlipbookMode)), item => new GUIContent(item));
 
-			public static GUIContent distortionEnabled = EditorGUIUtility.TrTextContent("Distortion", "Use a grab pass and normal map to simulate refraction.");
-			public static GUIContent distortionStrengthText = EditorGUIUtility.TrTextContent("Strength", "Distortion Strength.");
-			public static GUIContent distortionBlendText = EditorGUIUtility.TrTextContent("Blend", "Weighting between albedo and grab pass.");
+			public static GUIContent twoSidedEnabled = new GUIContent("Two Sided", "Render both front and back faces of the particle geometry.");
 
-			public static GUIContent softParticlesEnabled = EditorGUIUtility.TrTextContent("Soft Particles", "Fade out particle geometry when it gets close to the surface of objects written into the depth buffer.");
-			public static GUIContent softParticlesNearFadeDistanceText = EditorGUIUtility.TrTextContent("Near fade", "Soft Particles near fade distance.");
-			public static GUIContent softParticlesFarFadeDistanceText = EditorGUIUtility.TrTextContent("Far fade", "Soft Particles far fade distance.");
+			public static GUIContent distortionEnabled = new GUIContent("Enable Distortion", "Use a grab pass and normal map to simulate refraction.");
+			public static GUIContent distortionStrengthText = new GUIContent("Strength", "Distortion Strength.");
+			public static GUIContent distortionBlendText = new GUIContent("Blend", "Weighting between albedo and grab pass.");
 
-			public static GUIContent cameraFadingEnabled = EditorGUIUtility.TrTextContent("Camera Fading", "Fade out particle geometry when it gets close to the camera.");
-			public static GUIContent cameraNearFadeDistanceText = EditorGUIUtility.TrTextContent("Near fade", "Camera near fade distance.");
-			public static GUIContent cameraFarFadeDistanceText = EditorGUIUtility.TrTextContent("Far fade", "Camera far fade distance.");
+			public static GUIContent softParticlesEnabled = new GUIContent("Enable Soft Particles", "Fade out particle geometry when it gets close to the surface of objects written into the depth buffer.");
+			public static GUIContent softParticlesNearFadeDistanceText = new GUIContent("Near fade", "Soft Particles near fade distance.");
+			public static GUIContent softParticlesFarFadeDistanceText = new GUIContent("Far fade", "Soft Particles far fade distance.");
 
-			public static GUIContent emissionEnabled = EditorGUIUtility.TrTextContent("Emission");
+			public static GUIContent cameraFadingEnabled = new GUIContent("Enable Camera Fading", "Fade out particle geometry when it gets close to the camera.");
+			public static GUIContent cameraNearFadeDistanceText = new GUIContent("Near fade", "Camera near fade distance.");
+			public static GUIContent cameraFarFadeDistanceText = new GUIContent("Far fade", "Camera far fade distance.");
 
-			public static GUIContent blendingOptionsText = EditorGUIUtility.TrTextContent("Blending Options");
-			public static GUIContent mainOptionsText = EditorGUIUtility.TrTextContent("Main Options");
-			public static GUIContent mapsOptionsText = EditorGUIUtility.TrTextContent("Maps");
-			public static GUIContent requiredVertexStreamsText = EditorGUIUtility.TrTextContent("Required Vertex Streams");
+			public static GUIContent emissionEnabled = new GUIContent("Emission");
 
-			public static GUIContent streamPositionText = EditorGUIUtility.TrTextContent("Position (POSITION.xyz)");
-			public static GUIContent streamNormalText = EditorGUIUtility.TrTextContent("Normal (NORMAL.xyz)");
-			public static GUIContent streamColorText = EditorGUIUtility.TrTextContent("Color (COLOR.xyzw)");
-			public static GUIContent streamColorInstancedText = EditorGUIUtility.TrTextContent("Color (INSTANCED0.xyzw)");
-			public static GUIContent streamUVText = EditorGUIUtility.TrTextContent("UV (TEXCOORD0.xy)");
-			public static GUIContent streamUV2Text = EditorGUIUtility.TrTextContent("UV2 (TEXCOORD0.zw)");
-			public static GUIContent streamAnimBlendText = EditorGUIUtility.TrTextContent("AnimBlend (TEXCOORD1.x)");
-			public static GUIContent streamAnimFrameText = EditorGUIUtility.TrTextContent("AnimFrame (INSTANCED1.x)");
-			public static GUIContent streamTangentText = EditorGUIUtility.TrTextContent("Tangent (TANGENT.xyzw)");
+			public static string blendingOptionsText = "Blending Options";
+			public static string mainOptionsText = "Main Options";
+			public static string mapsOptionsText = "Maps";
+			public static string advancedOptionsText = "Advanced Options";
+			public static string requiredVertexStreamsText = "Required Vertex Streams";
 
-			public static GUIContent streamApplyToAllSystemsText = EditorGUIUtility.TrTextContent("Apply to Systems", "Apply the vertex stream layout to all Particle Systems using this material");
+			public static string streamPositionText = "Position (POSITION.xyz)";
+			public static string streamNormalText = "Normal (NORMAL.xyz)";
+			public static string streamColorText = "Color (COLOR.xyzw)";
+			public static string streamUVText = "UV (TEXCOORD0.xy)";
+			public static string streamUV2Text = "UV2 (TEXCOORD0.zw)";
+			public static string streamAnimBlendText = "AnimBlend (TEXCOORD1.x)";
+			public static string streamTangentText = "Tangent (TANGENT.xyzw)";
 
-			public static string undoApplyCustomVertexStreams = L10n.Tr("Apply custom vertex streams from material");
+			public static GUIContent streamApplyToAllSystemsText = new GUIContent("Apply to Systems", "Apply the vertex stream layout to all Particle Systems using this material");
 		}
 
 		MaterialProperty blendMode = null;
@@ -115,7 +114,7 @@ namespace UnityEditor
 		MaterialProperty cameraFarFadeDistance = null;
 
 		MaterialEditor m_MaterialEditor;
-
+		ColorPickerHDRConfig m_ColorPickerHDRConfig = new ColorPickerHDRConfig(0f, 99f, 1 / 99f, 3f);
 		List<ParticleSystemRenderer> m_RenderersUsingThisMaterial = new List<ParticleSystemRenderer>();
 
 		bool m_FirstTimeApply = true;
@@ -183,7 +182,7 @@ namespace UnityEditor
 				EditorGUILayout.Space();
 				GUILayout.Label(Styles.mainOptionsText, EditorStyles.boldLabel);
 
-				FlipbookBlendingPopup();
+				FlipbookModePopup();
 				TwoSidedPopup(material);
 				FadingPopup(material);
 				DistortionPopup(material);
@@ -209,6 +208,11 @@ namespace UnityEditor
 				foreach (var obj in blendMode.targets)
 					MaterialChanged((Material)obj);
 			}
+
+			EditorGUILayout.Space();
+
+			GUILayout.Label(Styles.advancedOptionsText, EditorStyles.boldLabel);
+			m_MaterialEditor.RenderQueueField();
 
 			EditorGUILayout.Space();
 
@@ -295,17 +299,17 @@ namespace UnityEditor
 			}
 		}
 
-		void FlipbookBlendingPopup()
+		void FlipbookModePopup()
 		{
 			EditorGUI.showMixedValue = flipbookMode.hasMixedValue;
-			var enabled = (flipbookMode.floatValue == (float)FlipbookMode.Blended);
+			var mode = (FlipbookMode)flipbookMode.floatValue;
 
 			EditorGUI.BeginChangeCheck();
-			enabled = EditorGUILayout.Toggle(Styles.flipbookBlending, enabled);
+			mode = (FlipbookMode)EditorGUILayout.Popup(Styles.flipbookMode, (int)mode, Styles.flipbookNames);
 			if (EditorGUI.EndChangeCheck())
 			{
 				m_MaterialEditor.RegisterPropertyChangeUndo("Flip-Book Mode");
-				flipbookMode.floatValue = enabled ? (float)FlipbookMode.Blended : (float)FlipbookMode.Simple;
+				flipbookMode.floatValue = (float)mode;
 			}
 
 			EditorGUI.showMixedValue = false;
@@ -409,7 +413,7 @@ namespace UnityEditor
 
 		void DoAlbedoArea(Material material)
 		{
-			m_MaterialEditor.TexturePropertyWithHDRColor(Styles.albedoText, albedoMap, albedoColor, true);
+			m_MaterialEditor.TexturePropertyWithHDRColor(Styles.albedoText, albedoMap, albedoColor, m_ColorPickerHDRConfig, true);
 			if (((BlendMode)material.GetFloat("_Mode") == BlendMode.Cutout))
 			{
 				m_MaterialEditor.ShaderProperty(alphaCutoff, Styles.alphaCutoffText, MaterialEditor.kMiniTextureFieldLabelIndentLevel);
@@ -435,7 +439,7 @@ namespace UnityEditor
 				bool hadEmissionTexture = emissionMap.textureValue != null;
 
 				// Texture and HDR color controls
-				m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, emissionMap, emissionColorForRendering, false);
+				m_MaterialEditor.TexturePropertyWithHDRColor(Styles.emissionText, emissionMap, emissionColorForRendering, m_ColorPickerHDRConfig, false);
 
 				// If texture was assigned and color was black set color to white
 				float brightness = emissionColorForRendering.colorValue.maxColorComponent;
@@ -477,35 +481,24 @@ namespace UnityEditor
 			// Display list of streams required to make this shader work
 			bool useLighting = (material.GetFloat("_LightingEnabled") > 0.0f);
 			bool useFlipbookBlending = (material.GetFloat("_FlipbookMode") > 0.0f);
-			bool useTangents = useLighting && material.GetTexture("_BumpMap");
-
-			bool useGPUInstancing = ShaderUtil.HasProceduralInstancing(material.shader);
-			if (useGPUInstancing && m_RenderersUsingThisMaterial.Count > 0)
-			{
-				if (!m_RenderersUsingThisMaterial[0].enableGPUInstancing)
-					useGPUInstancing = false;
-			}
+			bool useTangents = material.GetTexture("_BumpMap") && useLighting;
 
 			GUILayout.Label(Styles.streamPositionText, EditorStyles.label);
 
 			if (useLighting)
 				GUILayout.Label(Styles.streamNormalText, EditorStyles.label);
 
-			GUILayout.Label(useGPUInstancing ? Styles.streamColorInstancedText : Styles.streamColorText, EditorStyles.label);
+			GUILayout.Label(Styles.streamColorText, EditorStyles.label);
 			GUILayout.Label(Styles.streamUVText, EditorStyles.label);
 
-			if (useTangents)
-				GUILayout.Label(Styles.streamTangentText, EditorStyles.label);
-
-			if (useGPUInstancing)
-			{
-				GUILayout.Label(Styles.streamAnimFrameText, EditorStyles.label);
-			}
-			else if (useFlipbookBlending && !useGPUInstancing)
+			if (useFlipbookBlending)
 			{
 				GUILayout.Label(Styles.streamUV2Text, EditorStyles.label);
 				GUILayout.Label(Styles.streamAnimBlendText, EditorStyles.label);
 			}
+
+			if (useTangents)
+				GUILayout.Label(Styles.streamTangentText, EditorStyles.label);
 
 			// Build the list of expected vertex streams
 			List<ParticleSystemVertexStream> streams = new List<ParticleSystemVertexStream>();
@@ -517,33 +510,23 @@ namespace UnityEditor
 			streams.Add(ParticleSystemVertexStream.Color);
 			streams.Add(ParticleSystemVertexStream.UV);
 
-			if (useTangents)
-				streams.Add(ParticleSystemVertexStream.Tangent);
-
-			List<ParticleSystemVertexStream> instancedStreams = new List<ParticleSystemVertexStream>(streams);
-
-			if (useGPUInstancing)
-			{
-				instancedStreams.Add(ParticleSystemVertexStream.AnimFrame);
-			}
 			if (useFlipbookBlending)
 			{
 				streams.Add(ParticleSystemVertexStream.UV2);
 				streams.Add(ParticleSystemVertexStream.AnimBlend);
 			}
 
+			if (useTangents)
+				streams.Add(ParticleSystemVertexStream.Tangent);
+
 			// Set the streams on all systems using this material
 			if (GUILayout.Button(Styles.streamApplyToAllSystemsText, EditorStyles.miniButton, GUILayout.ExpandWidth(false)))
 			{
-				Undo.RecordObjects(m_RenderersUsingThisMaterial.Where(r => r != null).ToArray(), Styles.undoApplyCustomVertexStreams);
-
 				foreach (ParticleSystemRenderer renderer in m_RenderersUsingThisMaterial)
 				{
 					if (renderer != null)
 					{
-						if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
-							renderer.SetActiveVertexStreams(instancedStreams);
-						else
+						if (renderer != null)
 							renderer.SetActiveVertexStreams(streams);
 					}
 				}
@@ -558,11 +541,7 @@ namespace UnityEditor
 				{
 					renderer.GetActiveVertexStreams(rendererStreams);
 
-					bool streamsValid;
-					if (useGPUInstancing && renderer.renderMode == ParticleSystemRenderMode.Mesh && renderer.supportsMeshInstancing)
-						streamsValid = rendererStreams.SequenceEqual(instancedStreams);
-					else
-						streamsValid = rendererStreams.SequenceEqual(streams);
+					bool streamsValid = rendererStreams.SequenceEqual(streams);
 
 					if (!streamsValid)
 						Warnings += " " + renderer.name + "\n";
@@ -717,9 +696,9 @@ namespace UnityEditor
 
 			// Note: keywords must be based on Material value not on MaterialProperty due to multi-edit & material animation
 			// (MaterialProperty value might come from renderer material property block)
-			bool useDistortion = !hasZWrite && (material.GetFloat("_DistortionEnabled") > 0.0f);
-			SetKeyword(material, "_NORMALMAP", (useLighting || useDistortion) && material.GetTexture("_BumpMap"));
-			SetKeyword(material, "_METALLICGLOSSMAP", useLighting && material.GetTexture("_MetallicGlossMap"));
+			bool useDistortion = (material.GetFloat("_DistortionEnabled") > 0.0f) && !hasZWrite;
+			SetKeyword(material, "_NORMALMAP", material.GetTexture("_BumpMap") && (useLighting || useDistortion));
+			SetKeyword(material, "_METALLICGLOSSMAP", (material.GetTexture("_MetallicGlossMap") != null) && useLighting);
 
 			material.globalIlluminationFlags = MaterialGlobalIlluminationFlags.None;
 			SetKeyword(material, "_EMISSION", material.GetFloat("_EmissionEnabled") > 0.0f);

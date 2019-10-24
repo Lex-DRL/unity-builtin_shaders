@@ -46,11 +46,6 @@ struct v2f
 	UNITY_VERTEX_OUTPUT_STEREO
 };
 
-inline float4 UnityFlipSprite(in float3 pos, in fixed2 flip)
-{
-	return float4(pos.xy * flip, pos.z, 1.0);
-}
-
 v2f SpriteVert(appdata_t IN)
 {
 	v2f OUT;
@@ -58,8 +53,11 @@ v2f SpriteVert(appdata_t IN)
 	UNITY_SETUP_INSTANCE_ID (IN);
 	UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 
-	OUT.vertex = UnityFlipSprite(IN.vertex, _Flip);
-	OUT.vertex = UnityObjectToClipPos(OUT.vertex);
+#ifdef UNITY_INSTANCING_ENABLED
+	IN.vertex.xy *= _Flip;
+#endif
+
+	OUT.vertex = UnityObjectToClipPos(IN.vertex);
 	OUT.texcoord = IN.texcoord;
 	OUT.color = IN.color * _Color * _RendererColor;
 
