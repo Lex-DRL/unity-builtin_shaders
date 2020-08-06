@@ -1,4 +1,4 @@
-﻿Shader "DRL/DefaultClean-Opaque" {
+﻿Shader "DRL/DefaultClean-Transparent" {
 	Properties {
 		_MainTex ("Texture", 2D) = "white" {}
 		
