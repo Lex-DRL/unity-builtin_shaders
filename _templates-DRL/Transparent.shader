@@ -56,11 +56,13 @@
 	Category {
 		Tags {
 			// "PreviewType"="Plane"
-			"RenderType"="Opaque"
+			"Queue"="Transparent"
+			"RenderType"="Transparent"
 			"IgnoreProjector"="True"
 			"ForceNoShadowCasting"="True"
 		}
 		
+		Blend One OneMinusSrcAlpha
 		ColorMask [_ColorMask]
 		Cull [_Cull]
 		ZTest [_zTest]
