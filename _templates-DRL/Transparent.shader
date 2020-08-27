@@ -20,9 +20,9 @@
 		#pragma vertex vert
 		#pragma fragment frag
 		
-		// #pragma multi_compile _ DRL_AZAZA
-		// #pragma shader_feature _ DRL_KW_1 DRL_KW_2
-		// #pragma shader_feature _ DRL_KW_3
+		// #pragma multi_compile_local _ DRL_AZAZA
+		// #pragma shader_feature_local _ DRL_KW_1 DRL_KW_2
+		// #pragma shader_feature_local _ DRL_KW_3
 		
 		#include "UnityCG.cginc"
 		
