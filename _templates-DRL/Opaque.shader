@@ -10,7 +10,7 @@
 		// [ToggleLeft(DRL_KW_3)] Checkbox_mode ("Toggle parm", Int) = 1
 		
 		[Space] [Header(Shader Blending)]
-		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Int) = 0
+		[Enum(UnityEngine.Rendering.CullMode)] _Cull ("Cull", Int) = 2
 		[Enum(None,0,Alpha,1,RGB,14,RGBA,15)] _ColorMask ("out Color Mask", Float) = 15
 		[Enum(Off, 0, On, 1)] _zWrite ("Z-Write", Int) = 1
 		[Enum(UnityEngine.Rendering.CompareFunction)] _zTest ("Z-Test", Int) = 2
