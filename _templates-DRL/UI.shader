@@ -62,22 +62,24 @@ Shader "DRL/UI-Default"
 			float4 clipPos = UnityObjectToClipPos(v.vertex);
 			// float3 worldPosition = v.vertex;
 			o.vertex = clipPos;
+			o.vColor = v.color * _Color;
 			o.mainUVs = TRANSFORM_TEX(v.tex0, _MainTex);
 			
-			half2 pixelSize = clipPos.w;
-			pixelSize /= abs(
-				mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy)
-			);
+			#ifdef UNITY_UI_CLIP_RECT
+				half2 pixelSize = clipPos.w;
+				pixelSize /= abs(
+					mul((float2x2)UNITY_MATRIX_P, _ScreenParams.xy)
+				);
+				
+				float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
+				// DRL: I've got no idea why this line was even there in the default UI shader:
+				// float2 maskUV = (v.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
+				o.mask = half4(
+					v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw,
+					0.25h / (0.25h * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy))
+				);
+			#endif
 			
-			float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
-			// DRL: I've got no idea why this line was even there in the default UI shader:
-			// float2 maskUV = (v.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
-			o.mask = half4(
-				v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw,
-				0.25h / (0.25h * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy))
-			);
-			
-			o.vColor = v.color * _Color;
 			return o;
 		}
 		
