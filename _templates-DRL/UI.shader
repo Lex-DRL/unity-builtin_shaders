@@ -62,7 +62,7 @@ Shader "DRL/UI-Default"
 			float4 clipPos = UnityObjectToClipPos(v.vertex);
 			// float3 worldPosition = v.vertex;
 			o.vertex = clipPos;
-			o.mainUVs = TRANSFORM_TEX(v.tex0.xy, _MainTex);
+			o.mainUVs = TRANSFORM_TEX(v.tex0, _MainTex);
 			
 			half2 pixelSize = clipPos.w;
 			pixelSize /= abs(
