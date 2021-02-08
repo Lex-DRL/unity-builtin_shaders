@@ -47,10 +47,12 @@ Shader "DRL/UI-Default"
 		half4 _MainTex_ST;
 		
 		fixed4 _Color;
-		float4 _ClipRect;
 		
-		half _UIMaskSoftnessX;
-		half _UIMaskSoftnessY;
+		#ifdef UNITY_UI_CLIP_RECT
+			float4 _ClipRect;
+			half _UIMaskSoftnessX;
+			half _UIMaskSoftnessY;
+		#endif
 		
 		v2f vert(appdata v)
 		{
