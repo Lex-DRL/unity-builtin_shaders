@@ -40,7 +40,9 @@ Shader "DRL/UI-Default"
 			float4 vertex : SV_POSITION;
 			fixed4 vColor : COLOR;
 			half2 mainUVs : TEXCOORD0;
-			half4 mask : TEXCOORD2;
+			#ifdef UNITY_UI_CLIP_RECT
+				half4 mask : TEXCOORD2;
+			#endif
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
 		
