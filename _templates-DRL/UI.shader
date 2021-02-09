@@ -21,11 +21,11 @@ Shader "DRL/UI-Default"
 		#pragma vertex vert
 		#pragma fragment frag
 		
-		#include "UnityCG.cginc"
-		#include "UnityUI.cginc"
-		
 		#pragma multi_compile_local _ UNITY_UI_CLIP_RECT
 		#pragma multi_compile_local _ UNITY_UI_ALPHACLIP
+		
+		#include "UnityCG.cginc"
+		#include "UnityUI.cginc"
 		
 		struct appdata
 		{
