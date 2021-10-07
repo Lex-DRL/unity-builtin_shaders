@@ -1,4 +1,5 @@
 // DRL: based on the default cleaned-up "UI/Default" shader.
+// last synced with: 2019.4.31f1
 
 Shader "DRL/UI-Default"
 {
@@ -37,11 +38,11 @@ Shader "DRL/UI-Default"
 		
 		struct v2f
 		{
-			float4 vertex : SV_POSITION;
+			float4 pos : SV_POSITION;
 			fixed4 vColor : COLOR;
 			half2 mainUVs : TEXCOORD0;
 			#ifdef UNITY_UI_CLIP_RECT
-				half4 mask : TEXCOORD2;
+				half4 mask : TEXCOORD1;
 			#endif
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
@@ -65,7 +66,21 @@ Shader "DRL/UI-Default"
 			
 			float4 clipPos = UnityObjectToClipPos(v.vertex);
 			// float3 worldPosition = v.vertex;
-			o.vertex = clipPos;
+			//
+			// DRL:
+			// Probably, it's ^ some leftover from ancient versions. Currently,
+			// worldPos isn't used anywhere.
+			// Moreover, v.vertex IS indeed worldpos... scaled to account for canvas scaling.
+			// I.e., if canvas is scaled by 2.0 to make all the icons twice is bigger
+			// and resolution is 4K, the mesh's top-right corner is ACTUALLY at (1920, 1080)
+			// but obj-to-world matrix scales it by x2.
+			// 
+			// So:
+			// * if you need to account for canvas scale, use raw v.vertex.
+			// * if you need the actual pixel-pos on screen, get the true worldPos
+			//   (apply unity_ObjectToWorld matrix).
+			
+			o.pos = clipPos;
 			o.vColor = v.color * _Color;
 			o.mainUVs = TRANSFORM_TEX(v.tex0, _MainTex);
 			
