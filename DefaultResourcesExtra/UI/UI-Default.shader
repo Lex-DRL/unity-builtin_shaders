@@ -42,7 +42,7 @@ Shader "UI/Default"
 		Lighting Off
 		ZWrite Off
 		ZTest [unity_GUIZTestMode]
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend One OneMinusSrcAlpha
 		ColorMask [_ColorMask]
 
 		Pass
@@ -73,7 +73,7 @@ Shader "UI/Default"
 				fixed4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-				half4 mask : TEXCOORD2;
+				float4 mask : TEXCOORD2;
 				UNITY_VERTEX_OUTPUT_STEREO
 			};
 
@@ -100,7 +100,7 @@ Shader "UI/Default"
 				float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
 				float2 maskUV = (v.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
 				OUT.texcoord = TRANSFORM_TEX(v.texcoord.xy, _MainTex);
-				OUT.mask = half4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
+				OUT.mask = float4(v.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
 
 				OUT.color = v.color * _Color;
 				return OUT;
@@ -108,6 +108,13 @@ Shader "UI/Default"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
+				//Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
+				//The incoming alpha could have numerical instability, which makes it very sensible to
+				//HDR color transparency blend, when it blends with the world's texture.
+				const half alphaPrecision = half(0xff);
+				const half invAlphaPrecision = half(1.0/alphaPrecision);
+				IN.color.a = round(IN.color.a * alphaPrecision)*invAlphaPrecision;
+
 				half4 color = IN.color * (tex2D(_MainTex, IN.texcoord) + _TextureSampleAdd);
 
 				#ifdef UNITY_UI_CLIP_RECT
@@ -118,6 +125,8 @@ Shader "UI/Default"
 				#ifdef UNITY_UI_ALPHACLIP
 				clip (color.a - 0.001);
 				#endif
+
+				color.rgb *= color.a;
 
 				return color;
 			}

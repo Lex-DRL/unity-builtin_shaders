@@ -223,7 +223,7 @@ inline float3 ObjSpaceLightDir( in float4 v )
 	#endif
 }
 
-// Computes world space view direction, from object space position
+// Computes world space view direction from object position in world space
 inline float3 UnityWorldSpaceViewDir( in float3 worldPos )
 {
 	return _WorldSpaceCameraPos.xyz - worldPos;
@@ -454,9 +454,9 @@ struct v2f_vertex_lit {
 	fixed4 spec : COLOR1;
 };
 
-inline fixed4 VertexLight( v2f_vertex_lit i, sampler2D mainTex )
+inline fixed4 VertexLight(v2f_vertex_lit i, sampler2D mainTex)
 {
-	fixed4 texcol = tex2D( mainTex, i.uv );
+	fixed4 texcol = tex2D(mainTex, i.uv);
 	fixed4 c;
 	c.xyz = ( texcol.xyz * i.diff.xyz + i.spec.xyz * texcol.a );
 	c.w = texcol.w * i.diff.w;
@@ -503,22 +503,33 @@ half4 UnityEncodeRGBM (half3 color, float maxRGBM)
 
 // Decodes HDR textures
 // handles dLDR, RGBM formats
-inline half3 DecodeHDR (half4 data, half4 decodeInstructions)
+inline half3 DecodeHDR(half4 data, half4 decodeInstructions, int colorspaceIsGamma)
 {
 	// Take into account texture alpha if decodeInstructions.w is true(the alpha value affects the RGB channels)
 	half alpha = decodeInstructions.w * (data.a - 1.0) + 1.0;
 
 	// If Linear mode is not supported we can skip exponent part
-	#if defined(UNITY_COLORSPACE_GAMMA)
+	if(colorspaceIsGamma)
 		return (decodeInstructions.x * alpha) * data.rgb;
+
+	#if defined(UNITY_USE_NATIVE_HDR)
+	return decodeInstructions.x * data.rgb; // Multiplier for future HDRI relative to absolute conversion.
 	#else
-		#if defined(UNITY_USE_NATIVE_HDR)
-			return decodeInstructions.x * data.rgb; // Multiplier for future HDRI relative to absolute conversion.
-		#else
-			return (decodeInstructions.x * pow(alpha, decodeInstructions.y)) * data.rgb;
-		#endif
+	return (decodeInstructions.x * pow(alpha, decodeInstructions.y)) * data.rgb;
 	#endif
 }
+
+// Decodes HDR textures
+// handles dLDR, RGBM formats
+inline half3 DecodeHDR (half4 data, half4 decodeInstructions)
+{
+	#if defined(UNITY_COLORSPACE_GAMMA)
+	return DecodeHDR(data, decodeInstructions, 1);
+	#else
+	return DecodeHDR(data, decodeInstructions, 0);
+	#endif
+}
+
 
 // Decodes HDR textures
 // handles dLDR, RGBM formats
@@ -578,7 +589,7 @@ inline half3 DecodeRealtimeLightmap( fixed4 color )
 #endif
 }
 
-inline half3 DecodeDirectionalLightmap (half3 color, fixed4 dirTex, half3 normalWorld)
+inline half3 DecodeDirectionalLightmap(half3 color, fixed4 dirTex, half3 normalWorld)
 {
 	// In directional (non-specular) mode Enlighten bakes dominant light direction
 	// in a way, that using it for half Lambert and then dividing by a "rebalancing coefficient"
@@ -684,6 +695,8 @@ inline fixed3 UnpackNormal(fixed4 packednormal)
 {
 #if defined(UNITY_NO_DXT5nm)
 	return packednormal.xyz * 2 - 1;
+#elif defined(UNITY_ASTC_NORMALMAP_ENCODING)
+	return UnpackNormalDXT5nm(packednormal);
 #else
 	return UnpackNormalmapRGorAG(packednormal);
 #endif
@@ -691,11 +704,14 @@ inline fixed3 UnpackNormal(fixed4 packednormal)
 
 fixed3 UnpackNormalWithScale(fixed4 packednormal, float scale)
 {
-#ifndef UNITY_NO_DXT5nm
+#if defined(UNITY_ASTC_NORMALMAP_ENCODING)
+	// (y, y, y, x), preferred for ASTC
+	packednormal.x = packednormal.w;
+#elif !defined(UNITY_NO_DXT5nm)
 	// Unpack normal as DXT5nm (1, y, 1, x) or BC5 (x, y, 0, 1)
 	// Note neutral texture like "bump" is (0, 0, 1, 1) to work with both plain RGB normal and DXT5nm/BC5
 	packednormal.x *= packednormal.w;
-#endif
+#endif // UNITY_NO_DXT5nm
 	fixed3 normal;
 	normal.xy = (packednormal.xy * 2 - 1) * scale;
 	normal.z = sqrt(1 - saturate(dot(normal.xy, normal.xy)));
@@ -799,6 +815,15 @@ v2f_img vert_img( appdata_img v )
 
 inline float4 ComputeNonStereoScreenPos(float4 pos) {
 	float4 o = pos * 0.5f;
+#ifdef UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
+	switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
+	{
+	default: break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90: o.xy = float2(-o.y, o.x); break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180: o.xy = -o.xy; break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270: o.xy = float2(o.y, -o.x); break;
+	}
+#endif
 	o.xy = float2(o.x, o.y*_ProjectionParams.x) + o.w;
 	o.zw = pos.zw;
 	return o;
@@ -819,6 +844,15 @@ inline float4 ComputeGrabScreenPos (float4 pos) {
 	float scale = 1.0;
 	#endif
 	float4 o = pos * 0.5f;
+#ifdef UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
+	switch (UNITY_DISPLAY_ORIENTATION_PRETRANSFORM)
+	{
+	default: break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90: o.xy = float2(-o.y, o.x); break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180: o.xy = -o.xy; break;
+	case UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270: o.xy = float2(o.y, -o.x); break;
+	}
+#endif
 	o.xy = float2(o.x, o.y*scale) + o.w;
 #ifdef UNITY_SINGLE_PASS_STEREO
 	o.xy = TransformStereoScreenSpaceTex(o.xy, pos.w);

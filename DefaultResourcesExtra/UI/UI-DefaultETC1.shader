@@ -43,7 +43,7 @@ Shader "UI/DefaultETC1"
 		Lighting Off
 		ZWrite Off
 		ZTest [unity_GUIZTestMode]
-		Blend SrcAlpha OneMinusSrcAlpha
+		Blend One OneMinusSrcAlpha
 		ColorMask [_ColorMask]
 
 		Pass
@@ -73,7 +73,7 @@ Shader "UI/DefaultETC1"
 				fixed4 color    : COLOR;
 				float2 texcoord : TEXCOORD0;
 				float4 worldPosition : TEXCOORD1;
-				half4 mask : TEXCOORD2;
+				float4 mask : TEXCOORD2;
 			};
 
 			sampler2D _MainTex;
@@ -101,7 +101,7 @@ Shader "UI/DefaultETC1"
 				float4 clampedRect = clamp(_ClipRect, -2e10, 2e10);
 				float2 maskUV = (IN.vertex.xy - clampedRect.xy) / (clampedRect.zw - clampedRect.xy);
 				OUT.texcoord = TRANSFORM_TEX(IN.texcoord.xy, _MainTex);
-				OUT.mask = half4(IN.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
+				OUT.mask = float4(IN.vertex.xy * 2 - clampedRect.xy - clampedRect.zw, 0.25 / (0.25 * half2(_UIMaskSoftnessX, _UIMaskSoftnessY) + abs(pixelSize.xy)));
 
 				OUT.color = IN.color * _Color;
 				return OUT;
@@ -111,6 +111,13 @@ Shader "UI/DefaultETC1"
 
 			fixed4 frag(v2f IN) : SV_Target
 			{
+				//Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
+				//The incoming alpha could have numerical instability, which makes it very sensible to
+				//HDR color transparency blend, when it blends with the world's texture.
+				const half alphaPrecision = half(0xff);
+				const half invAlphaPrecision = half(1.0/alphaPrecision);
+				IN.color.a = round(IN.color.a * alphaPrecision)*invAlphaPrecision;
+
 				fixed4 color = IN.color * UnityGetUIDiffuseColor(IN.texcoord, _MainTex, _AlphaTex, _TextureSampleAdd);
 
 				#ifdef UNITY_UI_CLIP_RECT
@@ -122,6 +129,7 @@ Shader "UI/DefaultETC1"
 				clip (color.a - 0.001);
 				#endif
 
+				color.rgb *= color.a;
 				return color;
 			}
 		ENDCG

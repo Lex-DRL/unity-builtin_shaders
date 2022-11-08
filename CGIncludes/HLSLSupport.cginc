@@ -134,6 +134,7 @@ struct sampler1D            { Texture1D t; SamplerState s; };
 struct sampler2D            { Texture2D t; SamplerState s; };
 struct sampler3D            { Texture3D t; SamplerState s; };
 struct samplerCUBE          { TextureCube t; SamplerState s; };
+
 float4 tex1D(sampler1D x, float v)              { return x.t.Sample(x.s, v); }
 float4 tex2D(sampler2D x, float2 v)             { return x.t.Sample(x.s, v); }
 float4 tex3D(sampler3D x, float3 v)             { return x.t.Sample(x.s, v); }
@@ -143,18 +144,22 @@ float4 tex1Dbias(sampler1D x, in float4 t)              { return x.t.SampleBias(
 float4 tex2Dbias(sampler2D x, in float4 t)              { return x.t.SampleBias(x.s, t.xy, t.w); }
 float4 tex3Dbias(sampler3D x, in float4 t)              { return x.t.SampleBias(x.s, t.xyz, t.w); }
 float4 texCUBEbias(samplerCUBE x, in float4 t)          { return x.t.SampleBias(x.s, t.xyz, t.w); }
+
 float4 tex1Dlod(sampler1D x, in float4 t)           { return x.t.SampleLevel(x.s, t.x, t.w); }
 float4 tex2Dlod(sampler2D x, in float4 t)           { return x.t.SampleLevel(x.s, t.xy, t.w); }
 float4 tex3Dlod(sampler3D x, in float4 t)           { return x.t.SampleLevel(x.s, t.xyz, t.w); }
 float4 texCUBElod(samplerCUBE x, in float4 t)       { return x.t.SampleLevel(x.s, t.xyz, t.w); }
+
 float4 tex1Dgrad(sampler1D x, float t, float dx, float dy)              { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 tex2Dgrad(sampler2D x, float2 t, float2 dx, float2 dy)           { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 tex3Dgrad(sampler3D x, float3 t, float3 dx, float3 dy)           { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 texCUBEgrad(samplerCUBE x, float3 t, float3 dx, float3 dy)       { return x.t.SampleGrad(x.s, t, dx, dy); }
+
 float4 tex1D(sampler1D x, float t, float dx, float dy)              { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 tex2D(sampler2D x, float2 t, float2 dx, float2 dy)           { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 tex3D(sampler3D x, float3 t, float3 dx, float3 dy)           { return x.t.SampleGrad(x.s, t, dx, dy); }
 float4 texCUBE(samplerCUBE x, float3 t, float3 dx, float3 dy)       { return x.t.SampleGrad(x.s, t, dx, dy); }
+
 float4 tex1Dproj(sampler1D s, in float2 t)              { return tex1D(s, t.x / t.y); }
 float4 tex1Dproj(sampler1D s, in float4 t)              { return tex1D(s, t.x / t.w); }
 float4 tex2Dproj(sampler2D s, in float3 t)              { return tex2D(s, t.xy / t.z); }
@@ -163,16 +168,22 @@ float4 tex3Dproj(sampler3D s, in float4 t)              { return tex3D(s, t.xyz 
 float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xyz / t.w); }
 #endif
 
+// Ensure broader support by overriding half into min16float
+#if defined(UNITY_UNIFIED_SHADER_PRECISION_MODEL) && (defined(UNITY_COMPILER_HLSL) || defined(UNITY_COMPILER_DXC))
+#define UNITY_FIXED_IS_HALF 1
+#define half min16float
+#define half2 min16float2
+#define half3 min16float3
+#define half4 min16float4
+#define half2x2 min16float2x2
+#define half3x3 min16float3x3
+#define half4x4 min16float4x4
+#endif
+
 // Define "fixed" precision to be half on non-GLSL platforms,
 // and sampler*_prec to be just simple samplers.
 #if !defined(SHADER_API_GLES) && !defined(SHADER_API_PSSL) && !defined(SHADER_API_GLES3) && !defined(SHADER_API_VULKAN) && !defined(SHADER_API_METAL) && !defined(SHADER_API_SWITCH)
-#define fixed half
-#define fixed2 half2
-#define fixed3 half3
-#define fixed4 half4
-#define fixed4x4 half4x4
-#define fixed3x3 half3x3
-#define fixed2x2 half2x2
+#define UNITY_FIXED_IS_HALF 1
 #define sampler2D_half sampler2D
 #define sampler2D_float sampler2D
 #define samplerCUBE_half samplerCUBE
@@ -193,16 +204,10 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 #define Texture3D_half Texture3D
 #endif
 
-#if defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || (defined(SHADER_API_VULKAN) && defined(SHADER_API_MOBILE)) || (defined(SHADER_API_MOBILE) && defined(SHADER_API_METAL)) || defined(SHADER_API_SWITCH)
+#if !defined(UNITY_UNIFIED_SHADER_PRECISION_MODEL) && (defined(SHADER_API_GLES) || defined(SHADER_API_GLES3) || (defined(SHADER_API_MOBILE) && (defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN))) || defined(SHADER_API_SWITCH))
 // with HLSLcc, use DX11.1 partial precision for translation
 // we specifically define fixed to be float16 (same as half) as all new GPUs seems to agree on float16 being minimal precision float
-#define fixed min16float
-#define fixed2 min16float2
-#define fixed3 min16float3
-#define fixed4 min16float4
-#define fixed4x4 min16float4x4
-#define fixed3x3 min16float3x3
-#define fixed2x2 min16float2x2
+#define UNITY_FIXED_IS_HALF 1
 #define half min16float
 #define half2 min16float2
 #define half3 min16float3
@@ -212,7 +217,7 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 #define half4x4 min16float4x4
 #endif
 
-#if ((!defined(SHADER_API_MOBILE) && defined(SHADER_API_METAL)) || (!defined(SHADER_API_MOBILE) && defined(SHADER_API_VULKAN)))
+#if !defined(UNITY_UNIFIED_SHADER_PRECISION_MODEL) && ((!defined(SHADER_API_MOBILE) && (defined(SHADER_API_METAL) || defined(SHADER_API_VULKAN))))
 #define fixed float
 #define fixed2 float2
 #define fixed3 float3
@@ -227,6 +232,16 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 #define half2x2 float2x2
 #define half3x3 float3x3
 #define half4x4 float4x4
+#endif
+
+#if defined(UNITY_FIXED_IS_HALF)
+#define fixed half
+#define fixed2 half2
+#define fixed3 half3
+#define fixed4 half4
+#define fixed4x4 half4x4
+#define fixed3x3 half3x3
+#define fixed2x2 half2x2
 #endif
 
 // Define min16float/min10float to be half/fixed on non-D3D11 platforms.
@@ -570,6 +585,7 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 #define VFACE FACE
 #endif
 #if defined(SHADER_API_PSSL)
+#undef VFACE
 #define VFACE SV_IsFrontFace
 #endif
 
@@ -678,38 +694,71 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 
 // TODO: Really need a better define for iOS Metal than the framebuffer fetch one, that's also enabled on android and webgl (???)
 #if defined(SHADER_API_VULKAN) || (defined(SHADER_API_METAL) && defined(UNITY_FRAMEBUFFER_FETCH_AVAILABLE))
-// Renderpass inputs: Vulkan/Metal subpass input
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(idx) cbuffer hlslcc_SubpassInput_f_##idx { float4 hlslcc_fbinput_##idx; }
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT_MS(idx) cbuffer hlslcc_SubpassInput_F_##idx { float4 hlslcc_fbinput_##idx[8]; }
-// For halfs
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF(idx) cbuffer hlslcc_SubpassInput_h_##idx { half4 hlslcc_fbinput_##idx; }
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF_MS(idx) cbuffer hlslcc_SubpassInput_H_##idx { half4 hlslcc_fbinput_##idx[8]; }
-// For ints
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT(idx) cbuffer hlslcc_SubpassInput_i_##idx { int4 hlslcc_fbinput_##idx; }
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT_MS(idx) cbuffer hlslcc_SubpassInput_I_##idx { int4 hlslcc_fbinput_##idx[8]; }
-// For uints
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT(idx) cbuffer hlslcc_SubpassInput_u_##idx { uint4 hlslcc_fbinput_##idx; }
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT_MS(idx) cbuffer hlslcc_SubpassInput_U_##idx { uint4 hlslcc_fbinput_##idx[8]; }
 
-#define UNITY_READ_FRAMEBUFFER_INPUT(idx, v2fname) hlslcc_fbinput_##idx
-#define UNITY_READ_FRAMEBUFFER_INPUT_MS(idx, sampleIdx, v2fname) hlslcc_fbinput_##idx[sampleIdx]
+	#if defined(UNITY_COMPILER_DXC)
 
+		//Subpass inputs are disallowed in non-fragment shader stages with DXC so we need some dummy value to use in the fragment function while it's not bing compiled
+		#if defined(SHADER_STAGE_FRAGMENT)
+			#define UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(type, idx) [[vk::input_attachment_index(idx)]] SubpassInput<type##4> hlslcc_fbinput_##idx
+			#define UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(type, idx) [[vk::input_attachment_index(idx)]] SubpassInputMS<type##4> hlslcc_fbinput_##idx
+		#else
+			//declaring dummy resources here so that non-fragment shader stage automatic bindings wouldn't diverge from the fragment shader (important for vulkan)
+			#define UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(type, idx) Texture2D dxc_dummy_fbinput_resource##idx; static type DXC_DummySubpassVariable##idx = type(0).xxxx;
+			#define UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(type, idx) Texture2D dxc_dummy_fbinput_resource##idx; static type DXC_DummySubpassVariable##idx = type(0).xxxx
+		#endif
+		// Renderpass inputs: Vulkan/Metal subpass input
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(float, idx)
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT_MS(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(float, idx)
+		// For halfs
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(half, idx)
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF_MS(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(half, idx)
+		// For ints
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(int, idx)
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT_MS(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(int, idx)
+		// For uints
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX(uint, idx)
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT_MS(idx) UNITY_DXC_SUBPASS_INPUT_TYPE_INDEX_MS(uint, idx)
+
+		#if defined(SHADER_STAGE_FRAGMENT)
+			#define UNITY_READ_FRAMEBUFFER_INPUT(idx, v2fname) hlslcc_fbinput_##idx.SubpassLoad()
+			#define UNITY_READ_FRAMEBUFFER_INPUT_MS(idx, sampleIdx, v2fname) hlslcc_fbinput_##idx.SubpassLoad(sampleIdx)
+		#else
+			#define UNITY_READ_FRAMEBUFFER_INPUT(idx, v2fname) DXC_DummySubpassVariable##idx
+			#define UNITY_READ_FRAMEBUFFER_INPUT_MS(idx, sampleIdx, v2fname) DXC_DummySubpassVariable##idx
+		#endif
+	#else
+		// Renderpass inputs: Vulkan/Metal subpass input
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(idx) cbuffer hlslcc_SubpassInput_f_##idx { float4 hlslcc_fbinput_##idx; }
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT_MS(idx) cbuffer hlslcc_SubpassInput_F_##idx { float4 hlslcc_fbinput_##idx[8]; }
+		// For halfs
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF(idx) cbuffer hlslcc_SubpassInput_h_##idx { half4 hlslcc_fbinput_##idx; }
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF_MS(idx) cbuffer hlslcc_SubpassInput_H_##idx { half4 hlslcc_fbinput_##idx[8]; }
+		// For ints
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT(idx) cbuffer hlslcc_SubpassInput_i_##idx { int4 hlslcc_fbinput_##idx; }
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT_MS(idx) cbuffer hlslcc_SubpassInput_I_##idx { int4 hlslcc_fbinput_##idx[8]; }
+		// For uints
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT(idx) cbuffer hlslcc_SubpassInput_u_##idx { uint4 hlslcc_fbinput_##idx; }
+		#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT_MS(idx) cbuffer hlslcc_SubpassInput_U_##idx { uint4 hlslcc_fbinput_##idx[8]; }
+
+		#define UNITY_READ_FRAMEBUFFER_INPUT(idx, v2fname) hlslcc_fbinput_##idx
+		#define UNITY_READ_FRAMEBUFFER_INPUT_MS(idx, sampleIdx, v2fname) hlslcc_fbinput_##idx[sampleIdx]
+	#endif //defined(UNITY_COMPILER_DXC)
 
 #else
 // Renderpass inputs: General fallback path
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_FLOAT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_HALF(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_INT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_UINT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_FLOAT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_HALF(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_INT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT(idx) UNITY_DECLARE_TEX2D_NOSAMPLER_UINT(_UnityFBInput##idx); float4 _UnityFBInput##idx##_TexelSize;
 
 #define UNITY_READ_FRAMEBUFFER_INPUT(idx, v2fvertexname) _UnityFBInput##idx.Load(uint3(v2fvertexname.xy, 0))
 
 // MSAA input framebuffers via tex2dms
 
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT_MS(idx) Texture2DMS<float4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF_MS(idx) Texture2DMS<float4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT_MS(idx) Texture2DMS<int4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize
-#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT_MS(idx) Texture2DMS<uint4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_FLOAT_MS(idx) Texture2DMS<float4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_HALF_MS(idx) Texture2DMS<float4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_INT_MS(idx) Texture2DMS<int4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize;
+#define UNITY_DECLARE_FRAMEBUFFER_INPUT_UINT_MS(idx) Texture2DMS<uint4> _UnityFBInput##idx; float4 _UnityFBInput##idx##_TexelSize;
 
 #define UNITY_READ_FRAMEBUFFER_INPUT_MS(idx, sampleIdx, v2fvertexname) _UnityFBInput##idx.Load(uint2(v2fvertexname.xy), sampleIdx)
 
@@ -779,8 +828,21 @@ float4 texCUBEproj(samplerCUBE s, in float4 t)          { return texCUBE(s, t.xy
 	#define UNITY_DECLARE_DEPTH_TEXTURE(tex) sampler2D_float tex
 	#define UNITY_DECLARE_SCREENSPACE_SHADOWMAP(tex) sampler2D tex
 	#define UNITY_SAMPLE_SCREEN_SHADOW(tex, uv) tex2Dproj( tex, UNITY_PROJ_COORD(uv) ).r
-	#define UNITY_DECLARE_SCREENSPACE_TEXTURE(tex) sampler2D tex;
+	#define UNITY_DECLARE_SCREENSPACE_TEXTURE(tex) sampler2D_float tex;
 	#define UNITY_SAMPLE_SCREENSPACE_TEXTURE(tex, uv) tex2D(tex, uv)
+#endif
+
+// Vulkan SwapChain preTransform
+#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_0   0
+#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_90 1
+#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_180 2
+#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_270 3
+
+#ifdef UNITY_PRETRANSFORM_TO_DISPLAY_ORIENTATION
+	cbuffer UnityDisplayOrientationPreTransformData { int UnityDisplayOrientationPreTransform; };
+	#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM UnityDisplayOrientationPreTransform
+#else
+	#define UNITY_DISPLAY_ORIENTATION_PRETRANSFORM UNITY_DISPLAY_ORIENTATION_PRETRANSFORM_0
 #endif
 
 #endif // HLSL_SUPPORT_INCLUDED
