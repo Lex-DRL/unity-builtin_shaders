@@ -60,7 +60,7 @@ So you have two options:
 
 Keep in mind, however, that some Unity's cgincs contain a non-ASCII characters
 (which most likely are just typos of some european guy), which caused some
-troubles on attempt to read thos efiles with Python2's default `open()`
+troubles on attempt to read those files with Python2's default `open()`
 and which were very difficult to find. So I guess, you'll **NEED** to read
 those files with a right encoding, after all. Using `io.open()`.
 
@@ -115,6 +115,11 @@ try:
 	_h_replacements = _t.Iterable[_h_replacement]
 except:
 	pass
+
+try:
+	unicode = unicode
+except:
+	unicode = str
 
 # endregion
 
@@ -361,7 +366,7 @@ def reformat_file(file_path=''):
 
 
 _required_subdirs = (
-	'CGIncludes', 'DefaultResources', 'DefaultResourcesExtra', 'Editor'
+	'CGIncludes', 'DefaultResources', 'DefaultResourcesExtra', 'Editor', 'EditorDefaultResources'
 )
 _extensions = {
 	'.shader', '.cginc', '.glslinc', '.compute', '.cs'
@@ -371,7 +376,7 @@ _extensions = {
 def list_files_gen(
 	root='',  # type: _str_h
 	onerror=None,  # type: _t.Optional[_t.Callable[[OSError], _t.Any]]
-	dirs_limit=30
+	dirs_limit=300
 ):
 	"""
 	A generator, listing all the files that should be re-formatted in the
@@ -399,8 +404,8 @@ def list_files_gen(
 		return
 
 	# root = r'C:\_builtin_shaders'
-	if not (isinstance(dirs_limit, int) and 5 < dirs_limit < 100):
-		dirs_limit = 30
+	if not (isinstance(dirs_limit, int) and 5 < dirs_limit < 1000):
+		dirs_limit = 300
 
 	root = root.replace('\\', '/')
 	notrail = root.rstrip('/')
@@ -489,13 +494,14 @@ def _cleanup_args_gen(*args):
 		yield arg
 
 
-if __name__ == '__main__':
-	import sys, warnings
+def main(*args):
+	import warnings
+
 	errors = list()
 
 	i = 1
 	for fl_pth in sorted(
-		_cleanup_args_gen(*sys.argv[1:])
+		_cleanup_args_gen(*args)
 	):
 		try:
 			with warnings.catch_warnings():
@@ -519,3 +525,8 @@ if __name__ == '__main__':
 		raw_input()
 	except:
 		input()
+
+
+if __name__ == '__main__':
+	import sys
+	main(*sys.argv[1:])
