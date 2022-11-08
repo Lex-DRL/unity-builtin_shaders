@@ -1,8 +1,11 @@
+// DRL: based on the default cleaned-up "Sprites/Default" shader.
+// last synced with: 2021.3.13f1
+
 Shader "DRL/Sprites-Default"
 {
 	Properties {
 		[PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-		_Color ("Tint", Color) = (1,1,1,1)
+		[HideInInspector] _Color ("Tint", Color) = (1,1,1,1)
 		
 		[MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
 		[HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
@@ -15,7 +18,7 @@ Shader "DRL/Sprites-Default"
 		#pragma fragment SpriteFrag
 		
 		#pragma multi_compile_instancing
-		#pragma multi_compile _ PIXELSNAP_ON
+		#pragma multi_compile_local _ PIXELSNAP_ON
 		#pragma multi_compile _ ETC1_EXTERNAL_ALPHA
 		
 		#include "UnitySprites.cginc"

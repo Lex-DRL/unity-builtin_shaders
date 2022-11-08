@@ -1,5 +1,5 @@
 // DRL: based on the default cleaned-up "UI/Default" shader.
-// last synced with: 2019.4.31f1
+// last synced with: 2021.3.13f1
 
 Shader "DRL/UI-Default"
 {
@@ -28,17 +28,15 @@ Shader "DRL/UI-Default"
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 		
-		struct appdata
-		{
+		struct appdata {
 			float3 vertex : POSITION;
 			fixed4 color : COLOR;
 			half2 tex0 : TEXCOORD0;
 			UNITY_VERTEX_INPUT_INSTANCE_ID
 		};
 		
-		struct v2f
-		{
-			float4 pos : SV_POSITION;
+		struct v2f {
+			float4 positionCS : SV_POSITION;
 			fixed4 vColor : COLOR;
 			half2 mainUVs : TEXCOORD0;
 			#ifdef UNITY_UI_CLIP_RECT
@@ -47,7 +45,9 @@ Shader "DRL/UI-Default"
 			UNITY_VERTEX_OUTPUT_STEREO
 		};
 		
+		sampler2D _MainTex;
 		half4 _MainTex_ST;
+		fixed4 _TextureSampleAdd;
 		
 		fixed4 _Color;
 		
@@ -80,7 +80,7 @@ Shader "DRL/UI-Default"
 			// * if you need the actual pixel-pos on screen, get the true worldPos
 			//   (apply unity_ObjectToWorld matrix).
 			
-			o.pos = clipPos;
+			o.positionCS = clipPos;
 			o.vColor = v.color * _Color;
 			o.mainUVs = TRANSFORM_TEX(v.tex0, _MainTex);
 			
@@ -102,11 +102,15 @@ Shader "DRL/UI-Default"
 			return o;
 		}
 		
-		sampler2D _MainTex;
-		fixed4 _TextureSampleAdd;
-		
 		fixed4 frag(v2f i) : SV_Target
 		{
+			//Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
+			//The incoming alpha could have numerical instability, which makes it very sensible to
+			//HDR color transparency blend, when it blends with the world's texture.
+			const half alphaPrecision = half(0xff);
+			const half invAlphaPrecision = half(1.0/alphaPrecision);
+			i.vColor.a = round(i.vColor.a * alphaPrecision) * invAlphaPrecision;
+			
 			half4 clr = i.vColor * (
 				tex2D(_MainTex, i.mainUVs) + _TextureSampleAdd
 			);
@@ -137,13 +141,6 @@ Shader "DRL/UI-Default"
 			"PreviewType"="Plane"
 		}
 		
-		Blend One OneMinusSrcAlpha
-		ColorMask [_ColorMask]
-		Cull Off
-		ZTest [unity_GUIZTestMode]
-		ZWrite Off
-		Lighting Off
-		
 		Stencil {
 			Ref [_Stencil]
 			Comp [_StencilComp]
@@ -151,6 +148,13 @@ Shader "DRL/UI-Default"
 			ReadMask [_StencilReadMask]
 			WriteMask [_StencilWriteMask]
 		}
+		
+		Blend One OneMinusSrcAlpha
+		ColorMask [_ColorMask]
+		Cull Off
+		ZTest [unity_GUIZTestMode]
+		ZWrite Off
+		Lighting Off
 		
 		SubShader { Pass {
 			Name "Default"
