@@ -1,7 +1,7 @@
 Shader ".DRL-URP/Transparent" {
 	Properties {
 		_Color ("Color", Color) = (0.2, 0.6, 1, 1)
-		_MainTex ("Texture", 2D) = "white" {}
+		[NoScaleOffset] _MainTex ("Texture", 2D) = "white" {}
 		
 		// _VectorParm ("Vector Parm", Vector) = (1, 1, 1, 0)
 		// [PowerSlider(3.333333)] _RangeParm ("Range Parm", Range(0, 10)) = 1
