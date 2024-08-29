@@ -1,5 +1,5 @@
 // DRL: based on the default cleaned-up "UI/Default" shader.
-// last synced with: 2022.3.17f1
+// last synced with: 2022.3.43f1
 
 Shader "DRL/UI-Default"
 {
@@ -28,7 +28,7 @@ Shader "DRL/UI-Default"
 		#include "UnityCG.cginc"
 		#include "UnityUI.cginc"
 
-		struct appdata {
+		struct appdata_t {
 			float3 vertex : POSITION;
 			fixed4 color : COLOR;
 			half2 texcoord0 : TEXCOORD0;
@@ -59,12 +59,12 @@ Shader "DRL/UI-Default"
 
 		int _UIVertexColorAlwaysGammaSpace;
 
-		v2f vert(appdata v)
+		v2f vert(appdata_t v)
 		{
 			v2f OUT;
-			UNITY_SETUP_INSTANCE_ID(v)
-			// UNITY_INITIALIZE_OUTPUT(v2f, OUT)
-			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT)
+			UNITY_SETUP_INSTANCE_ID(v);
+			// UNITY_INITIALIZE_OUTPUT(v2f, OUT);
+			UNITY_INITIALIZE_VERTEX_OUTPUT_STEREO(OUT);
 
 			float4 clipPos = UnityObjectToClipPos(v.vertex);
 			OUT.positionCS = clipPos;
@@ -114,8 +114,8 @@ Shader "DRL/UI-Default"
 			//Round up the alpha color coming from the interpolator (to 1.0/256.0 steps)
 			//The incoming alpha could have numerical instability, which makes it very sensible to
 			//HDR color transparency blend, when it blends with the world's texture.
-			const half alphaPrecision = half(0xff);
-			const half invAlphaPrecision = half(1.0/alphaPrecision);
+			static const half alphaPrecision = half(0xff);
+			static const half invAlphaPrecision = half(1.0/alphaPrecision);
 			IN.vColor.a = round(IN.vColor.a * alphaPrecision) * invAlphaPrecision;
 
 			half4 clr = IN.vColor * (
